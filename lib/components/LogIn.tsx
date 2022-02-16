@@ -1,0 +1,69 @@
+import React, { useState } from 'react'
+import config from '../config'
+import { useLocation, useHistory } from 'react-router-dom';
+import {handleApiData} from './Apicalls'
+function LogIn({setProfileData} : any) {
+  const history = useHistory()
+  const location: any = useLocation()
+  const [userName, setUserName] = useState('')
+  const [password, setPassword] = useState('')
+  const [signUpOutcome, setSignUpOutcome] = useState('')
+  const userData = {
+    username: userName,
+    password: password
+  }
+  async function logIn() {
+    
+    try {
+      const signUpResult = await fetch(`http://localhost:${config.authPort}/login`, {
+        method: 'POST',
+        credentials: 'include',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Credentials' : 'true',
+          'Access-Control-Allow-Origin' : `http://localhost:${config.authPort}`
+        },
+        body: JSON.stringify(userData),
+      })
+      const signUpResult2 = await signUpResult.text()
+      setSignUpOutcome(signUpResult2.split("\"").join(""))
+      if (signUpResult2.split("\"").join("").includes("Login successful!")) {
+        handleApiData(`/users/${userData.username}`, setProfileData, "get", null)
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  function specifyUserName(e: any) {
+    setUserName(e.target.value)
+  }
+  function specifyPassword(e: any) {
+    setPassword(e.target.value)
+  }
+  function profileNavigate() {
+      history.push(`/users/${userName}`)
+  }
+  return (
+    <div className = "content">
+      <div className="signUpPopup">
+      <div className= "popupHeader">Log in</div>
+      <div className="singleLine">
+        <div>User Name: </div>
+        <input type="text" onInput={specifyUserName} ></input>
+      </div>
+      <div className="singleLine">
+        <div>Password: </div>
+        <input type="password" onInput={specifyPassword}></input>
+      </div>
+      <div className="singleLine"><button className={!userName || !password ? "inactiveButton center" : "activeButton center"} onClick={logIn}>Log In</button></div>
+      {signUpOutcome ? <div className="singleLine"><div className = "center">Log in result: {signUpOutcome}</div></div>: ""}
+      {signUpOutcome.includes("Login successful!") ? <div className="singleLine"><button className = "center" onClick = {profileNavigate}>Continue to profile page.</button></div>: ""}
+    </div>
+  </div>
+ 
+  );
+}
+
+export default LogIn

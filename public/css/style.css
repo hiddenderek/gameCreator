@@ -1,0 +1,968 @@
+
+
+body {
+  overflow: hidden; /* Hide scrollbars */
+  background: rgb(17,5,21);
+  background-size: 100vw 100vh;
+  background-image:
+  linear-gradient(to bottom, rgb(3,28,52), rgb(17,5,21));
+  font-size: 62.5% !important;
+}
+form {
+  display: inline-block;
+}
+h1 {
+  font-size: 12px;
+  font-weight: normal;
+  padding: none;
+  margin: 0;
+  font-family: "8bit";
+}
+/*lol*/
+p {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  user-select: none;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+:root{
+  --sideContentWidth: 35rem;
+  --topBarWidth: 4.5rem;
+  --userInfoWidth: 8.5rem;
+  --editorElementContainer: 10rem;
+  --editorElementIcon: 7rem;
+  --gameIconWidth: 36rem;
+  --gameIconHeight: 18rem;
+  --gameIconPadding: 1rem;
+  --gameStatWidth: 3rem;
+  --gameStatHeight: 3rem;
+  --bannerButtonWidth: 8rem;
+  font-size: 62.5% !important;
+}
+input {
+  box-sizing: border-box;
+}
+@font-face {
+  font-family:"neonLights";
+  src: url(/fonts/NeonTubes2.otf);
+}
+@font-face {
+  font-family:"8bit";
+  src: url(/fonts/8-bitpusab.ttf);
+}
+* {
+  scrollbar-width: thin;          /* "auto" or "thin" */
+  scrollbar-color: rgb(247, 100, 215);   /* scroll thumb and track */
+}
+*::-webkit-scrollbar {
+  width: 12px;               /* width of the entire scrollbar */
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;        /* color of the tracking area */
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgb(247, 100, 215);    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+}
+#goalElement{
+  grid-area: elm4;
+}
+.goalElement{
+  background: transparent;
+  background-image: url("/images/goalElement.png");
+  background-size: 99.9% 100%;
+  height: 200%;
+  margin-top: -100%;
+  image-rendering: pixelated;
+  z-index: 4;
+}
+.spikeElement{
+  background-image: url("/images/spikeElement.png");
+  background-size: 100% 100%;
+  image-rendering: pixelated;
+  z-index: 3
+}
+#spikeElement{
+  grid-area: elm3;
+  z-index: 3
+}
+.groundElement{
+  background: transparent;
+  background-image: url("/images/groundElement2.png");
+  background-size: 100% 100%;
+  image-rendering: pixelated;
+  z-index: 3
+}
+.groundElement.topElement{
+  background-image: url("/images/groundElement.png");
+}
+#groundElement{
+  grid-area: elm1;
+}
+.lavaElement{
+  background: red;
+  background-image: url("/images/lavaElement.png");
+  background-size: 100% 100%;
+  image-rendering: pixelated;
+  z-index: 3
+}
+#lavaElement{
+  grid-area: elm2;
+}
+#emptyElement {
+  grid-area: elm5;
+  background: black;
+}
+.emptyElement {
+  background: transparent;
+  z-index: 3;
+}
+.elementButton {
+  height: var(--editorElementIcon);
+  width: var(--editorElementIcon);
+  margin-bottom:  calc(var(--editorElementContainer) - var(--editorElementIcon));
+  position: relative;
+}
+.elementButton.goalElement {
+  height: var(--editorElementIcon);
+  margin-top: 0px;
+  background-image: url("/images/goalElement2.png");
+}
+.elementLabel {
+  margin-top: var(--editorElementIcon);
+  height: calc(var(--editorElementContainer) - var(--editorElementIcon));
+  width: var(--editorElementIcon);
+  font-size: .7rem;
+  color: white;
+}
+.editorElement {
+  outline: .07rem solid rgba(0, 0, 0, 0.1);
+}
+.editorElement:hover {
+  background: rgb(120, 192, 236);
+  background-image: null !important;
+}
+.editorElement:active{
+  background: white;
+}
+.elementSelected{
+  border: .35rem solid black;
+  outline: .35rem solid white;
+  z-index: 10 !important;
+}
+.editSectionTitle{
+  text-align: center;
+  color: white;
+  grid-area: title;
+}
+.editSectionContainer{
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, var(--editorElementIcon));
+  grid-template-rows: 30px repeat(3, var(--editorElementContainer));
+  grid-template-areas:
+  "title title title title"
+  "elm1 elm2 elm3 elm4"
+  "elm5 elm6 elm7 elm8"
+  "elm9 elm10 elm11 elm12";
+  grid-area: editSec;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 15px;
+  font-family: "8bit";
+  font-size: 10px;
+  
+}
+.fullSize{
+  display: relative;
+  height: 100%;
+  width: 100%;
+}
+.topLeft {
+  top: 0;
+  left: 0;
+}
+.autoFitContainer {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 100%;
+}
+.autoFitContent {
+  width: 100%;
+  max-height: 100%;
+  aspect-ratio: 2/3;
+  align-self: center;
+  justify-self: center;
+}
+.autoWidth {
+  width: auto;
+}
+.autoHeight {
+  height: auto;
+}
+.halfWidth {
+  width: 50%;
+}
+.halfHeight {
+  width: 50%;
+}
+.width66 {
+  width: 66%;
+}
+.height66 {
+  height: 66%;
+}
+.fullWidth{
+  width: 100%;
+}
+.fullHeight{
+  height: 100%;
+}
+.smallWidth {
+  width: 5rem;
+}
+.mediumWidth {
+  width: 10rem;
+}
+.largeWidth {
+  width: 15rem;
+}
+.noClick{
+  pointer-events: none;
+}
+.smallHeight{
+  height: 3rem;
+}
+.mediumHeight{
+  height: 4rem;
+}
+.largeHeight{
+  height: 5rem;
+}
+.editorTitleChange {
+  width: auto;
+  height: 100%;
+  max-height: 4rem;
+  box-sizing: border-box;
+  float: right;
+  grid-area: titleChange;
+  font-family: '8bit';
+}
+.gameEditorSave{
+  grid-area: saveBtn;
+}
+.saveButton {
+  width: 10rem;
+  height: 80%;
+  border-radius: 12.5%/35% ;
+  color: white;
+  background-color:rgb(122, 47, 112);
+  border: solid 1px rgb(97, 37, 65);
+}
+.saveButton:hover{
+  background-color:rgb(95, 48, 89);
+}
+.saveButton:active{
+  background-color:rgb(73, 36, 68);
+}
+.gameEditorTitle{
+  width: 100%;
+  text-align: center;
+  align-self: center;
+  color: rgb(240, 210, 233);
+  text-shadow: 
+  0px 0px .5rem rgb(247, 100, 215), 
+  0px 0px .5rem rgb(247, 100, 215), 
+  0px 0px .5rem rgb(247, 100, 215), 
+  0px 0px .8rem rgb(247, 100, 215), 
+  0px 0px .8rem rgb(235, 100, 247),  
+  0px 0px 1rem rgb(235, 100, 247),  
+  0px 0px 1.3rem rgb(235, 100, 247),  
+  0px 0px 2.2rem rgb(235, 100, 247); 
+  font-family: neonLights;
+  font-size: 3.5rem;
+  height: 5rem;
+  grid-area: editLabel;
+}
+.gameEditor{
+  width: 100%;
+  background: rgb(17,5,21);
+  grid-area: sideContent;
+  display: grid;
+  font-size: 1.7rem;
+  grid-template-columns: 100%;
+  grid-template-rows: 6rem 3rem 4rem auto;
+  grid-template-areas:
+  "editLabel"
+  "titleChange"
+  "saveBtn"
+  "editSec";
+  background: rgba(236, 120, 174, 0.185);
+  background-size: 100px 100px;
+  background-image:
+  linear-gradient(to right, rgb(93,9,67,.5) 2px, transparent 2px),
+  linear-gradient(to bottom, rgb(93,9,67,.5)  2px, transparent 2px);
+}
+.gameWrapper {
+  width: 100%;
+  max-height: 100%;
+  aspect-ratio: 16/9;
+  align-self: center;
+  justify-self: center;
+  overflow: hidden;
+  position: relative;
+  color: white;
+}
+.gameTextContainer {
+  width: 100%;
+  height: 20rem;
+}
+.gameText {
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  z-index: 4;
+}
+.gameStatText{
+  font-size: 2rem;
+  font-family: '8bit';
+}
+.gameWin{
+  background:rgba(75, 61, 136, 0.767);
+  backdrop-filter: blur(5rem);
+  font-size: 8rem;
+  font-family: '8bit';
+  z-index:5;
+}
+.gameLose{
+  background:rgba(75, 61, 136, 0.767);
+  backdrop-filter: blur(5rem);
+  font-size: 8rem;
+  font-family: '8bit';
+  z-index:5;
+}
+.retryContainer {
+  width: 20rem;
+  height: 8rem;
+}
+.retryButton{
+  font-family: arial;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  border-radius: 10%/40%;
+  color: black;
+  height: 50%;
+  width: 100%;
+}
+.screenBoundary {
+  width: 100%;
+  height: 100%;
+}
+.healthBarContainer{
+  width: 12%;
+  height: 9%;
+  background: transparent;
+  position: absolute;
+  white-space: nowrap;
+  left: 0;
+  right: 0;
+  overflow: visible;
+}
+.healthBarBlock{
+  width: 20%;
+  height: 100%;
+  display: inline-block;
+  background: transparent;
+  box-sizing: border-box;
+  padding: 3%;
+}
+.healthBarfill{
+  width: 100%;
+  height: 100%;
+  background: white;
+}
+.character {
+  width: 3.125%;
+  height: 11.111%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  -webkit-mask-box-image: url("/images/character.png");
+  mask-image: url("/images/character.png");
+  mask-mode: alpha;
+  background-image: url("/images/character.png");
+  background-size: 100% 100%;
+  image-rendering: pixelated;
+
+}
+.characterJump{
+  width: 3.125%;
+  height: 13.88875%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  -webkit-mask-box-image: url("/images/characterJump.png");
+  mask-image: url("/images/characterJump.png");
+  mask-mode: alpha;
+  background-image: url("/images/characterJump.png");
+  background-size: 100% 100%;
+  image-rendering: pixelated;
+}
+.characterLightDamage{
+  background-color: rgba(255, 217, 0, 0.719);
+  background-blend-mode: multiply;
+  animation: blinker 2s linear infinite;
+}
+.characterMediumDamage{
+  background-color: rgba(231, 121, 12, 0.712);
+  background-blend-mode: multiply;
+  animation: blinker 2s linear infinite;
+}
+.characterHighDamage{
+  background-color: rgba(245, 2, 2, 0.753);
+  background-blend-mode: multiply;
+  animation: blinker 2s linear infinite;
+}
+
+@keyframes blinker {
+  2% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 100;
+  }
+}
+.pixelate {
+  image-rendering: pixelated;
+}
+
+.gameGrid {
+  display: grid;
+  width: 100%;
+  max-height: 100%;
+  aspect-ratio: 16/9;
+  grid-template-columns: repeat(32, 3.125%);
+  grid-template-rows: repeat(18, 5.55555%);
+  overflow: hidden;
+  align-self: center;
+  justify-self: center;
+}
+.gameIcon {
+  width: var(--gameIconWidth);
+  height: var(--gameIconHeight);
+  text-align: center;
+  position: relative;
+  border-radius: 3%/6%;
+  border: .2rem solid rgb(108,178,222);
+  font-family: '8bit';
+  font-size: .8rem;
+  color: white;
+  transition: background-color 200ms;
+  padding-left: var(--gameIconPadding);
+  padding-right: var(--gameIconPadding);
+  overflow: hidden;
+  z-index: 1;
+}
+.gameIcon:hover{
+  background-color: rgb(100,100,100,.4);
+}
+.gameEffect{
+  background-color: transparent;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  background-size: 100% 2px, 3px 100%;
+  box-shadow: inset 0px 0px 2rem rgb(108,178,222, .6);
+  z-index: -1;
+}
+.gameEffect:hover{
+  background-color: rgba(174, 170, 236, 0.219);
+}
+.gameIconBig{
+  transform: scale(1.5);
+  transform-origin: top left;
+}
+.editIcon {
+  position: absolute;
+  top: 2%;
+  left: 2%;
+  z-index: 10;
+  width: 1.3rem;
+  height: 1.3rem;
+}
+.iconText{
+  margin-left: calc((var(--gameIconPadding) * -1));
+  text-shadow: 3px 2px 2px rgba(251, 12, 12, 0.651), 0px -1px 2px rgba(12, 80, 251, 0.411),-2px 0px 1px rgba(52, 251, 12, 0.452);
+  color: rgba(255, 255, 255, 0.84);
+}
+.gameTitle {
+   font-family: '8bit';
+   font-size: 1.7rem;
+   color: white;
+   width: calc(100% - (var(--bannerButtonWidth) * 5.5));
+   margin-left: calc(var(--bannerButtonWidth) * 3);
+   user-select: none;
+}
+.voteText {
+  font-family: 'Arial';
+  font-size: 1.1rem;
+  color:rgb(235, 100, 247);
+}
+.bannerButton {
+  width: var(--bannerButtonWidth);
+  height: 100%;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  color: white;
+}
+.bannerButton:hover{
+  background: rgba(255, 255, 255, 0.308);
+}
+.bannerButton:active{
+  background: rgba(255, 255, 255, 0.508);
+}
+.gameBrowserContainer {
+  grid-area: content;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 4.5rem calc(100vh - var(--topBarWidth) - 4.5rem);
+  grid-template-areas: 
+  "gameBrowserBanner"
+  "gameBrowser"
+}
+.gameBrowserBanner {
+  width: 100%;
+  height: var(--topBarWidth);
+  white-space: nowrap;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  color: white;
+  font-family: arial;
+  font-size: 1.4rem;
+  grid-area: gameBrowserBanner;
+}
+.gameBrowserContentContainer{
+  grid-area: gameBrowser;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+.gameBrowser {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(38rem, 1fr));
+  grid-template-rows: repeat(auto-fill, minmax(18rem, 1fr));
+  justify-items: center;
+  grid-gap: 1rem;
+  padding: 1rem;
+}
+
+.Home {
+  grid-area: content;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 30rem 4rem 2rem auto;
+  grid-template-areas: 
+  "homeLogo"
+  "homeCaption"
+  "homeTrendingLabel"
+  "homeTrending";
+}
+.rankView {
+  z-index: 10;
+  background:rgba(75, 61, 136, 0.767);
+  backdrop-filter: blur(5rem);
+}
+.rankList {
+  width: 400px;
+  font-size: 1rem;
+  font-family: "8bit";
+}
+.ranks {
+  display: flex;
+  justify-content: space-evenly;
+  flex-flow: row wrap;
+}
+.rankSection {
+  flex-basis: 300px;
+  color: white;
+  font-size: 1.5rem;
+  font-family: arial;
+}
+.rankLabel {
+  color: white;
+}
+.rankEntry {
+  display: flex;
+  flex-flow: row wrap;
+}
+.rankEntry p {
+  flex-grow: 1;
+}
+.rankEntry p ::after {
+  text-align: right;
+}
+.homeLogo{
+  width: 68rem;
+  height: 30rem;
+  grid-area: homeLogo;
+  pointer-events: none;
+}
+.homeLogoCaption{
+  font-size: 1.3rem;
+  color: rgb(247, 100, 215);
+  font-family: "8bit";
+  grid-area: homeCaption;
+}
+.homeTrendingLabel {
+  grid-area: homeTrendingLabel;
+  font-size: 1rem;
+  color: white;
+  font-family: "8bit";
+}
+.trendingGames {
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  grid-area: homeTrending;
+}
+.userProfile {
+  background: white;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: var(--userInfoWidth) 3rem auto;
+  grid-template-areas: 
+  "profileInfo"
+  "profileGameLabel"
+  "profileGameContent";
+  padding: 2rem;
+  overflow: hidden;
+}
+.userInfo {
+  font-size: 1.8rem;
+  height: var(--userInfoWidth);
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: space-between;
+  grid-area: profileInfo;
+}
+.profileGameLabel{
+  grid-area: profileGameLabel;
+  height: 100%;
+  font-size: 2rem;
+  font-family: Arial;
+  color: white;
+}
+.profileGameBrowser{
+  grid-area: profileGameContent;
+}
+.profileContainer {
+  height: 100%;
+  width: 30rem;
+  display: flex;
+  flex-flow: row;
+  gap: 1rem;
+  margin-left: 3rem;
+}
+.profileIcon {
+  width: calc(var(--userInfoWidth) * .8);
+  height: calc(var(--userInfoWidth) * .8);
+  border-radius: 50%;
+  border: .3rem solid white;
+  box-shadow: 0 0 .2rem #fff,
+  0 0 .2rem #fff,
+  0 0 2rem #fe13d7,
+  0 0 0.8rem #f613fe,
+  0 0 1.8rem #ff47e0e1;
+}
+.profileText {
+  width: calc(100% - var(--userInfoWidth));
+  font-family: Arial;
+  color:white;
+  display: flex;
+  flex-flow: column;
+}
+.profileName {
+  font-size: 3.8rem;
+  color: rgb(240, 210, 233);
+  text-shadow: 
+  0px 0px .5rem rgb(247, 100, 215), 
+  0px 0px .5rem rgb(247, 100, 215), 
+  0px 0px .5rem rgb(247, 100, 215), 
+  0px 0px .8rem rgb(247, 100, 215), 
+  0px 0px .8rem rgb(235, 100, 247),  
+  0px 0px 1rem rgb(235, 100, 247),  
+  0px 0px 1.3rem rgb(235, 100, 247),  
+  0px 0px 2.2rem rgb(235, 100, 247); 
+  font-family: neonLights;
+}
+
+.gameButton {
+  width: 17rem;
+  height: 4rem;
+  background:rgb(120, 192, 236);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-flow: row;
+  font-family: arial;
+  color: white;
+  font-size: 1.7rem;
+  margin-right: 3rem;
+  gap: 1rem;
+}
+.gameButton p {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+.plusIcon{
+  font-size: 3rem;
+}
+.inlineItem {
+  display: inline-block;
+}
+.deleteIcon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--gameStatWidth);
+  height: var(--gameStatHeight);
+}
+.gameStat {
+  margin-top: calc(var(--gameIconHeight) - var(--gameStatHeight));
+  height: var(--gameStatHeight);
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
+  text-shadow: 3px 2px 2px rgba(251, 12, 12, 0.651), 0px -1px 2px rgba(12, 80, 251, 0.411),-2px 0px 1px rgba(52, 251, 12, 0.452);
+}
+.smallLike {
+  width: 2.3rem;
+}
+.left {
+  float: left;
+  text-align: left;
+}
+.right {
+  float: right;
+  text-align: right;
+}
+.center {
+  margin-left: 50%;
+  transform: translate(-50%);
+  text-align: center;
+}
+.bottom {
+  bottom: 0;
+}
+.flexCenter{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
+  align-content: center;
+  text-align: center;
+}
+.flexDirColumn{
+  flex-flow: column;
+}
+.inlineFlex {
+  display: inline-flex !important;
+}
+.absolute {
+  position: absolute;
+}
+.searchBarForm {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+.searchBarInput {
+  max-width: 50%;
+  width: 500px;
+  height: 32px;
+  box-sizing: border-box;
+  pointer-events: all;
+
+}
+.login {
+  width: var(--bannerButtonWidth);
+  height: 100%;
+  color: rgb(247, 100, 215);
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-family: "8bit";
+}
+.singleLine{
+  width: 95%;
+  height: 25px;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  margin-top: 4px;
+  padding-bottom: 4px;
+  white-space: nowrap;
+  color:rgb(120, 192, 236);
+}
+.inactiveButton {
+  background: dimgray;
+  pointer-events: none;
+}
+.activeButton {
+  background: lightGray;
+}
+.popupHeader {
+  color: rgb(240, 210, 233);
+  text-shadow: 
+  0px 0px .5rem rgb(247, 100, 215), 
+  0px 0px .5rem rgb(247, 100, 215), 
+  0px 0px .5rem rgb(247, 100, 215), 
+  0px 0px .8rem rgb(247, 100, 215), 
+  0px 0px .8rem rgb(235, 100, 247),  
+  0px 0px 1rem rgb(235, 100, 247),  
+  0px 0px 1.3rem rgb(235, 100, 247),  
+  0px 0px 2.2rem rgb(235, 100, 247); 
+  font-family: neonLights;
+  font-size: 3rem;
+  height: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.smallLabel {
+  color:white;
+  font-family: '8bit';
+  font-size: 1rem;
+  padding-left: 1rem;
+}
+.signUpPopup {
+  max-width: 94%;
+  width: 350px;
+  background: rgb(21,43,102);
+  font-family: Arial;
+  font-size: 1.4rem;
+  text-align: center;
+  color: black;
+  position: absolute;
+  overflow: hidden;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(110%);
+}
+.signUp {
+  width: var(--bannerButtonWidth);
+  height: 100%;
+  color: rgb(247, 100, 215);
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  font-size: 1rem;
+  font-family: "8bit";
+}
+.banner {
+  position: relative;
+  grid-area: banner;
+  background: rgb(21,43,102);
+}
+.sideBar {
+  background: rgb(17,5,21);
+  border-right: .3rem solid white;
+  box-shadow: 0 0 .2rem #fff,
+  0 0 .2rem #fff,
+  0 0 2rem #fe13d7,
+  0 0 0.8rem #f613fe,
+  0 0 1.8rem #ff47e0e1;
+  grid-area: sideBar;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(auto-fill, minmax(6rem, 9rem));
+  justify-content: center;
+  justify-items: center;
+  align-content: top;
+  z-index: 10;
+}
+.sideBarButton {
+  display: grid;
+  grid-template-columns: 80%;
+  grid-template-rows: auto 1.3rem;
+  grid-template-areas: 
+  "sideBarIcon"
+  "sideBarLabel";
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
+}
+.sideBarButton:hover{
+  background: rgba(255, 255, 255, 0.15)
+}
+.sideLabel {
+  grid-area: sideBarLabel;
+  font-size: 1.3rem;
+  font-family: Arial;
+  color: rgb(120, 192, 236);
+}
+.sideIcon {
+  grid-area: sideBarIcon;
+  max-height:80%; max-width:80%;
+}
+.content {
+  grid-area: content;
+  overflow: scroll;
+  overflow-x: hidden;
+  background: transparent;
+  background-size: 100px 100px;
+  background-image:
+  linear-gradient(to right, rgb(93,9,67,.5) 2px, transparent 2px),
+  linear-gradient(to bottom, rgb(93,9,67,.5)  2px, transparent 2px);
+}
+.footer {
+  grid-area: footer;
+  background: blue;
+}
+.noSideBar {
+  grid-template-areas:
+  "sideBar banner banner banner banner"
+  "sideBar content content content content" !important
+}
+.appContainer {
+  position: absolute;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 55px repeat(3, 1fr) var(--sideContentWidth);
+  grid-template-rows: var(--topBarWidth) auto;
+  grid-template-areas:
+  "sideBar banner banner banner banner"
+  "sideBar content content content sideContent"
+}
