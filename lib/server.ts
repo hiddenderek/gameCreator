@@ -180,7 +180,22 @@ app.get('/api/trending', async (req: any, res: any) => {
 
 app.get('/api/ranks/scores', async (req: any, res: any) =>{
     try {
-
+        console.log('getScores!')
+        const getScores = await pool.query(`
+        SELECT * FROM (
+            SELECT DISTINCT u.username,
+            COUNT(CASE WHEN u.id = s.user_id THEN s.id ELSE NULL END) AS score_count
+            FROM users u, gamescores s GROUP BY u.id
+        ) AS Q1 WHERE score_count IS NOT NULL ORDER BY score_count DESC LIMIT 25 
+        `)
+        console.log(getScores.rows)
+        if (getScores.rows[0]) {
+            res.status(200)
+            res.json(getScores.rows)
+        } else {
+            res.status(400) 
+            res.json('No scores available.')
+        }
     } catch (e) {
         console.log(e)
         res.status(404)

@@ -8,10 +8,11 @@ function Ranks () {
     type userData = {
         username: string,
         total_score: number,
+        score_count: number
         play_count: number
     }
     useEffect(()=>{
-        //handleApiData(`/ranks/highScores`, setHighScoreRanks, "get", null)
+        handleApiData(`/ranks/scores`, setHighScoreRanks, "get", null)
         handleApiData(`/ranks/likes`, setLikeRanks, "get", null)
         handleApiData(`/ranks/plays`, setPlaysRanks, "get", null)
     },[])
@@ -20,6 +21,7 @@ function Ranks () {
         <div className="ranks content" >
             <div className = "rankSection">
                 <h1 className = "fullWidth flexCenter smallHeight rankLabel">HIGH SCORES ACHIEVED</h1>            
+                <ul>{highScoreRanks.map((item: userData, index)=><li className = "rankEntry"><p>{`${index + 1}: ${item.username}`}</p><p className = "right">{`${item.score_count} high scores`}</p></li>)}</ul>  
             </div>
             <div className = "rankSection">
                 <h1 className = "fullWidth flexCenter smallHeight rankLabel">LIKES RECIEVED</h1>

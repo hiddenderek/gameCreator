@@ -600,6 +600,7 @@ input {
   color: white;
   font-size: 1.5rem;
   font-family: arial;
+  padding: 1rem;
 }
 .rankLabel {
   color: white;
