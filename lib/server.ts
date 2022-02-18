@@ -347,7 +347,7 @@ app.patch('/api/games/:userName/:gameName', authenticateToken, async (req: any, 
     try {
         const { userName } = req.params
         const { gameName } = req.params
-        const { gameData, screen, gridImage } = req.body
+        const { gameData, screen, gridImage, plays } = req.body
         const columnType = Object.keys(req.body)[0]
         const gameDataString = JSON.stringify(gameData)
         console.log(userName)
@@ -363,7 +363,7 @@ app.patch('/api/games/:userName/:gameName', authenticateToken, async (req: any, 
             `)
             if (saveGame) res.status(200)
             res.json(saveGame.rows[0])
-        } else if (id && req.user.name == userName) {
+        } else if (id && (req.user.name == userName || plays)) {
             console.log('UPDATE')
             const updateGame = await pool.query(`
             UPDATE gamedata SET ${columnType} = '${req.body[columnType]}'  WHERE user_id = '${id}' AND  game_name = '${gameName}' RETURNING ${columnType}
