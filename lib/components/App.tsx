@@ -27,9 +27,6 @@ function App () {
   const location: any = useLocation()
   const history = useHistory()
   const dispatch = useAppDispatch()
-  function setCurrentUser (user: string) {
-    dispatch(setUser(user))
-  }
   //this app initially sets the current user if you were previously logged in. The current user name is stored in httpsonly cookies. 
   //if there is a current user, the app will change the UI state to your user and populate the page with relevant data.
   useEffect(() => {
@@ -39,14 +36,18 @@ function App () {
     getData()
     async function getData() {
       console.log('currentuserer!')
-      let currentUser = await handleApiData(`/currentUser`, setCurrentUser, "get", null)
-      if (!currentUser) {
-        currentUser = await handleApiData(`/currentUser`, setCurrentUser, "get", null)
-      }
-      if (currentUser) {
-        console.log('THE CURRENT USER IS: ' + `/users/${currentUser}`)
-        const result = await handleApiData(`/users/${currentUser}`, setProfileData, "get", null)
-        console.log(result)
+      try {
+        let currentUser = await handleApiData(`/currentUser`, null, "get", null)
+        if (!currentUser) {
+          currentUser = await handleApiData(`/currentUser`, null, "get", null)
+        }
+        if (currentUser?.status === 200){
+            console.log('THE CURRENT USER IS: ' + `/users/${currentUser?.data}`)
+            const result = await handleApiData(`/users/${currentUser?.data}`, setProfileData, "get", null)
+            console.log(result)
+        }
+      } catch (e) {
+        console.log('Failed getting user: ' + e)
       }
     }
   }, [])
@@ -66,7 +67,7 @@ function App () {
     } else if (location.pathname.includes('/games/')) {
       dispatch(gameEditorReset())
     }
-  },[location])
+  },[location.pathname])
   console.log('resetgmae!')
   console.log(profileData.username)
   console.log('hi')
@@ -86,8 +87,8 @@ function App () {
   console.log(sideBar)
   return (
     <div className={sideBar === true ? "appContainer" : "appContainer noSideBar"} tabIndex={0} onKeyDown={(e: any)=>{keyPress(e)}} onKeyUp={(e: any)=>{keyRelease(e)}}>
-      <Banner  userData = {profileData.username ? profileData : ""} setProfileData = {setProfileData} />
-      <SideBar />
+      <Banner  profileData = {profileData as userObject} setProfileData = {setProfileData} />
+      <SideBar profileData = {profileData as userObject}/>
       <Switch>
         <Route path="/signup">
           <SignUp />
@@ -103,13 +104,13 @@ function App () {
           <Game profileData = {profileData as userObject} />
         </Route>
         <Route path="/games">
-          <GameBrowser />
+          <GameBrowser profileData = {profileData as userObject}/>
         </Route>
         <Route path="/users">
-          <UserProfile userData = {profileData.username ? profileData : ""}/>
+          <UserProfile profileData = {profileData as userObject}/>
         </Route>
         <Route path="/home" >
-          <Home />
+          <Home profileData = {profileData as userObject}/>
         </Route>
         <Route path="/rankings" >
           <Ranks />

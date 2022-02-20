@@ -1,11 +1,14 @@
 import config from '../config'
 
+const successStatus = [200, 201, 202, 204]
+const failedStatus = [400, 401, 402, 404, 409, 422]
+const needsRefreshStatus = [403]
 
 export async function getApiData(pathName: string) {
     const controller = new AbortController()
     const url = `http://${location.hostname}:${config.port}/api${pathName}`
     console.log(url)
-    const timeoutId = setTimeout(() => controller.abort(), 5000)
+    const timeoutId = setTimeout(() => controller.abort(), 3000)
     const responseData = await fetch(url, {
         method: 'GET',
         headers: {
@@ -22,7 +25,7 @@ export async function postApiData(pathName: string, body: string | object | null
     const url = `http://${location.hostname}:${config.port}/api${pathName}`
     console.log(url)
     console.log(body)
-    const timeoutId = setTimeout(() => controller.abort(), 5000)
+    const timeoutId = setTimeout(() => controller.abort(), 3000)
     const responseData = await fetch(url, {
         method: 'POST',
         headers: {
@@ -31,6 +34,7 @@ export async function postApiData(pathName: string, body: string | object | null
         body: body ? body as string :  "{}",
         signal: controller.signal
     })
+    console.log(responseData)
     return Promise.resolve(responseData)
 }
 
@@ -39,7 +43,7 @@ export async function deleteApiData(pathName: string, body: string | object | nu
     const url = `http://${location.hostname}:${config.port}/api${pathName}`
     console.log(url)
     console.log(body)
-    const timeoutId = setTimeout(() => controller.abort(), 5000)
+    const timeoutId = setTimeout(() => controller.abort(), 3000)
     const responseData = await fetch(url, {
         method: 'DELETE',
         headers: {
@@ -57,7 +61,7 @@ export async function patchApiData(pathName: string, body: string | object | nul
     const url = `http://${location.hostname}:${config.port}/api${pathName}`
     console.log(url)
     console.log(body)
-    const timeoutId = setTimeout(() => controller.abort(), 5000)
+    const timeoutId = setTimeout(() => controller.abort(), 3000)
     const responseData = await fetch(url, {
         method: 'PATCH',
         headers: {
@@ -66,7 +70,7 @@ export async function patchApiData(pathName: string, body: string | object | nul
         body: body ? body as string : "{}",
         signal: controller.signal
     })
-
+    console.log(responseData)
     return Promise.resolve(responseData)
 }
 export async function getAccessToken() {
@@ -83,6 +87,8 @@ export async function getAccessToken() {
     return Promise.resolve(refreshData)
 }
 
+
+
 export async function handleApiData(pathName: string | null, setState: Function | null, action: string | null, body: string | object | null) {
     console.log('handling!')
     console.log(pathName)
@@ -96,17 +102,31 @@ export async function handleApiData(pathName: string | null, setState: Function 
         console.log('error proccessing object')
     }
     let responseData
-    if (action == "get") {
-        responseData = await getApiData(pathName)
-    } else if (action == "post") {
-        responseData = await postApiData(pathName, body)
-    } else if (action == "delete") {
-        responseData = await deleteApiData(pathName, body)
-    } else if (action == "patch") {
-        responseData = await patchApiData(pathName, body)
+
+    switch (action) {
+        case "get": {
+            console.log('GET')
+            responseData = await getApiData(pathName)
+            break
+        }
+        case "post": {
+            console.log('POST')
+            responseData = await postApiData(pathName, body)
+            break
+        }
+        case "delete": {
+            console.log('DELETE')
+            responseData = await deleteApiData(pathName, body)
+            break
+        }
+        case "patch": {
+            console.log('PATCH')
+            responseData = await patchApiData(pathName, body)
+            break
+        }
     }
      
-    if (responseData?.status === 200 || responseData?.status === 201 || responseData?.status === 204) {
+    if (successStatus.includes(responseData?.status as number)) {
         const responseResult = await responseData?.text()
         console.log(responseResult)
         try {
@@ -114,28 +134,38 @@ export async function handleApiData(pathName: string | null, setState: Function 
             if (typeof setState !== "undefined" && setState) {
                 setState(responseDataResult)
             }
-            return Promise.resolve(responseDataResult)
+            return Promise.resolve({data: responseDataResult, status: responseData?.status})
         } catch (e) {
             console.log(e)
-            return Promise.resolve(responseResult)
+            return Promise.resolve({data: responseResult, status: responseData?.status})
         }
         
-    } else if (responseData?.status === 403) {
+    } else if (needsRefreshStatus.includes(responseData?.status as number)) {
         console.log('token not valid, requesting refresh')
         const refreshData = await getAccessToken()
         console.log('refresh')
-        if (refreshData.status == 400 || refreshData.status == 401 || refreshData.status == 403 || refreshData.status == 404) {
+        //if, after requesting the access token, the response status is still requiring a refresh or is failed, do nothing.
+        if (needsRefreshStatus.includes(refreshData.status) || failedStatus.includes(refreshData.status)) {
             console.log('refresh unsuccessful')
+            return Promise.resolve({data: null, status: refreshData.status})
         } else {
+            //if the accesss token request gives a response status is succesfull, retry the request.
             console.log('refresh successful!')
             handleApiData(pathName, setState, action, body)
         }
-    } else if (responseData?.status === 400 || responseData?.status === 401 || responseData?.status === 404) {
+    } else if (failedStatus.includes(responseData?.status as number)) {
         if (typeof setState !== "undefined" && setState) {
             setState({})
         }
-        return Promise.resolve({})
+        try {
+            const responseResult = await responseData?.text()
+            const responseDataResult = responseResult ? JSON.parse(responseResult) : responseData
+            return Promise.resolve({data: responseDataResult, status: responseData?.status})
+        } catch (e) {
+            console.log('ERROR PROCESSING DATA: ' + e)
+            return Promise.resolve({data: null, status: responseData?.status})
+        }
     } else {
-        return Promise.resolve({})
+        return Promise.resolve({data: null, status: responseData?.status})
     }
 }

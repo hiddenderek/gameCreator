@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import {useLocation} from 'react-router'
 import GameIcon from './GameIcon'
 import { handleApiData } from './Apicalls';
-function Home () {
+import { userObject } from '../app/types';
+function Home ({profileData} : {profileData: userObject}) {
     const [featuredGames, setFeaturedGames] = useState([])
     useEffect(()=>{
         handleApiData(`/trending`, setFeaturedGames, "get", null)
@@ -15,7 +16,7 @@ function Home () {
             <span className = "homeTrendingLabel flexCenter">TRENDING GAMES: </span>
             <div className = "trendingGames">
                 <div id = "gameInfo" className = "gameBrowser gameBrowserBig">
-                    {typeof featuredGames.map == "function" ? featuredGames?.map((item : {game_name: string})=>{console.log(item);return <GameIcon key={item.game_name} gameData={item}/>}) : ""}
+                    {typeof featuredGames.map == "function" ? featuredGames?.map((item : {game_name: string})=>{console.log(item);return <GameIcon key={item.game_name} gameData={item} profileData = {profileData}/>}) : ""}
                 </div>
             </div>
         </div>

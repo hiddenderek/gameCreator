@@ -1,12 +1,13 @@
 import React, { useRef, useEffect, useState, useReducer } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { loadGame, setGameName, setGameLikes, setGameSize } from '../features/gameData/gameData-slice';
+import { loadGame, setGameLoaded, setGameName, setGameLikes, setGameSize } from '../features/gameData/gameData-slice';
 import GameElement from './GameElement'
 import Character from './Character'
 import HealthBar from './HealthBar'
 import GameResult from './GameResult'
 import RankView from './RankView'
-import { spikeAlternate, timeCount } from './GameEvents';
+import { spikeAlternate, timeCount, resetGame } from './GameEvents';
+import { characterReset } from '../features/character/character-slice';
 import { setRankView } from '../features/userInterface/userInterface-slice';
 import { useLocation } from 'react-router'
 import { handleApiData } from './Apicalls';
@@ -15,6 +16,7 @@ function Game({profileData} : {profileData: userObject}) {
   const gameData: elementObj[] = useAppSelector((state) => state.gameData.gameData)
   const characterHealth = useAppSelector((state) => state.character.health)
   const gameWin = useAppSelector((state) => state.gameEvents.winGame)
+  const gameLoaded = useAppSelector((state) => state.gameData.gameLoaded)
   const timePlayed = useAppSelector((state)=> state.gameEvents.timer)
   const rankView = useAppSelector((state)=>state.userInterface.rankView)
   const gameRef = useRef<HTMLDivElement>(null);
@@ -33,9 +35,11 @@ function Game({profileData} : {profileData: userObject}) {
   }
   useEffect(() => {
     console.log('new game')
+    setTimeout(()=>{
     dispatch(setRankView(false))
     dispatch(setGameSize({ width: gameGet?.width, height: gameGet?.height }))
     getGameData()
+    }, location.pathname.includes('/gameEditor/') ? 100 : 0)
   }, [location.pathname])
   useEffect(()=> {
     if (gameWin === true) {
@@ -43,12 +47,6 @@ function Game({profileData} : {profileData: userObject}) {
         handleApiData(`${location.pathname}/scores/${profileData.username}`, null, "post", {score: timePlayed})
     }
   }, [gameWin])
-  useEffect(()=>{
-    if (gameProps !== {}){
-      spikeAlternate()
-      timeCount()
-    }
-  }, [gameProps])
 
   async function getGameData() {
     try {
@@ -60,12 +58,19 @@ function Game({profileData} : {profileData: userObject}) {
       }
       console.log('got')
       console.log(responseDataResult)
-      dispatch(loadGame(responseDataResult.game_data[gameScreen].gameData))
-      dispatch(setGameName(responseDataResult.game_name))
-      dispatch(setGameLikes(responseDataResult.likes))
-      const addView = await handleApiData(null, null, "patch", { plays: responseDataResult.plays + 1 })
-      console.log('geting2')
-      console.log(addView)
+      if (responseDataResult?.data) {
+        const gameParse = typeof responseDataResult?.data === "string" ? JSON.parse(responseDataResult?.data) : responseDataResult?.data
+        dispatch(loadGame( gameParse?.game_data[gameScreen]?.gameData))
+        dispatch(setGameName( gameParse?.game_name))
+        dispatch(setGameLikes(gameParse?.likes))
+        const addView = await handleApiData(null, null, "patch", { plays: gameParse?.plays + 1 })
+        console.log('geting2')
+        console.log(addView)
+        dispatch(characterReset())
+        spikeAlternate()
+        timeCount()
+        dispatch(setGameLoaded())
+      }
       return Promise.resolve('gameLoaded')
     } catch (e) {
       console.log(e)
@@ -96,12 +101,14 @@ function Game({profileData} : {profileData: userObject}) {
   return (
     <div id="gameWrapper" ref={gameRef} className="gameWrapper content"  >
       <img className="fullWidth fullHeight noClick absolute pixelate topLeft" src="/images/background_sunset.png"></img>
+      {((characterHealth == 0 || gameWin) || location.pathname.includes('/gameEditor/')) || !gameLoaded ? "" : <p className = "absolute topRight timerFont">{timePlayed}</p>}
       {characterHealth == 0 || gameWin ? "" : <HealthBar />}
       {characterHealth == 0 || gameWin ? "" : <Character ref={gameRef} />}
       <div id="gameGrid" className="gameGrid">
         {gameData.map((item, index) => { return <GameElement key={index} index={index} id={`element${index}`} ref={gameRef} class={elementDetect(item.type, item.specialProps)} /> })}
       </div>
       {(characterHealth == 0 || gameWin) && !rankView ? <GameResult /> : ""}
+      {!gameLoaded ? <div className = "fullHeight fullWidth topLeft absolute flexCenter gameWin">Loading...</div> : ""}
       {rankView ? <RankView /> : ""}
     </div>
   );

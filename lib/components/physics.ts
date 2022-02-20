@@ -1,14 +1,13 @@
-import { remove } from 'lodash';
 import { store } from '../../lib/app/store'
 import { toggleGravity, changeY, setY, removeHealth } from '../features/character/character-slice';
 import { evalTime, winGame } from '../features/gameEvents/gameEvents-slice'
-import { useLocation } from 'react-router'
+import { clearCounts } from './GameEvents'
 let gravityLoop: NodeJS.Timeout
 let characterLoop: NodeJS.Timeout
 let lavaCount = 0
 let spikeCount = 0
 
-typeof window != "undefined" ? window.addEventListener("popstate", (e) => {clearInterval(characterLoop)}) : ""
+typeof window != "undefined" ? window.addEventListener("popstate", (e) => { clearInterval(characterLoop) }) : ""
 export function gravityManage(action: boolean) {
     store.dispatch(toggleGravity(action))
     const getStore = store.getState()
@@ -50,11 +49,9 @@ export function characterTrack(ref: any) {
         let gameElmLocation3 = positionX + ((positionY1) * 32)
         let gameElmLocation4 = positionX2 + ((positionY1) * 32)
         //if all tracked game element array items exist and the character is not less than X 0 or greater than Y 18 (boundaries of the grid), evaluate physics. 
-        if ((gameData[gameElmLocation1] || gameData[gameElmLocation2] || gameData[gameElmLocation3] || gameData[gameElmLocation4]) && positionY <= 18 && positionX >-1) {
-            if ((
-                (gameData[gameElmLocation1]?.collision && (gameData[gameElmLocation1]?.specialProps?.collisionActive === undefined ? true : gameData[gameElmLocation1].specialProps.collisionActive)) ||
-                (gameData[gameElmLocation2]?.collision && (gameData[gameElmLocation2]?.specialProps?.collisionActive === undefined ? true : gameData[gameElmLocation2].specialProps.collisionActive))
-            )) {
+        if (positionY <= 18) {
+            if (((gameData[gameElmLocation1]?.collision && (gameData[gameElmLocation1]?.specialProps?.collisionActive === undefined ? true : gameData[gameElmLocation1].specialProps.collisionActive)) ||
+                (gameData[gameElmLocation2]?.collision && (gameData[gameElmLocation2]?.specialProps?.collisionActive === undefined ? true : gameData[gameElmLocation2].specialProps.collisionActive)))) {
                 //if the game element exists and there is a collision property, get the percentage Y location of the collision element 
                 //and compare it to the characters percentage location. Offset it by 11% (height of the character)
                 let gameCollisionPercent: number = 0
@@ -63,7 +60,7 @@ export function characterTrack(ref: any) {
                 }
                 if (gameData[gameElmLocation2]?.collision) {
                     gameCollisionPercent = (((gameData[gameElmLocation2].collision.top * gameHeightAdjust) / curGameHeight) * 100) - 11.111
-                } 
+                }
                 if (((gameCollisionPercent) <= (character.y))) {
                     if (getStore.character.gravity === true) {
                         // if the character Y % is past the collision elements Y % then stop gravity and set the character Y % to the collision elements Y %
@@ -90,9 +87,9 @@ export function characterTrack(ref: any) {
             //actions for type 3 of game element
             if ((gameData[gameElmLocation1]?.type == "3" || gameData[gameElmLocation2]?.type == "3" || gameData[gameElmLocation3]?.type == "3" || gameData[gameElmLocation4]?.type == "3") &&
                 ((gameData[gameElmLocation1]?.specialProps?.collisionActive) ||
-                 (gameData[gameElmLocation2]?.specialProps?.collisionActive) ||
-                 (gameData[gameElmLocation3]?.specialProps?.collisionActive) ||
-                 (gameData[gameElmLocation4]?.specialProps?.collisionActive))
+                    (gameData[gameElmLocation2]?.specialProps?.collisionActive) ||
+                    (gameData[gameElmLocation3]?.specialProps?.collisionActive) ||
+                    (gameData[gameElmLocation4]?.specialProps?.collisionActive))
             ) {
                 spikeCount++
                 if (spikeCount > 3) {
@@ -104,16 +101,18 @@ export function characterTrack(ref: any) {
                 spikeCount = 0
             }
             //actions for type 4 of game element
-            if ((gameData[gameElmLocation1]?.type == "4" || gameData[gameElmLocation2]?.type == "4")  && location.pathname.includes('/games/')) {
+            if ((gameData[gameElmLocation1]?.type == "4" || gameData[gameElmLocation2]?.type == "4") && location.pathname.includes('/games/')) {
                 store.dispatch(evalTime())
                 store.dispatch(winGame())
+                clearCounts()
             }
-        } else if (positionY > 18){
+        } else if ((positionY > 18) && location.pathname.includes('/games/')) {
             store.dispatch(removeHealth(10))
+            clearCounts()
         }
     }, 16.666)
 }
 
-export function clearCharacterTrack () {
+export function clearCharacterTrack() {
     clearInterval(characterLoop)
 }

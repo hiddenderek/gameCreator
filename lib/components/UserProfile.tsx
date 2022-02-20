@@ -3,7 +3,9 @@ import { useLocation, useHistory } from 'react-router-dom';
 import { useAppSelector } from '../app/hooks';
 import GameIcon from './GameIcon'
 import { handleApiData } from './Apicalls';
-function UserProfile ({userData }: any) {
+import {userObject} from '../app/types'
+function UserProfile ({profileData}: {profileData: userObject}) {
+    const {username} = profileData
     const history = useHistory()
     const searchTerm = useAppSelector((state) => state.userInterface.searchTerm)
     const [userGames , setUserGames] = useState([])
@@ -16,8 +18,8 @@ function UserProfile ({userData }: any) {
         console.log("SEARCH: "+ `/games/${displayedUserName}${location.search}`)
         const gameResponse = await handleApiData(`/games/${displayedUserName}${location.search}`, setUserGames, "get", null)
         console.log(gameResponse)
-        if (gameResponse !== "failed selecting games"){
-            setUserGames(gameResponse)
+        if (gameResponse?.status === 200){
+            setUserGames(gameResponse?.data)
         }
     }
     useEffect(() => {
@@ -37,11 +39,11 @@ function UserProfile ({userData }: any) {
 
     useEffect(() => {
         getData()
-    }, [displayedUserName, userData.username, location.search])
+    }, [displayedUserName, username, location.search])
     
-    console.log("userName: " + userData.username)
+    console.log("userName: " + username)
     function createGame() {
-        history.push(`/gameEditor/${userData.username}/new`)
+        history.push(`/gameEditor/${username}/new`)
     }
     return (
         <div id="userProfile" className="userProfile content">
@@ -55,16 +57,16 @@ function UserProfile ({userData }: any) {
                         <div className="left">User Profile</div>
                     </div>
                 </div>
-                { displayedUserName === userData.username ? 
+                { displayedUserName === username ? 
                 <div className="right gameButton" onClick={createGame}>
                     <p className="plusIcon">+</p>
                     <p>Create Game</p>
                 </div>
                 : ""}
             </div>
-            <div className="profileGameLabel center">{displayedUserName === userData.username ?  "Your Games:" : `${displayedUserName}'s Games:`}</div>
+            <div className="profileGameLabel center">{displayedUserName === username ?  "Your Games:" : `${displayedUserName}'s Games:`}</div>
             <div className="gameBrowserContentContainer profileGameBrowser">
-                <div id="gameInfo" className="gameBrowser">{typeof userGames.map == "function" ? userGames?.map((item: gameObject) => { console.log(item); return <GameIcon key={item.game_name} gameData={item} getData={getData} /> }) : ""}</div>
+                <div id="gameInfo" className="gameBrowser">{typeof userGames.map == "function" ? userGames?.map((item: gameObject) => { console.log(item); return <GameIcon key={item.game_name} gameData={item} getData={getData} profileData={profileData}/> }) : ""}</div>
             </div>
         </div>
     );

@@ -4,11 +4,12 @@ import React, { useRef, useEffect, useState } from 'react';
 import { useLocation, useHistory } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../app/hooks';
 import { handleApiData } from './Apicalls';
+import { userObject } from '../app/types';
 import config from '../config'
 import GameIcon from './GameIcon'
-function GameBrowser () {
+function GameBrowser ({profileData}:{profileData: userObject}) {
     const [gameList, setGameList] = useState([])
-    const [resultDirection, setResultDirection] = useState("ASC")
+    const [resultDirection, setResultDirection] = useState("DESC")
     const [queryMode, setQueryMode] = useState("time_created")
     const [uploadDate, setUploadDate] = useState("40 YEARS")
     const history = useHistory()
@@ -28,19 +29,10 @@ function GameBrowser () {
             console.log('urlChange')
             history.push(newURL)
         } else {
-            getGames()
+            handleApiData(location.pathname + location.search, setGameList, "get", null)
         }
 
     }, [location.search, searchTerm, queryMode, uploadDate, resultDirection])
-
-    async function getGames() {
-        try {
-            const gameResponse = await handleApiData(location.pathname + location.search, setGameList, "get", null)
-            console.log(gameResponse)
-        } catch (e) {
-            console.log(e)
-        }
-    }
 
     function changeQueryMode(query: string) {
         console.log(query)
@@ -68,7 +60,7 @@ function GameBrowser () {
                     <div className="bannerButton" onClick={() => { changeResultDirection('DESC') }}>Descending</div>
                     <div className="bannerButton" > Limit to: </div>
                     <form className="bannerButton">
-                        <select onChange={(e: any) => { changeUploadDate(e.target.value) }}>
+                        <select value = {uploadDate} onChange={(e: any) => { changeUploadDate(e.target.value) }}>
                             <option value="1 HOUR">Last Hour</option>
                             <option value="1 DAY">Today</option>
                             <option value="1 WEEK">This Week</option>
@@ -80,7 +72,7 @@ function GameBrowser () {
                 </div>
                 <div className = "gameBrowserContentContainer"> 
                 <div id="gameBrowser" className="gameBrowser ">
-                    {typeof gameList.map !== "undefined" ? gameList.map((item: gameObject) => { return <GameIcon key={item.game_name} gameData={item} /> }) : ""}
+                    {typeof gameList.map !== "undefined" ? gameList.map((item: gameObject) => { return <GameIcon key={item.game_name} gameData={item} profileData = {profileData} /> }) : ""}
                 </div>
                 </div>
             </div>

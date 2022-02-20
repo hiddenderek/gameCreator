@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'; 
 
 interface gameDataState {
+    gameLoaded: boolean,
     gameData: elementObj[],
     gameName: string,
     gameLikes: number,
@@ -21,6 +22,7 @@ interface gameSizeObj {
     height: number | undefined
 }
 const initialState: gameDataState = {
+    gameLoaded: false,
     gameData: [],
     gameName: '',
     gameLikes: 0,
@@ -74,6 +76,9 @@ const gameDataSlice = createSlice({
             const {width, height} = action.payload
             state.gameSize = {width: width, height: height}
         },
+        setGameLoaded(state) {
+            state.gameLoaded = true
+        },
         undo(state){
             try {
                 const historyLength = gameHistory.length
@@ -109,5 +114,5 @@ const gameDataSlice = createSlice({
     }
 })
 
-export const {gameReset, loadGame, setGameName, setGameLikes, modifyGame, setGameSize, undo, redo} = gameDataSlice.actions
+export const {gameReset, loadGame, setGameName, setGameLikes, modifyGame, setGameSize, setGameLoaded, undo, redo} = gameDataSlice.actions
 export default gameDataSlice.reducer;

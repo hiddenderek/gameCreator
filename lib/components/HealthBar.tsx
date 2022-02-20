@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { useAppSelector } from '../app/hooks';
 import HealthBarBlock from './HealthBarBlock';
 import _ from 'lodash'
 function HealthBar () {
   const characterHealth = useAppSelector((state) => state.character.health)
-  const gameData = useAppSelector((state) => state.gameData.gameData)
-  const dispatch = useAppDispatch()
 
   // reflects current health status of character
   useEffect(() => {

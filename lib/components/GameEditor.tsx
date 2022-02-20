@@ -44,24 +44,30 @@ function GameEditor ({turnOnSideBar, profileData} : any) {
 
   function specifyGameName(e: any) {
     setGameName(e.target.value)
+    console.log(gameName)
   }
   async function saveGameEdit() {
     const gridCanvas  = await html2canvas(document.getElementById('gameGrid') as HTMLElement,{backgroundColor:null})
     const gridImage = gridCanvas.toDataURL()
     console.log(gridImage)
-    const saveGameResult = await handleApiData(`/games/${username}/${gameName}`, null, location.pathname == `/gameEditor/${username}/new` ? 'post' : 'patch', { screen: "1-1", gameData: gameData, gridImage: gridImage })
+    const saveGameResult = await handleApiData(`/games/${username}/${curGameName}`, null, location.pathname == `/gameEditor/${username}/new` ? 'post' : 'patch', { screen: "1-1", gameData: gameData, newGameName: gameName, gridImage: gridImage })
     console.log(saveGameResult)
   }
   return (
     <div id="gameEditor" className="gameEditor sideContent">
       <div id="title" className="gameEditorTitle flexCenter">Game Editor</div>
-      <form className="fullSize editorTitleChange">
-        <span className="left flexCenter smallLabel autoWidth fullHeight">CHANGE TITLE</span>
-        <input className="right fullHeight" value = {'location.pathname' == `/gameEditor/${username}/new` ? '': curGameName } placeholder="Game Name..." onInput={specifyGameName}></input>
+      {location.pathname !== `/gameEditor/${username}/new` && location.pathname !== `/gameEditor/${username}/${curGameName}` ? 
+      <p className="rankLabel flexCenter">YOU MUST LOG IN TO SAVE CHANGES.</p>
+       :
+      <><form className="fullSize editorTitleChange">
+        <span className="left flexCenter smallLabel autoWidth fullHeight">{location.pathname === `/gameEditor/${username}/new` ? "SET TITLE" : "CHANGE TITLE"}</span>
+        <input className="right fullHeight" value = {'location.pathname' == `/gameEditor/${username}/new` ? '': gameName } placeholder="Game Name..." onInput={specifyGameName}></input>
       </form>
       <div className="gameEditorSave flexCenter fullWidth">
         <button id="saveButton" className="saveButton" onClick={saveGameEdit}>Save Game</button>
       </div>
+      </>
+       }
       <div id="editSection1Container" className="editSectionContainer" >
         <div id="editSection1Title" className="editSectionTitle">GROUND ELEMENTS</div>
         <div id="emptyElement" className={`emptyElement elementButton  ${currentElement === "0" ? "elementSelected" : ""}`} onClick={dispatchCurrentElement}>

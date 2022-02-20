@@ -39,11 +39,16 @@ function authenticateToken(req: any, res: any, next: any) {
 app.get('/api/currentUser', authenticateToken, async (req: any, res: any) => {
     console.log('getCurrentUser')
     try {
-        console.log(req.user)
-        if (req.user.name) res.status(200)
-        res.json(req.user.name)
+        console.log("CURRENT USER: " + req.user)
+        if (req?.user?.name  && req?.user?.name !== "[object Object]") {
+            res.status(200)
+            res.json(req.user.name)
+        } else {
+            res.status(404)
+            res.json('')
+        }
     } catch (e) {
-        res.status(404)
+        res.status(400)
         res.json('')
     }
 })
@@ -54,12 +59,17 @@ app.get('/api/users', authenticateToken, async (req: any, res: any) => {
         const showUsers = await pool.query(`
         SELECT * FROM users
         `)
-        if (showUsers) res.status(200)
-        res.json(showUsers.rows)
+        if (showUsers.rows) {
+            res.status(200)
+            res.json(showUsers.rows)
+        } else {
+            res.status(404)
+            res.json('Could not get users.')
+        }
     } catch (e) {
         console.log(e)
         res.status(404)
-        res.json('failed selecting users')
+        res.json('Failed getting users.')
     }
 })
 
@@ -69,22 +79,30 @@ app.get('/api/users/:userName', async (req: any, res: any) => {
         const { userName } = req.params
         console.log(userName)
         let showUser
-        if (userName.length <= 30) {
+        if (userName.length <= 30 && userName !== "[object Object]") {
             showUser = await pool.query(`
             SELECT username, time_of_signup, date_of_birth FROM users WHERE username = '${userName}'
             `)
-        } else if (userName.length > 30) {
+        } else if (userName.length > 30 && userName !== "[object Object]") {
             showUser = await pool.query(`
             SELECT username, time_of_signup, date_of_birth FROM users WHERE id = '${userName}'
             `)
         }
         console.log(showUser?.rows[0])
-        if (showUser) res.status(200)
-        res.json(showUser?.rows[0])
+        if (showUser?.rows[0]) {
+            console.log('CURRENT USER:')
+            console.log(showUser?.rows[0])
+            res.status(200)
+            res.json(showUser?.rows[0])
+        } else {
+            console.log('USER RETREIVAL FAILED.')
+            res.status(404)
+            res.json('Could not get user.')
+        }
     } catch (e) {
         console.log(e)
-        res.status(404)
-        res.json('failed selecting users')
+        res.status(400)
+        res.json('Failed getting user.')
     }
 })
 
@@ -104,16 +122,22 @@ app.post('/api/users/:userName', async (req: any, res: any) => {
         INSERT INTO users (id, username, password, date_of_birth, time_of_signup) VALUES (uuid_generate_v4(), '${userName}', '${hashedPassword}', DATE '${dateOfBirth}', CURRENT_DATE) RETURNING *
         `)
         console.log('savin')
-        if (addUser) res.status(200)
-        res.json("Successful! User has been added")
+        if (addUser) {
+            res.status(200)
+            res.json("Successful! User has been added")
+        } else {
+            res.status(404)
+            res.json('Could not add user.')
+        }
     } catch (e: any) {
         console.log(e.message)
         res.status(404)
         if (e.message.match('violates unique constraint') && e.message.match('password')) {
             res.json('Failed. Password must be unique.')
-        }
-        if (e.message.match('violates unique constraint') && e.message.match('username')) {
+        } else if (e.message.match('violates unique constraint') && e.message.match('username')) {
             res.json('Failed. Username must be unique.')
+        } else {
+            res.json('Failed. Unknown errror.')
         }
     }
 })
@@ -128,12 +152,17 @@ app.patch('/api/users/:userName', authenticateToken, async (req: any, res: any) 
         UPDATE users SET ${columnType} = '${userChange[columnType]}' WHERE username = '${userName}' RETURNING *
         `)
         console.log('savin')
-        if (updateUser) res.status(200)
-        res.json(updateUser.rows[0])
+        if (updateUser.rows[0]) {
+            res.status(200)
+            res.json(updateUser.rows[0])
+        } else {
+            res.status(404) 
+            res.json('Could not modify user.')
+        }
     } catch (e) {
         console.log(e)
         res.status(404)
-        res.json('failed modifying users')
+        res.json('Failed modifying users.')
     }
 
 })
@@ -145,8 +174,13 @@ app.delete('/api/users/:userName', authenticateToken, async (req: any, res: any)
         const updateUser = await pool.query(`
         DELETE FROM users WHERE username = '${userName}' RETURNING *
         `)
-        if (updateUser) res.status(200)
-        res.json(updateUser.rows[0])
+        if (updateUser.rows[0]) {
+            res.status(200)
+            res.json(updateUser.rows[0])
+        } else {
+            res.status(404)
+            res.json('could not delete user.')
+        }
     } catch (e) {
         console.log(e)
         res.status(404)
@@ -170,10 +204,16 @@ app.get('/api/trending', async (req: any, res: any) => {
             ) AS q1 
         ORDER BY ((like_count - dislike_count) * time_rank * time_rank * play_rank) DESC Limit 32 
         `)
-        if (trendingGames) res.status(200)
-        res.json(trendingGames.rows)
+        if (trendingGames.rows) {
+            res.status(200)
+            res.json(trendingGames.rows)
+        } else {
+            res.status(404)
+            res.json('Could not get trending games.')
+        }
     } catch (e) {
-        res.status(404)
+        res.status(400)
+        res.json('Failed getting trending games.')
         console.log(e)
     }
 })
@@ -193,30 +233,37 @@ app.get('/api/ranks/scores', async (req: any, res: any) =>{
             res.status(200)
             res.json(getScores.rows)
         } else {
-            res.status(400) 
+            res.status(404) 
             res.json('No scores available.')
         }
     } catch (e) {
         console.log(e)
-        res.status(404)
+        res.status(400)
         res.json('failed getting ranks')
     }
 })
 app.get('/api/ranks/plays', async (req: any, res: any) => {
     try {
+        console.log('gettingRanks!')
         const getRanks = await pool.query(`
-            SELECT * FROM (
+        SELECT * FROM (
                 SELECT DISTINCT u.username, 
                 SUM(CASE WHEN u.id = d.user_id THEN d.plays ELSE NULL END)::int AS play_count
                 FROM users u, gamedata d GROUP BY u.id
-            ) AS q1 WHERE play_count IS NOT NULL LIMIT 25
+        ) AS Q1  WHERE play_count IS NOT NULL ORDER BY play_count DESC LIMIT 25 
         `)
+        console.log('ranks: ')
+        console.log(getRanks)
         if (getRanks.rows) {
             res.status(200)
             res.json(getRanks.rows)
+        } else {
+            res.status(404)
+            res.json('failed getting ranks.')
+            console.log('failed getting ranks')
         }
     } catch (e) {
-        res.status(404)
+        res.status(400)
         res.json('failed getting ranks: ' + e)
     }
 })
@@ -236,6 +283,9 @@ app.get('/api/ranks/likes', async (req: any, res: any) => {
         if (getRanks.rows) {
             res.status(200)
             res.json(getRanks.rows)
+        } else {
+            res.status(404)
+            res.json('Could not get likes.')
         }
     } catch (e) {
         res.status(404)
@@ -248,15 +298,27 @@ app.get('/api/ranks/likes', async (req: any, res: any) => {
 app.get('/api/games', async (req: any, res: any) => {
     console.log('getGames')
     try {
+        console.log(`SELECT DISTINCT d.game_name, d.time_created, d.id, s.action, COUNT(CASE WHEN s.action = 'like' THEN s.action ELSE NULL END) OVER (ORDER BY s.action) AS likes FROM gamedata d LEFT JOIN gameactions s ON d.id = s.game_id ${req?.query?.search || req?.query?.uploaddate ? 'WHERE' : ""} ${req?.query?.search ? `game_name ILIKE '%${req.query.search}%'` : ""} ${req?.query?.uploaddate && req?.query?.search ? "AND" : ""} ${req?.query?.uploaddate ? `time_created > NOW() - INTERVAL '${req?.query?.uploaddate}'` : ""} ORDER BY ${req?.query?.mode ? req.query.mode : "time_created"} ${req?.query?.direction ? req.query.direction : "ASC"}`)
         const selectGames = await pool.query(`
-        SELECT * FROM gamedata ${req?.query?.search || req?.query?.uploaddate ? 'WHERE' : ""} ${req?.query?.search ? `game_name ILIKE '%${req.query.search}%'` : ""} ${req?.query?.uploaddate && req?.query?.search ? "AND" : ""} ${req?.query?.uploaddate ? `time_created > NOW() - INTERVAL '${req?.query?.uploaddate}'` : ""} ORDER BY ${req?.query?.mode ? req.query.mode : "time_created"} ${req?.query?.direction ? req.query.direction : "ASC"}
+        SELECT game_name, game_data, user_id, id, plays, grid_image, time_created, (like_count - dislike_count) AS likes FROM (
+            SELECT DISTINCT d.game_name, d.game_data, d.id, d.user_id, d.plays, d.grid_image, d.time_created,
+            COUNT(CASE WHEN a.game_id = d.id AND a.action = 'like' THEN a.game_id ELSE NULL END)::int AS like_count, 
+            COUNT(CASE WHEN a.game_id = d.id AND a.action = 'dislike' THEN a.game_id ELSE NULL END)::int AS dislike_count 
+            FROM gamedata d, gameactions a GROUP BY d.id
+            ) AS q1 
+            ${req?.query?.search || req?.query?.uploaddate ? 'WHERE' : ""} ${req?.query?.search ? `game_name ILIKE '%${req.query.search}%'` : ""} ${req?.query?.uploaddate && req?.query?.search ? "AND" : ""} ${req?.query?.uploaddate ? `time_created > NOW() - INTERVAL '${req?.query?.uploaddate}'` : ""} ORDER BY ${req?.query?.mode ? req.query.mode : "time_created"} ${req?.query?.direction ? req.query.direction : "ASC"} LIMIT 50
         `)
-        if (selectGames) res.status(200)
-        res.json(selectGames.rows)
+        if (selectGames.rows) {
+            res.status(200)
+            res.json(selectGames.rows)
+        } else {
+            res.status(404)
+            res.json('Failed getting games.')
+        }
     } catch (e) {
         console.log(e)
-        res.status(404)
-        res.json('failed selecting games')
+        res.status(400)
+        res.json('Failed getting games.')
     }
 })
 app.get('/api/games/:userName', async (req: any, res: any) => {
@@ -270,12 +332,17 @@ app.get('/api/games/:userName', async (req: any, res: any) => {
         const readGameData = await pool.query(`
         SELECT * FROM gamedata WHERE user_id = '${id}' ${req?.query?.search ? `AND game_name ILIKE '%${req.query.search}%'` : ""}
         `)
-        if (readGameData) res.status(200)
-        res.json(readGameData.rows)
+        if (readGameData.rows) {
+            res.status(200)
+            res.json(readGameData.rows)
+        } else {
+            res.status(404)
+            res.json('Failed getting games from user.')
+        }
     } catch (e) {
         console.log(e)
-        res.status(404)
-        res.json('failed reading game')
+        res.status(400)
+        res.json('Failed getting games from user.')
     }
 })
 app.get('/api/games/:userName/:gameName', async (req: any, res: any) => {
@@ -291,11 +358,16 @@ app.get('/api/games/:userName/:gameName', async (req: any, res: any) => {
         const readGameData = await pool.query(`
         SELECT * FROM gamedata WHERE user_id = '${id}' AND game_name = '${gameName}'
         `)
-        if (readGameData) res.status(200)
-        res.json(readGameData.rows[0])
+        if (readGameData.rows[0]) {
+            res.status(200)
+            res.json(readGameData.rows[0])
+        } else {
+            res.status(404)
+            res.json('Failed getting game data.')
+        }
     } catch (e) {
         console.log(e)
-        res.status(404)
+        res.status(400)
         res.json('failed reading game')
     }
 })
@@ -303,11 +375,9 @@ app.post('/api/games/:userName/:gameName', authenticateToken, async (req: any, r
     console.log('postGame')
     try {
         const { userName } = req.params
-        const { gameName } = req.params
-        const { screen, gridImage } = req.body
+        const { newGameName, screen, gridImage } = req.body
         const gameData = JSON.stringify(req.body.gameData)
         console.log(userName)
-        console.log(gameName)
         console.log(screen)
         console.log(req.body)
         console.log(`SELECT * FROM users WHERE username = '${userName}'`)
@@ -319,7 +389,7 @@ app.post('/api/games/:userName/:gameName', authenticateToken, async (req: any, r
         //user_id is a foreign key
         if (id && req.user.name == userName) {
             addGame = await pool.query(`
-            INSERT INTO gamedata (id, game_name, game_data, user_id, time_created, grid_image) VALUES (uuid_generate_v4(), '${gameName}', '{}', '${id}', CURRENT_TIMESTAMP, '${gridImage}') RETURNING *
+            INSERT INTO gamedata (id, game_name, game_data, user_id, time_created, grid_image) VALUES (uuid_generate_v4(), '${newGameName}', '{}', '${id}', CURRENT_TIMESTAMP, '${gridImage}') RETURNING *
             `)
         }
         console.log('ROWINFO: ')
@@ -329,16 +399,22 @@ app.post('/api/games/:userName/:gameName', authenticateToken, async (req: any, r
             const addGameData = await pool.query(`
             UPDATE gamedata SET game_data = jsonb_set(game_data, '{${screen}}', '{"gameData":${gameData}}', true) WHERE id = '${gameId}' RETURNING jsonb_pretty(game_data)
             `)
-            if (addGameData) (res.status(200))
-            res.json(addGameData)
+            if (addGameData) {
+                res.status(200)
+                res.json(addGameData)
+            } else {
+                res.status(404)
+                res.json('Failed adding game.')
+            }
+           
             console.log('gamedata:')
         }
 
 
     } catch (e) {
         console.log(e)
-        res.status(404)
-        res.json('failed adding game')
+        res.status(400)
+        res.json('Failed adding game.')
     }
 })
 
@@ -347,11 +423,12 @@ app.patch('/api/games/:userName/:gameName', authenticateToken, async (req: any, 
     try {
         const { userName } = req.params
         const { gameName } = req.params
-        const { gameData, screen, gridImage, plays } = req.body
+        const { newGameName, gameData, screen, gridImage, plays } = req.body
         const columnType = Object.keys(req.body)[0]
         const gameDataString = JSON.stringify(gameData)
         console.log(userName)
         console.log(gameName)
+        console.log(newGameName)
         console.log(screen)
         const getUser = await pool.query(`
         SELECT id FROM users WHERE username = '${userName}'
@@ -359,21 +436,31 @@ app.patch('/api/games/:userName/:gameName', authenticateToken, async (req: any, 
         const { id } = getUser.rows[0]
         if (screen && gameData && id && req.user.name == userName) {
             const saveGame = await pool.query(`  
-            UPDATE gamedata SET game_data = jsonb_set(game_data, '{${screen}}', '{"gameData" : ${gameDataString}}'), grid_image = '${gridImage}' WHERE user_id = '${id}' AND  game_name = '${gameName}' RETURNING game_data
+            UPDATE gamedata SET game_data = jsonb_set(game_data, '{${screen}}', '{"gameData" : ${gameDataString}}'), grid_image = '${gridImage}', game_name = '${newGameName}' WHERE user_id = '${id}' AND  game_name = '${gameName}' RETURNING game_data
             `)
-            if (saveGame) res.status(200)
-            res.json(saveGame.rows[0])
+            if (saveGame.rows[0]) {
+                res.status(200)
+                res.json(saveGame.rows[0])
+            } else {
+                res.status(404)
+                res.json('Failed updating game screen.')
+            }
         } else if (id && (req.user.name == userName || plays)) {
             console.log('UPDATE')
             const updateGame = await pool.query(`
             UPDATE gamedata SET ${columnType} = '${req.body[columnType]}'  WHERE user_id = '${id}' AND  game_name = '${gameName}' RETURNING ${columnType}
             `)
-            if (updateGame) res.status(200)
-            res.json(updateGame.rows[0])
+            if (updateGame.rows[0]) {
+                res.status(200)
+                res.json(updateGame.rows[0])
+            } else {
+                res.status(404)
+                res.json('Failed updating game.')
+            }
         }
     } catch (e) {
         console.log(e)
-        res.status(404)
+        res.status(400)
         res.json('failed modifying game')
     }
 })
@@ -404,18 +491,28 @@ app.delete('/api/games/:userName/:gameName', authenticateToken, async (req: any,
             const deleteGame = await pool.query(`  
             DELETE FROM gamedata WHERE user_id = '${id}' AND  game_name = '${gameName}'
             `)
-            if (deleteGame) res.status(200)
-            res.json(deleteGame)
+            if (deleteGame) {
+                res.status(200)
+                res.json(deleteGame)
+            } else {
+                res.status(404)
+                res.json('Could not delete game')
+            }
         } else if (screen && id && mode == "screen" && req.user.name == userName) {
             const deleteGameScreen = await pool.query(`  
             UPDATE gamedata SET game_data = game_data - '${screen}' WHERE user_id = '${id}' AND  game_name = '${gameName}' RETURNING game_data
             `)
-            if (deleteGameScreen) res.status(200)
-            res.json(deleteGameScreen)
+            if (deleteGameScreen) {
+                res.status(200)
+                res.json(deleteGameScreen)
+            } else {
+                res.status(404)
+                res.json('Could not delete game screen.')
+            }
         }
     } catch (e) {
         console.log(e)
-        res.status(404)
+        res.status(400)
         res.json('failed deleting game')
     }
 })
@@ -439,7 +536,7 @@ app.get('/api/games/:userName/:gameName/scores', async (req: any, res: any) => {
         console.log(getGameScores)
     } catch (e) {
         console.log(e)
-        res.status(404)
+        res.status(400)
         res.json('failed getting scores')
     }
 })
@@ -476,15 +573,18 @@ app.post('/api/games/:userName/:gameName/scores/:curUser', authenticateToken, as
                 console.log(postNewScore.rows[0])
                 res.status(200)
                 res.json(postNewScore.rows[0])
+            } else {
+                res.status(404)
+                res.json('Could not set high score.')
             }
         } else {
-            res.status(400)
-            res.json('failed setting high score')
+            res.status(404)
+            res.json('Failed setting high score.')
         }
     } catch (e) {
         console.log(e)
-        res.status(404)
-        res.json('failed setting high score')
+        res.status(400)
+        res.json('Failed setting high score.')
     }
 })
 
@@ -501,12 +601,17 @@ app.get('/api/games/:userName/:gameName/actions/:action', async (req: any, res: 
         const addAction = await pool.query(`
         SELECT * FROM gameactions WHERE game_id = '${gameId}' AND action = '${action}'
         `)
-        if (addAction) res.status(200)
-        res.json(addAction?.rows?.length)
+        if (addAction?.rows) {
+            res.status(200)
+            res.json(addAction?.rows?.length)
+        } else {
+            res.json(404)
+            res.json('Could not get likes.')
+        }
     } catch (e) {
         console.log(e)
-        res.status(404)
-        res.json('failed getting likes')
+        res.status(400)
+        res.json('Failed getting likes')
     }
 })
 app.post('/api/games/:userName/:gameName/actions/:action', authenticateToken, async (req: any, res: any) => {
@@ -531,37 +636,46 @@ app.post('/api/games/:userName/:gameName/actions/:action', authenticateToken, as
         const addAction = await pool.query(`
         INSERT INTO gameactions (id, action, game_id, user_id) VALUES ('${gameId}${userId}', '${action}', '${gameId}', '${userId}') ON CONFLICT (id) DO UPDATE SET action = '${action}'
         `)
-        if (addAction) res.status(200)
-        res.json(addAction.rows[0])
+        if (addAction) {
+            res.status(200)
+            res.json(addAction.rows[0])
+        } else {
+            res.status(404)
+            res.json('Failed liking game.')
+        }
     } catch (e) {
         console.log(e)
-        res.status(404)
+        res.status(400)
         res.json('failed liking game')
     }
 })
 
-app.get('/api/gameEditor/:userName/:gameName', authenticateToken, async (req: any, res: any) => {
+app.get('/api/gameEditor/:userName/:gameName', async (req: any, res: any) => {
     console.log('getGameEditorGame')
     try {
-        const { userName } = req.params
-        const { gameName } = req.params
+        const { userName, gameName } = req.params
         console.log('GET EDITOR')
         console.log(userName)
-        console.log(req.user.name)
-        let data: any
-        if (gameName == "new" && req.user.name == userName) {
-
+        if (gameName == "new") {
             console.log('readin')
             try {
-                data = fs.readFileSync("./lib/data/gameData.txt", 'utf8', (err: any, dataRead: any) => {
+                const data = fs.readFileSync("./lib/data/gameData.txt", 'utf8', (err: any, dataRead: any) => {
                     return dataRead
                 })
+                if (data) {
+                    res.status(200)
+                    res.json(data)
+                } else {
+                    res.status(404)
+                    res.json('Failed getting default data.')
+                }
             } catch (e) {
                 console.log('error')
                 console.log(e)
-                data = "error"
+                res.status(400)
+                res.json('Failed getting default data.')
             }
-        } else if (req.user.name == userName) {
+        } else {
             console.log('gettinGAME!')
             try {
                 const getUser = await pool.query(`
@@ -571,19 +685,22 @@ app.get('/api/gameEditor/:userName/:gameName', authenticateToken, async (req: an
                 const readGameData = await pool.query(`
                 SELECT * FROM gamedata WHERE user_id = '${id}' AND game_name = '${gameName}'
                 `)
-                if (readGameData) res.status(200)
-                res.json(readGameData.rows[0])
+                if (readGameData) {
+                    res.status(200)
+                    res.json(readGameData.rows[0])
+                } else {
+                    res.status(404)
+                    res.json('Failed reading game.')
+                }
             } catch (e) {
                 console.log(e)
-                res.status(404)
+                res.status(400)
                 res.json('failed reading game')
             }
         }
-        if (data) res.status(200)
-        res.send(data)
     } catch (e) {
         console.log(e)
-        res.status(404)
+        res.status(400)
         res.json('failed loading gameData')
     }
 

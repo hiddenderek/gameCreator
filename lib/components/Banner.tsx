@@ -5,7 +5,7 @@ import {useAppSelector, useAppDispatch} from '../app/hooks';
 import {setSearchTerm, setRankView} from '../features/userInterface/userInterface-slice'
 import { handleApiData } from './Apicalls';
 import config from '../config';
-function Banner ({setProfileData, userData} : any) {
+function Banner ({setProfileData, profileData} : any) {
   const history = useHistory()
   const location: any = useLocation()
   const searchTerm = useAppSelector((state) => state.userInterface.searchTerm)
@@ -33,7 +33,7 @@ function Banner ({setProfileData, userData} : any) {
     history.push('/login')
   }
   function profileNav() {
-    history.push(`/users/${userData.username}`)
+    history.push(`/users/${profileData.username}`)
   }
 
   //the search term is set, if the value is either truthy or blank. 
@@ -87,14 +87,14 @@ function Banner ({setProfileData, userData} : any) {
         {location.pathname.includes('/games/') && gameName ?
         <span className = "inlineFlex flexCenter fullHeight absolute gameTitle"><div className = "bannerButton voteText" onClick = {changeRankView}><div className = "height66 autoWidth left autoFitContainer noClick" ><img className = "autoFitContent noClick" src = "/images/trophy.png"/></div><p>&nbsp;&nbsp;Ranks</p></div>	&nbsp;&nbsp;{gameName.toUpperCase()}&nbsp;&nbsp;<div className = "bannerButton voteText" onClick = {()=>{rateGame("like")}}><p>Like</p><img className = "halfHeight autoWidth pixelate noClick"src = "/images/like.png"/></div><div className = "bannerButton voteText" onClick = {()=>{rateGame("dislike")}}><p>Dislike</p><img className = "halfHeight autoWidth pixelate noClick"src = "/images/dislike.png"/></div></span>
         : ""}
-      {!userData.username ?
+      {!profileData.username ?
         <>
           <div className="inlineItem right login" onClick={() => { logIn() }}>LOGIN</div>
           <div className="inlineItem right signUp" onClick={() => { signUp() }}>SIGN UP</div>
         </>
         :
         <>
-          <div className="inlineItem right login" onClick={() => { profileNav() }}>{userData.username.toUpperCase()}</div>
+          <div className="inlineItem right login" onClick={() => { profileNav() }}>{profileData.username.toUpperCase()}</div>
           <div className="inlineItem right signUp" onClick={() => { logOut() }}>LOG OUT</div>
         </>
       }

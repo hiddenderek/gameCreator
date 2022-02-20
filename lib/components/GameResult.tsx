@@ -1,10 +1,6 @@
-import React, { useRef, useEffect, useState, useReducer } from 'react';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
-import {loadGame, setGameName, setGameLikes, setGameSize } from '../features/gameData/gameData-slice';
-import { resetGame, spikeAlternate, timeCount } from './GameEvents';
-import { useLocation } from 'react-router'
-import { handleApiData } from './Apicalls';
-import { characterTrack } from './physics';
+import React from 'react';
+import {useAppSelector } from '../app/hooks';
+
 ;
 function GameResult() {
   const characterHealth = useAppSelector((state) => state.character.health)
@@ -12,7 +8,6 @@ function GameResult() {
   const playTimeMinutes = useAppSelector((state) => state.gameEvents.playTimeMinutes)
   const playTimeHours = useAppSelector((state) => state.gameEvents.playTimeHours)
   const gameWin = useAppSelector((state) => state.gameEvents.winGame)
-  const gameRef = useRef<HTMLDivElement>(null);
 
   return (
     <div className={`fullHeight fullWidth topLeft absolute flexCenter flexDirColumn ${gameWin ? "gameWin" : characterHealth == 0 ? "gameLose" : ""}`}>

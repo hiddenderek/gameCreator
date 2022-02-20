@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { toggleGravity, changeY, setY } from '../features/character/character-slice';
-import {gravityManage, characterTrack, clearCharacterTrack} from './physics'
+import React, { useEffect } from 'react';;
+import { useAppSelector } from '../app/hooks';
+import { useLocation } from 'react-router-dom'
+import {characterTrack, clearCharacterTrack} from './physics'
+import {resetGame} from './GameEvents'
 function Character (props: any, ref: any) {
+  const location = useLocation()
   const character = useAppSelector((state) => state.character)
-
   // manages collision for character
 
 
@@ -14,8 +14,9 @@ function Character (props: any, ref: any) {
   useEffect(() => {
     console.log('track!')
       clearCharacterTrack()
+      resetGame()
       characterTrack(ref)
-  },[])
+  },[location.pathname])
   return (
     <div id="character" className={`${character.jump ? "characterJump" : "character"} ${character.health < 7 &&  character.health >= 4 ? "characterLightDamage" : character.health < 4 && character.health> 1 ? "characterMediumDamage" : character.health == 1 ? "characterHighDamage" : null}`} style={{ transform: `${character.direction == "left" ? "scaleX(-1)" : "scaleX(1)"}`, top: `${character.y}%`, left: `${character.x}%`}}>
     </div>
