@@ -11,7 +11,7 @@ function Home ({profileData} : {profileData: userObject}) {
     console.log('homeRender!')
     return (
         <div className="Home content" >
-            <img src = "/images/game_creator.png" className = "homeLogo center"></img>
+            <img src = "/images/gamecreator.png" className = "homeLogo center"></img>
             <div className = "flexCenter fullWidth mediumHeight homeLogoCaption">MAKE AND SHARE YOUR OWN GAMES!</div>
             <span className = "homeTrendingLabel flexCenter">TRENDING GAMES: </span>
             <div className = "trendingGames">

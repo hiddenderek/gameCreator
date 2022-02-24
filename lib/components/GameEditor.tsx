@@ -11,6 +11,7 @@ function GameEditor ({turnOnSideBar, profileData} : any) {
   const currentElement = useAppSelector((state) => state.gameEditor.currentElement)
   const location = useLocation()
   const [gameName, setGameName] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const dispatch = useAppDispatch()
   const {username} = profileData
   useEffect(()=>{
@@ -51,11 +52,16 @@ function GameEditor ({turnOnSideBar, profileData} : any) {
     const gridImage = gridCanvas.toDataURL()
     console.log(gridImage)
     const saveGameResult = await handleApiData(`/games/${username}/${curGameName}`, null, location.pathname == `/gameEditor/${username}/new` ? 'post' : 'patch', { screen: "1-1", gameData: gameData, newGameName: gameName, gridImage: gridImage })
+    if (saveGameResult?.status as number >= 400) {
+      setErrorMessage(saveGameResult?.data)
+    } else {
+      setErrorMessage('')
+    }
     console.log(saveGameResult)
   }
   return (
     <div id="gameEditor" className="gameEditor sideContent">
-      <div id="title" className="gameEditorTitle flexCenter">Game Editor</div>
+      <div id="title" className="gameEditorTitle flexCenter">GAME EDITOR</div>
       {location.pathname !== `/gameEditor/${username}/new` && location.pathname !== `/gameEditor/${username}/${curGameName}` ? 
       <p className="rankLabel flexCenter">YOU MUST LOG IN TO SAVE CHANGES.</p>
        :
@@ -66,12 +72,12 @@ function GameEditor ({turnOnSideBar, profileData} : any) {
       <div className="gameEditorSave flexCenter fullWidth">
         <button id="saveButton" className="saveButton" onClick={saveGameEdit}>Save Game</button>
       </div>
-      </>
+      <p className="gameEditorError flexCenter fullWidth">{errorMessage.toUpperCase()}</p></>
        }
       <div id="editSection1Container" className="editSectionContainer" >
-        <div id="editSection1Title" className="editSectionTitle">GROUND ELEMENTS</div>
+        <div id="editSection1Title" className="editSectionTitle">SELECT ELEMENTS</div>
         <div id="emptyElement" className={`emptyElement elementButton  ${currentElement === "0" ? "elementSelected" : ""}`} onClick={dispatchCurrentElement}>
-        <span className = "absolute topLeft flexCenter elementLabel">EMPTY</span>
+        <span className = "absolute topLeft flexCenter elementLabel">REMOVE</span>
         </div>
         <div id="groundElement" className={`groundElement elementButton ${currentElement === "1" ? "elementSelected" : ""}`} onClick={dispatchCurrentElement}>
           <img className="elementImage"></img>

@@ -25,7 +25,10 @@ export function timeCount() {
     if (!timeCounter) {
         timeCounter = setInterval(() => {
             console.log('countTime')
-            store.dispatch(countTime())
+            const getStore = store.getState()
+            if (!getStore.userInterface.rankView) {
+                store.dispatch(countTime())
+            }
         }, 1000)
     }
 }

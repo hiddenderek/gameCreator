@@ -109,7 +109,7 @@ function Game({profileData} : {profileData: userObject}) {
       </div>
       {(characterHealth == 0 || gameWin) && !rankView ? <GameResult /> : ""}
       {!gameLoaded ? <div className = "fullHeight fullWidth topLeft absolute flexCenter gameWin">Loading...</div> : ""}
-      {rankView ? <RankView /> : ""}
+      {rankView ? <RankView profileData={profileData}/> : ""}
     </div>
   );
 }

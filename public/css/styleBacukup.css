@@ -2,10 +2,10 @@
 
 body {
   overflow: hidden; /* Hide scrollbars */
-  background: rgb(8, 14, 51);
-  background-size: 100vw;
-  background-image: url('/images/background_main.png');
-  padding: 2.5rem;
+  background: rgb(17,5,21);
+  background-size: 100vw 100vh;
+  background-image:
+  linear-gradient(to bottom, rgb(3,28,52), rgb(17,5,21));
   font-size: 62.5% !important;
 }
 form {
@@ -28,10 +28,6 @@ ul {
   list-style-type: none;
   padding: 0;
 }
-li {
-  display: flex;
-  justify-content: space-between;
-}
 :root{
   --sideContentWidth: 35rem;
   --topBarWidth: 4.5rem;
@@ -49,9 +45,6 @@ li {
 input {
   box-sizing: border-box;
 }
-select {
-  box-sizing: border-box;
-}
 @font-face {
   font-family:"neonLights";
   src: url(/fonts/NeonTubes2.otf);
@@ -62,7 +55,7 @@ select {
 }
 * {
   scrollbar-width: thin;          /* "auto" or "thin" */
-  scrollbar-color: rgb(100, 201, 247);   /* scroll thumb and track */
+  scrollbar-color: rgb(247, 100, 215);   /* scroll thumb and track */
 }
 *::-webkit-scrollbar {
   width: 12px;               /* width of the entire scrollbar */
@@ -73,7 +66,7 @@ select {
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: rgb(100, 201, 247);    /* color of the scroll thumb */
+  background-color: rgb(247, 100, 215);    /* color of the scroll thumb */
   border-radius: 20px;       /* roundness of the scroll thumb */
 }
 #goalElement{
@@ -274,44 +267,52 @@ select {
   height: 80%;
   border-radius: 12.5%/35% ;
   color: white;
-  background-color:rgb(47, 58, 122);
-  border: none;
+  background-color:rgb(122, 47, 112);
+  border: solid 1px rgb(97, 37, 65);
 }
 .saveButton:hover{
-  background-color:rgb(59, 73, 151);
+  background-color:rgb(95, 48, 89);
 }
 .saveButton:active{
-  background-color:rgb(78, 92, 172);
+  background-color:rgb(73, 36, 68);
 }
 .gameEditorTitle{
   width: 100%;
   text-align: center;
   align-self: center;
-  color: rgb(255, 255, 255);
-  font-family: "8bit";
-  font-size: 2rem;
+  color: rgb(240, 210, 233);
+  text-shadow: 
+  0px 0px .5rem rgb(247, 100, 215), 
+  0px 0px .5rem rgb(247, 100, 215), 
+  0px 0px .5rem rgb(247, 100, 215), 
+  0px 0px .8rem rgb(247, 100, 215), 
+  0px 0px .8rem rgb(235, 100, 247),  
+  0px 0px 1rem rgb(235, 100, 247),  
+  0px 0px 1.3rem rgb(235, 100, 247),  
+  0px 0px 2.2rem rgb(235, 100, 247); 
+  font-family: neonLights;
+  font-size: 3.5rem;
   height: 5rem;
   grid-area: editLabel;
 }
-.gameEditorError{
-  font-family: "8bit";
-  font-size: 1rem;
-  color: rgb(100, 201, 247);
-}
 .gameEditor{
   width: 100%;
+  background: rgb(17,5,21);
   grid-area: sideContent;
   display: grid;
   font-size: 1.7rem;
   grid-template-columns: 100%;
-  grid-template-rows: 8rem 3rem 4rem 2rem auto;
+  grid-template-rows: 8rem 3rem 4rem auto;
   grid-template-areas:
   "editLabel"
   "titleChange"
   "saveBtn"
-  "errorMsg"
   "editSec";
-  background: rgba(25, 29, 78, 0.911);
+  background: rgba(236, 120, 174, 0.185);
+  background-size: 100px 100px;
+  background-image:
+  linear-gradient(to right, rgb(93,9,67,.5) 2px, transparent 2px),
+  linear-gradient(to bottom, rgb(93,9,67,.5)  2px, transparent 2px);
 }
 .gameWrapper {
   width: 100%;
@@ -473,6 +474,7 @@ select {
   text-align: center;
   position: relative;
   border-radius: 3%/6%;
+  border: .2rem solid rgb(108,178,222);
   font-family: '8bit';
   font-size: .8rem;
   color: white;
@@ -489,6 +491,7 @@ select {
   background-color: transparent;
   background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
   background-size: 100% 2px, 3px 100%;
+  box-shadow: inset 0px 0px 2rem rgb(108,178,222, .6);
   z-index: -1;
 }
 .gameEffect:hover{
@@ -524,9 +527,6 @@ select {
   font-size: 1.1rem;
   color:rgb(235, 100, 247);
 }
-.voteSelected {
-  background: rgba(252, 252, 252, 0.205);
-}
 .bannerButton {
   width: var(--bannerButtonWidth);
   height: 100%;
@@ -554,48 +554,15 @@ select {
 }
 .gameBrowserBanner {
   width: 100%;
-  flex-flow: row wrap;
+  height: var(--topBarWidth);
+  white-space: nowrap;
   display: flex;
   justify-content: center;
   align-content: center;
-  align-items: center;
   color: white;
   font-family: arial;
   font-size: 1.4rem;
   grid-area: gameBrowserBanner;
-  gap: 10px;
-}
-.gameBrowserValue {
-  flex-basis: var(--bannerButtonWidth);
-  display: flex;
-  justify-items: center;
-  align-items: center;
-  justify-content: center;
-  align-content: center;
-  color: white;
-  background: rgb(48, 80, 117);
-  border-radius: 5%/30%;
-  user-select: none;
-}
-.gameBrowserValue:hover{
-  background: rgb(57, 103, 156);
-}
-.gameBrowserValue:active{
-  background: rgb(86, 156, 236);
-}
-.gameValueSelected{
-  background: rgb(73, 128, 192);
-}
-.gameBrowserCategory {
-  font-weight: bold;
-  width: var(--bannerButtonWidth);
-  display: flex;
-  justify-items: center;
-  align-items: center;
-  justify-content: center;
-  align-content: center;
-  color: white;
-  user-select: none;
 }
 .gameBrowserContentContainer{
   grid-area: gameBrowser;
@@ -653,29 +620,29 @@ select {
   grid-area: content;
   display: grid;
   grid-template-columns: 100%;
-  grid-template-rows: 15rem 5rem 3rem auto;
+  grid-template-rows: 26rem 5rem 2rem auto;
   grid-template-areas: 
   "homeLogo"
   "homeCaption"
   "homeTrendingLabel"
   "homeTrending";
-  align-items: center;
 }
 .homeLogo{
-  width: 50rem;
+  width: 60rem;
+  height: 27rem;
   grid-area: homeLogo;
   pointer-events: none;
 }
 .homeLogoCaption{
   font-size: 1.3rem;
-  color: rgb(255, 255, 255);
+  color: rgb(247, 100, 215);
   font-family: "8bit";
   grid-area: homeCaption;
 }
 .homeTrendingLabel {
   grid-area: homeTrendingLabel;
   font-size: 1rem;
-  color: rgb(100, 201, 247);
+  color: white;
   font-family: "8bit";
 }
 .trendingGames {
@@ -925,7 +892,7 @@ select {
 .signUp {
   width: var(--bannerButtonWidth);
   height: 100%;
-  color: rgb(100, 201, 247);
+  color: rgb(247, 100, 215);
   display: flex;
   justify-content: center;
   align-content: center;
@@ -939,7 +906,13 @@ select {
   background: rgb(21,43,102);
 }
 .sideBar {
-  background: rgb(10, 3, 36);
+  background: rgb(17,5,21);
+  border-right: .3rem solid white;
+  box-shadow: 0 0 .2rem #fff,
+  0 0 .2rem #fff,
+  0 0 2rem #fe13d7,
+  0 0 0.8rem #f613fe,
+  0 0 1.8rem #ff47e0e1;
   grid-area: sideBar;
   display: grid;
   grid-template-columns: 1fr;
@@ -964,12 +937,6 @@ select {
 .sideBarButton:hover{
   background: rgba(255, 255, 255, 0.15)
 }
-.sideBarButton:active{
-  background: rgba(255, 255, 255, 0.35)
-}
-.sideBarButtonSelected{
-  background: rgba(255, 255, 255, 0.08)
-}
 .sideLabel {
   grid-area: sideBarLabel;
   font-size: 1.3rem;
@@ -985,6 +952,10 @@ select {
   overflow: scroll;
   overflow-x: hidden;
   background: transparent;
+  background-size: 100px 100px;
+  background-image:
+  linear-gradient(to right, rgb(93,9,67,.5) 2px, transparent 2px),
+  linear-gradient(to bottom, rgb(93,9,67,.5)  2px, transparent 2px);
 }
 .footer {
   grid-area: footer;

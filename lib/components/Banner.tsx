@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useState, useEffect} from 'react'
 import { useHistory } from 'react-router-dom';
 import { useLocation } from 'react-router'
 import {useAppSelector, useAppDispatch} from '../app/hooks';
@@ -6,11 +6,14 @@ import {setSearchTerm, setRankView} from '../features/userInterface/userInterfac
 import { handleApiData } from './Apicalls';
 import config from '../config';
 function Banner ({setProfileData, profileData} : any) {
+  const {username} = profileData
   const history = useHistory()
   const location: any = useLocation()
   const searchTerm = useAppSelector((state) => state.userInterface.searchTerm)
   const rankView = useAppSelector((state)=> state.userInterface.rankView)
   const gameName = useAppSelector((state)=> state.gameData.gameName)
+  const [like, setLike] = useState(false)
+  const [dislike, setDislike] = useState(false)
   const dispatch = useAppDispatch()
   useEffect(()=>{
     //when the banner is first mounted, the current location search term is set in the redux state. 
@@ -25,6 +28,11 @@ function Banner ({setProfileData, profileData} : any) {
   },[])
   useEffect(()=> {
     changeSearchTerm('')
+    if (location.pathname.includes('/games/')) {
+      setLike(false)
+      setDislike(false)
+      setUserActions()
+    }
   }, [location.pathname])
   function signUp(){
     history.push('/signup')
@@ -33,7 +41,7 @@ function Banner ({setProfileData, profileData} : any) {
     history.push('/login')
   }
   function profileNav() {
-    history.push(`/users/${profileData.username}`)
+    history.push(`/users/${username}`)
   }
 
   //the search term is set, if the value is either truthy or blank. 
@@ -65,10 +73,36 @@ function Banner ({setProfileData, profileData} : any) {
       console.log(e)
     }
   }
-  function rateGame(rating : string) {
-    handleApiData(`${location.pathname}/actions/${rating}`, null, "post", null)
+  async function rateGame(rating : string) {
+    const rateResult = await handleApiData(`${location.pathname}/actions/${rating}`, null, "post", null)
+    if (rateResult?.status === 200) {
+        if (rating === "dislike") {
+          setDislike(true)
+          setLike(false)
+        } else if (rating === "like") {
+          setLike(true)
+          setDislike(false)
+        }
+    }
   
   }
+  async function setUserActions() {
+    try {
+        const getUserActions = await handleApiData(`${location.pathname}/${username}/actions`, null, "get", null)
+        if (getUserActions?.status === 200) {
+          if (getUserActions?.data === "like") {
+              setLike(true)
+              setDislike(false)
+          } else if (getUserActions?.data === "dislike") {
+              setDislike(true)
+              setLike(false)
+          }
+        } 
+    } catch (e) {
+        console.log('ERROR GETTING LIKES: ' + e)
+    }
+}
+
   function changeRankView() {
     if (rankView === false) {
         dispatch(setRankView(true))
@@ -85,16 +119,31 @@ function Banner ({setProfileData, profileData} : any) {
         </form>
         : ""}
         {location.pathname.includes('/games/') && gameName ?
-        <span className = "inlineFlex flexCenter fullHeight absolute gameTitle"><div className = "bannerButton voteText" onClick = {changeRankView}><div className = "height66 autoWidth left autoFitContainer noClick" ><img className = "autoFitContent noClick" src = "/images/trophy.png"/></div><p>&nbsp;&nbsp;Ranks</p></div>	&nbsp;&nbsp;{gameName.toUpperCase()}&nbsp;&nbsp;<div className = "bannerButton voteText" onClick = {()=>{rateGame("like")}}><p>Like</p><img className = "halfHeight autoWidth pixelate noClick"src = "/images/like.png"/></div><div className = "bannerButton voteText" onClick = {()=>{rateGame("dislike")}}><p>Dislike</p><img className = "halfHeight autoWidth pixelate noClick"src = "/images/dislike.png"/></div></span>
+        <span className = "inlineFlex flexCenter fullHeight absolute gameTitle">
+          <div className = "bannerButton voteText" onClick = {changeRankView}>
+            <div className = "height66 autoWidth left autoFitContainer noClick" >
+              <img className = "autoFitContent noClick" src = "/images/trophy.png"/>
+            </div>
+            <p>&nbsp;&nbsp;Ranks</p>
+          </div>&nbsp;&nbsp;{gameName.toUpperCase()}&nbsp;&nbsp;
+          <div className = {`bannerButton voteText ${like ? "voteSelected" : ""}`} onClick = {()=>{rateGame("like")}}>
+            <p>Like</p>
+            <img className = "halfHeight autoWidth pixelate noClick"src = "/images/like.png"/>
+          </div>
+          <div className = {`bannerButton voteText ${dislike ? "voteSelected" : ""}`} onClick = {()=>{rateGame("dislike")}}>
+            <p>Dislike</p>
+            <img className = "halfHeight autoWidth pixelate noClick"src = "/images/dislike.png"/>
+          </div>
+        </span>
         : ""}
-      {!profileData.username ?
+      {!username ?
         <>
           <div className="inlineItem right login" onClick={() => { logIn() }}>LOGIN</div>
           <div className="inlineItem right signUp" onClick={() => { signUp() }}>SIGN UP</div>
         </>
         :
         <>
-          <div className="inlineItem right login" onClick={() => { profileNav() }}>{profileData.username.toUpperCase()}</div>
+          <div className="inlineItem right login" onClick={() => { profileNav() }}>{username.toUpperCase()}</div>
           <div className="inlineItem right signUp" onClick={() => { logOut() }}>LOG OUT</div>
         </>
       }

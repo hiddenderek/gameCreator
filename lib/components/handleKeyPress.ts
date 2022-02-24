@@ -16,7 +16,7 @@ export function handleKeyPress(e: event) {
             store.dispatch(toggleRight(true))
             rightLoop = setInterval(() => {
                 const getNewStore = store.getState()
-                if (getNewStore.character.x < 95.9) {
+                if (getNewStore.character.x < 95.9 && !getNewStore.userInterface.rankView) {
                     store.dispatch(changeX(.4))
                 }
             }, 16.666)
@@ -26,7 +26,7 @@ export function handleKeyPress(e: event) {
             store.dispatch(toggleLeft(true))
             leftLoop = setInterval(() => {
                 const getNewStore = store.getState()
-                if (getNewStore.character.x >= 0) {
+                if (getNewStore.character.x >= 0 && !getNewStore.userInterface.rankView) {
                     store.dispatch(changeX(-.4))
                 }
             }, 16.666)
@@ -67,21 +67,23 @@ export function handleKeyPress(e: event) {
 
             spaceLoop = setInterval(() => {
                 const getStore = store.getState()
-                console.log('jump')
-                //jump arc starts at -1.2 (negative is up) and gradually slows until it peaks at 0 and then starts going downward (positive)
-                //limit is 1.2, then the jump arc stops
-                jumpDecrease = jumpDecrease + .05
-                let jumpAmount = -1.2 + jumpDecrease
-                // if the jump arc hasnt completed yet (< 1.2 and you havent released space yet (gravity is stopped), execute jump arc
-                if (jumpAmount < 1.2 && getStore.character.gravity === false) {
-                    console.log('jumpmove')
-                    store.dispatch(changeY(jumpAmount))
-                } else if (jumpAmount >= 1.2) {
-                    //if you're still holding down space and havent released it yet, but the jump arc has completed, release the jump action.
-                    clearInterval(spaceLoop)
-                    store.dispatch(jump(false))
-                    store.dispatch(toggleGravity(true))
-                    jumpDecrease = 0
+                if (!getStore.userInterface.rankView) {
+                    console.log('jump')
+                    //jump arc starts at -1.2 (negative is up) and gradually slows until it peaks at 0 and then starts going downward (positive)
+                    //limit is 1.2, then the jump arc stops
+                    jumpDecrease = jumpDecrease + .05
+                    let jumpAmount = -1.2 + jumpDecrease
+                    // if the jump arc hasnt completed yet (< 1.2 and you havent released space yet (gravity is stopped), execute jump arc
+                    if (jumpAmount < 1.2 && getStore.character.gravity === false) {
+                        console.log('jumpmove')
+                        store.dispatch(changeY(jumpAmount))
+                    } else if (jumpAmount >= 1.2) {
+                        //if you're still holding down space and havent released it yet, but the jump arc has completed, release the jump action.
+                        clearInterval(spaceLoop)
+                        store.dispatch(jump(false))
+                        store.dispatch(toggleGravity(true))
+                        jumpDecrease = 0
+                    }
                 }
             }, 16.666)
         }
