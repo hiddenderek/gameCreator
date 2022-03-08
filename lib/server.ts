@@ -8,7 +8,9 @@ import cors from 'cors'
 import bcrypt from 'bcrypt'
 processEnv.config()
 import PoolGet from 'pg'
-import { stringify } from 'querystring';
+import useragent from 'express-useragent'
+import https from 'https'
+
 const Pool = PoolGet.Pool
 const pool = new Pool({
     user: "postgres",
@@ -21,18 +23,27 @@ const fs = require("fs")
 
 const app = express()
 app.use(express.json({ limit: "2mb" }))
-app.use(express.static('public'));
-app.use(cookieParser());
-app.set('view engine', 'ejs');
 app.use(cors({
-    origin: `http://localhost:${config.authPort}`
+    credentials: true,
+    origin: `https://192.168.1.5:${config.port}`
 }));
+app.use(cookieParser());
+app.use(express.static('public'));
+app.use(useragent.express());
+app.set('view engine', 'ejs');
 function authenticateToken(req: any, res: any, next: any) {
     console.log('AUTHENTICATE')
+    console.log(req.cookies)
     const token = JSON.parse(req.cookies.secureCookie)
-    if (token == null) return res.sendStatus(401)
+    if (token == null) {
+        console.log('NULL AUTHENTICATE')
+        return res.sendStatus(401)
+    }
     jwt.verify(token.accessToken, process.env.ACCESS_TOKEN_SECRET as string, (err: any, user: any) => {
-        if (err) return res.sendStatus(403)
+        if (err) {
+            console.log('ERROR AUTHENTICATE')
+            return res.sendStatus(403)
+        }
         req.user = user
         next()
     })
@@ -44,11 +55,14 @@ app.get('/api/currentUser', authenticateToken, async (req: any, res: any) => {
         if (req?.user?.name  && req?.user?.name !== "[object Object]") {
             res.status(200)
             res.json(req.user.name)
+            console.log('GOT USER!')
         } else {
+            console.log('COULD NOT FIND USER')
             res.status(404)
             res.json('')
         }
     } catch (e) {
+        console.log('FAILED GETTING USER')
         res.status(400)
         res.json('')
     }
@@ -420,20 +434,22 @@ app.post('/api/games/:userName/:gameName', authenticateToken, async (req: any, r
         const { userName } = req.params
         const { newGameName, screen, gridImage } = req.body
         const gameData = JSON.stringify(req.body.gameData)
-        console.log(userName)
-        console.log(screen)
-        console.log(req.body)
-        console.log(`SELECT * FROM users WHERE username = '${userName}'`)
         const getUser = await pool.query(`
         SELECT id FROM users WHERE username = $1
         `, [userName])
         const { id } = getUser.rows[0]
         let addGame
         //user_id is a foreign key
-        if (id && req.user.name == userName) {
+        if (id && req.user.name == userName && newGameName) {
             addGame = await pool.query(`
             INSERT INTO gamedata (id, game_name, game_data, user_id, time_created, grid_image) VALUES (uuid_generate_v4(), $1, '{}', $2, CURRENT_TIMESTAMP, $3) RETURNING *
             `, [newGameName, id, gridImage])
+        } else if (!newGameName){
+            res.status(404)
+            res.json('Game name must exist.')
+        } else {
+            res.status(404)
+            res.json('Failed adding game.')      
         }
         const gameId = addGame?.rows[0].id
         if (screen && gameData && gameId && req.user.name == userName) {
@@ -457,8 +473,15 @@ app.post('/api/games/:userName/:gameName', authenticateToken, async (req: any, r
         res.status(400)
         if (e.message.includes('violates unique constraint') && e.message.includes('game_name')) {
             res.json('Game name is already used.')
-        } else {
-            res.json('Failed adding game.')
+        }
+        if (e.message.includes('nameminiumlength')) {
+            res.json('Game name character length must be greater than 1')
+        }
+        if (e.message.includes('namecharviolation')){
+            res.json('Game name must not include special characters "/ \\ & ? . = { }"')
+        }
+        if (e.message.includes('nameviolation')){
+            res.json('Game name must not be equal to new or blank.')
         }
        
     }
@@ -790,11 +813,13 @@ app.get('/*', async (req: any, res: any) => {
     console.log(contentGet.initialContent)
     console.log('hmmmm')
     console.log(req.body)
-    res.render('index', { data: contentGet.initialContent });
+    res.render('index', { data: contentGet.initialContent, isMobile: req.useragent.isMobile });
 })
 
-
-app.listen(config.port, function listenHandler() {
+https.createServer({
+  key: fs.readFileSync("./lib/key.pem"),
+  cert: fs.readFileSync("./lib/cert.pem"),
+},app).listen(config.port, function listenHandler() {
     console.info(`Running on ${config.port}`)
 })
 

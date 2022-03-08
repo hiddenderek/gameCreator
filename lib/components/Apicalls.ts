@@ -6,28 +6,29 @@ const needsRefreshStatus = [403]
 
 export async function getApiData(pathName: string) {
     const controller = new AbortController()
-    const url = `http://${location.hostname}:${config.port}/api${pathName}`
+    const url = `https://${config.hostname}:${config.port}/api${pathName}`
     console.log(url)
-    const timeoutId = setTimeout(() => controller.abort(), 3000)
+    const timeoutId = setTimeout(() => controller.abort(), 20000)
     const responseData = await fetch(url, {
         method: 'GET',
+        credentials: 'include',
         headers: {
             'Accept': 'application/json',
         },
         signal: controller.signal
     })
-    console.log(responseData)
     return Promise.resolve(responseData)
 }
 
 export async function postApiData(pathName: string, body: string | object | null) {
     const controller = new AbortController()
-    const url = `http://${location.hostname}:${config.port}/api${pathName}`
+    const url = `https://${config.hostname}:${config.port}/api${pathName}`
     console.log(url)
     console.log(body)
-    const timeoutId = setTimeout(() => controller.abort(), 3000)
+    const timeoutId = setTimeout(() => controller.abort(), 5000)
     const responseData = await fetch(url, {
         method: 'POST',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -40,12 +41,13 @@ export async function postApiData(pathName: string, body: string | object | null
 
 export async function deleteApiData(pathName: string, body: string | object | null) {
     const controller = new AbortController()
-    const url = `http://${location.hostname}:${config.port}/api${pathName}`
+    const url = `https://${config.hostname}:${config.port}/api${pathName}`
     console.log(url)
     console.log(body)
-    const timeoutId = setTimeout(() => controller.abort(), 3000)
+    const timeoutId = setTimeout(() => controller.abort(), 5000)
     const responseData = await fetch(url, {
         method: 'DELETE',
+        credentials: 'include',
         headers: {
             'Content-type': 'application/json',
         },
@@ -58,12 +60,13 @@ export async function deleteApiData(pathName: string, body: string | object | nu
 
 export async function patchApiData(pathName: string, body: string | object | null) {
     const controller = new AbortController()
-    const url = `http://${location.hostname}:${config.port}/api${pathName}`
+    const url = `https://${config.hostname}:${config.port}/api${pathName}`
     console.log(url)
     console.log(body)
-    const timeoutId = setTimeout(() => controller.abort(), 3000)
+    const timeoutId = setTimeout(() => controller.abort(), 5000)
     const responseData = await fetch(url, {
         method: 'PATCH',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -74,14 +77,14 @@ export async function patchApiData(pathName: string, body: string | object | nul
     return Promise.resolve(responseData)
 }
 export async function getAccessToken() {
-    const refreshData = await fetch(`http://${location.hostname}:${config.authPort}/token`, {
+    const refreshData = await fetch(`https://${config.hostname}:${config.authPort}/token`, {
         method: 'POST',
         credentials: 'include',
         mode: 'cors',
         headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Credentials': 'true',
-            'Access-Control-Allow-Origin': `http://${location.hostname}:${config.authPort}`
+            'Access-Control-Allow-Origin': `https://${config.hostname}:${config.authPort}`
         }
     })
     return Promise.resolve(refreshData)
@@ -92,7 +95,7 @@ export async function getAccessToken() {
 export async function handleApiData(pathName: string | null, setState: Function | null, action: string | null, body: string | object | null) {
     console.log('handling!')
     console.log(pathName)
-    pathName = pathName ? pathName : (location.pathname+location.search)
+    pathName = pathName ? pathName : (location?.pathname+location?.search)
     body  = body ?? "{}"
     try {
         if (typeof body == "object") {

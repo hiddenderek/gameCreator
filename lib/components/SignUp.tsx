@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import config from '../config'
-import { useHistory } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 
 function SignUp() {
+  const location = useLocation()
   const history = useHistory()
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
@@ -14,9 +15,10 @@ function SignUp() {
     password: password,
     dateOfBirth: dateOfBirth
   }
-  async function signUp() {
+  async function signUp(e:any) {
+    e.preventDefault()
     if (passwordMatch === 'Passwords match!' && userName && dateOfBirth) {
-      const signUpResult = await fetch(`http://localhost:${config.port}/api/users/${userName}`, {
+      const signUpResult = await fetch(`https://${config.hostname}:${config.port}/api/users/${userName}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -31,9 +33,11 @@ function SignUp() {
   }
 
   function specifyUserName(e: any) {
+    e.preventDefault()
     setUserName(e.target.value)
   }
   function specifyPassword(e: any) {
+    e.preventDefault()
     setPassword(e.target.value)
     if (e.target.value !== confirmPassword) {
       setPasswordMatch('Error: Passwords do not match.')
@@ -42,6 +46,7 @@ function SignUp() {
     }
   }
   function specifyConfirmPassword(e: any) {
+    e.preventDefault()
     setConfirmPassword(e.target.value)
     if (e.target.value !== password) {
       setPasswordMatch('Error: Passwords do not match.')
@@ -50,6 +55,7 @@ function SignUp() {
     }
   }
   function specifyDateOfBirth(e: any) {
+    e.preventDefault()
     setDateOfBirth(e.target.value)
   }
   function profileNavigate() {
@@ -59,15 +65,38 @@ function SignUp() {
     <div className="content">
       <div className="signUpPopup">
         <div className="popupHeader" >Sign Up</div>
-        <form className="singleLine"><label>User Name: </label><input type="text" onInput={specifyUserName} ></input></form>
-        <form className="singleLine"><label>Password: </label><input type="password" onInput={specifyPassword}></input></form>
-        <form className="singleLine"><label>Confirm Password: </label><input type="password" onInput={specifyConfirmPassword}></input></form>
-        <div className="singleLine"><div className="center">{passwordMatch}</div></div>
-        <form className="singleLine"><label>Date of Birth: </label><input type="date" onInput={specifyDateOfBirth}></input></form>
-        <div className="singleLine"><div className="center">{dateOfBirth ? "Date of birth specified!" : "No date of birth specified."}</div></div>
-        <div className="singleLine"><button className={passwordMatch != "Passwords match!" || !dateOfBirth || !userName ? "inactiveButton center" : "activeButton center"} onClick={signUp}>Submit</button></div>
-        {signUpOutcome ? <div className="singleLine"><p className="center">Sign up result: {signUpOutcome}</p></div> : ""}
-        {signUpOutcome.includes('Successful') ? <div className="singleLine"><button className="center" onClick={profileNavigate}>Continue to login</button></div> : ""}
+        <div className="singleLine">
+          <label>User Name: </label><input type="text" onInput={specifyUserName} ></input>
+        </div>
+        <div className="singleLine">
+          <label>Password: </label>
+          <input type="password" onInput={specifyPassword}></input>
+        </div>
+        <div className="singleLine">
+          <label>Confirm Password: </label>
+          <input type="password" onInput={specifyConfirmPassword}></input>
+        </div>
+        <div className="singleLine">
+          <div className="center">{passwordMatch}</div>
+        </div>
+        <div className="singleLine">
+          <label>Date of Birth: </label>
+          <input type="date" onInput={specifyDateOfBirth}></input>
+        </div>
+        <div className="singleLine">
+          <div className="center">{dateOfBirth ? "Date of birth specified!" : "No date of birth specified."}</div>
+        </div>
+        <form className="singleLine" onSubmit={(e)=>{signUp(e)}}>
+          <button className={passwordMatch != "Passwords match!" || !dateOfBirth || !userName ? "inactiveButton center" : "activeButton center"}>Submit</button>
+        </form>
+        {signUpOutcome ?
+          <div className="singleLine">
+            <p className="center">Sign up result: {signUpOutcome}</p>
+          </div> : ""}
+        {signUpOutcome.includes('Successful') ? 
+        <div className="singleLine">
+          <button className="center" onClick={profileNavigate}>Continue to login</button>
+        </div> : ""}
       </div>
     </div>
   );

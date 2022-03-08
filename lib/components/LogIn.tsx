@@ -3,8 +3,8 @@ import config from '../config'
 import { useLocation, useHistory } from 'react-router-dom';
 import {handleApiData} from './Apicalls'
 function LogIn({setProfileData} : any) {
+  const location = useLocation()
   const history = useHistory()
-  const location: any = useLocation()
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
   const [signUpOutcome, setSignUpOutcome] = useState('')
@@ -12,17 +12,18 @@ function LogIn({setProfileData} : any) {
     username: userName,
     password: password
   }
-  async function logIn() {
-    
+  async function logIn(e:any) {
+    e.preventDefault()
     try {
-      const signUpResult = await fetch(`http://localhost:${config.authPort}/login`, {
+      console.log(location)
+      const signUpResult = await fetch(`https://${config.hostname}:${config.authPort}/login`, {
         method: 'POST',
         credentials: 'include',
         mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Credentials' : 'true',
-          'Access-Control-Allow-Origin' : `http://localhost:${config.authPort}`
+          'Access-Control-Allow-Origin' : `https://${config.hostname}:${config.authPort}`
         },
         body: JSON.stringify(userData),
       })
@@ -43,23 +44,30 @@ function LogIn({setProfileData} : any) {
     setPassword(e.target.value)
   }
   function profileNavigate() {
-      history.push(`/users/${userName}`)
+    history.push(`/users/${userName}`)
   }
   return (
-    <div className = "content">
+    <div className="content">
       <div className="signUpPopup">
-      <div className= "popupHeader">Log in</div>
-      <div className="singleLine">
-        <div>User Name: </div>
-        <input type="text" onInput={specifyUserName} ></input>
-      </div>
-      <div className="singleLine">
-        <div>Password: </div>
-        <input type="password" onInput={specifyPassword}></input>
-      </div>
-      <div className="singleLine"><button className={!userName || !password ? "inactiveButton center" : "activeButton center"} onClick={logIn}>Log In</button></div>
-      {signUpOutcome ? <div className="singleLine"><div className = "center">Log in result: {signUpOutcome}</div></div>: ""}
-      {signUpOutcome.includes("Login successful!") ? <div className="singleLine"><button className = "center" onClick = {profileNavigate}>Continue to profile page.</button></div>: ""}
+        <div className="popupHeader">Log in</div>
+        <div className = "fullWidth">
+          <div className="singleLine">
+            <label>User Name: </label>
+            <input type="text" onInput={specifyUserName} ></input>
+          </div>
+          <div className="singleLine">
+            <label>Password: </label>
+            <input type="password" onInput={specifyPassword}></input>
+          </div>
+        </div>
+        <form className="singleLine" onSubmit={(e) => { logIn(e) }}>
+          <button className={!userName || !password ? "inactiveButton center" : "activeButton center"}>Log In</button>
+        </form>
+        {signUpOutcome ? 
+          <div className="singleLine"><div className="center">Log in result: {signUpOutcome}</div></div> : ""}
+        {signUpOutcome.includes("Login successful!") ? 
+          <div className="singleLine"><button className = "center" onClick = {profileNavigate}>Continue to profile page.</button>
+          </div>: ""}
     </div>
   </div>
  

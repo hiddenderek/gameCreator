@@ -24,4 +24,4 @@ function Character (props: any, ref: any) {
 }
 
 const gameRef = React.forwardRef(Character)
-export default gameRef
+export default React.memo(gameRef)

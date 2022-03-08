@@ -45,6 +45,7 @@ function UserProfile ({profileData}: {profileData: userObject}) {
     function createGame() {
         history.push(`/gameEditor/${username}/new`)
     }
+    
     return (
         <div id="userProfile" className="userProfile content">
             <div id="userInfo" className="userInfo">
@@ -53,18 +54,18 @@ function UserProfile ({profileData}: {profileData: userObject}) {
                         <img className = "fullHeight fullWidth" src = "/images/profile.png" />
                     </div>
                     <div className="profileText">
-                        <div className="left profileName">{displayedUserName}</div>
+                        <div className="left profileName">{displayedUserName.toUpperCase()}</div>
                         <div className="left">User Profile</div>
                     </div>
                 </div>
                 { displayedUserName === username ? 
                 <div className="right gameButton" onClick={createGame}>
                     <p className="plusIcon">+</p>
-                    <p>Create Game</p>
+                    <p>CREATE GAME</p>
                 </div>
                 : ""}
             </div>
-            <div className="profileGameLabel center">{displayedUserName === username ?  "Your Games:" : `${displayedUserName}'s Games:`}</div>
+            <div className="profileGameLabel center">{displayedUserName === username ?  "YOUR GAMES:" : `${displayedUserName.toUpperCase()}'S GAMES:`}</div>
             <div className="gameBrowserContentContainer profileGameBrowser">
                 <div id="gameInfo" className="gameBrowser">{typeof userGames.map == "function" ? userGames?.map((item: gameObject) => { console.log(item); return <GameIcon key={item.game_name} gameData={item} getData={getData} profileData={profileData}/> }) : ""}</div>
             </div>

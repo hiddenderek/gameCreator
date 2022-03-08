@@ -47,8 +47,9 @@ function GameEditor ({turnOnSideBar, profileData} : any) {
     setGameName(e.target.value)
     console.log(gameName)
   }
-  async function saveGameEdit() {
-    const gridCanvas  = await html2canvas(document.getElementById('gameGrid') as HTMLElement,{backgroundColor:null})
+  async function saveGameEdit(e: any) {
+    e.preventDefault()
+    const gridCanvas = await html2canvas(document.getElementById('gameGrid') as HTMLElement, { backgroundColor: null })
     const gridImage = gridCanvas.toDataURL()
     console.log(gridImage)
     const saveGameResult = await handleApiData(`/games/${username}/${curGameName}`, null, location.pathname == `/gameEditor/${username}/new` ? 'post' : 'patch', { screen: "1-1", gameData: gameData, newGameName: gameName, gridImage: gridImage })
@@ -60,40 +61,47 @@ function GameEditor ({turnOnSideBar, profileData} : any) {
     console.log(saveGameResult)
   }
   return (
-    <div id="gameEditor" className="gameEditor sideContent">
-      <div id="title" className="gameEditorTitle flexCenter">GAME EDITOR</div>
-      {location.pathname !== `/gameEditor/${username}/new` && location.pathname !== `/gameEditor/${username}/${curGameName}` ? 
-      <p className="rankLabel flexCenter">YOU MUST LOG IN TO SAVE CHANGES.</p>
-       :
-      <><form className="fullSize editorTitleChange">
-        <span className="left flexCenter smallLabel autoWidth fullHeight">{location.pathname === `/gameEditor/${username}/new` ? "SET TITLE" : "CHANGE TITLE"}</span>
-        <input className="right fullHeight" value = {'location.pathname' == `/gameEditor/${username}/new` ? '': gameName } placeholder="Game Name..." onInput={specifyGameName}></input>
-      </form>
-      <div className="gameEditorSave flexCenter fullWidth">
-        <button id="saveButton" className="saveButton" onClick={saveGameEdit}>Save Game</button>
-      </div>
-      <p className="gameEditorError flexCenter fullWidth">{errorMessage.toUpperCase()}</p></>
-       }
+    <div id="gameEditor" className="gameEditor sideContent" >
+      <h1 id="title" className="gameEditorTitle flexCenter">GAME EDITOR</h1>
+      {location.pathname !== `/gameEditor/${username}/new` && location.pathname !== `/gameEditor/${username}/${curGameName}` ?
+        <p className="rankLabel flexCenter">YOU MUST LOG IN TO SAVE CHANGES.</p>
+        :
+        <>
+          <div className="fullSize flexEdges editorTitleChange">
+            <label className="left flexCenter smallLabel autoWidth fullHeight">
+              {location.pathname === `/gameEditor/${username}/new` ? "SET TITLE" : "CHANGE TITLE"}
+            </label>
+            <input className="right fullHeight"
+              value={'location.pathname' == `/gameEditor/${username}/new` ? '' : gameName}
+              placeholder="Game Name..." onInput={specifyGameName}>
+            </input>
+          </div>
+          <form className="gameEditorSave flexCenter fullWidth" onSubmit={e => {saveGameEdit(e)}}>
+            <button id="saveButton" className="saveButton">Save Game</button>
+          </form>
+          <p className="gameEditorError flexCenter fullWidth">{errorMessage.toUpperCase()}</p>
+        </>
+      }
       <div id="editSection1Container" className="editSectionContainer" >
         <div id="editSection1Title" className="editSectionTitle">SELECT ELEMENTS</div>
         <div id="emptyElement" className={`emptyElement elementButton  ${currentElement === "0" ? "elementSelected" : ""}`} onClick={dispatchCurrentElement}>
-        <span className = "absolute topLeft flexCenter elementLabel">REMOVE</span>
+          <span className="absolute topLeft flexCenter elementLabel">REMOVE</span>
         </div>
         <div id="groundElement" className={`groundElement elementButton ${currentElement === "1" ? "elementSelected" : ""}`} onClick={dispatchCurrentElement}>
           <img className="elementImage"></img>
-          <span className = "absolute topLeft flexCenter elementLabel">GROUND</span>
+          <span className="absolute topLeft flexCenter elementLabel">GROUND</span>
         </div>
         <div id="lavaElement" className={`lavaElement elementButton ${currentElement === "2" ? "elementSelected" : ""}`} onClick={dispatchCurrentElement}>
           <img className="elementImage"></img>
-          <span className = "absolute topLeft flexCenter elementLabel">LAVA</span>
+          <span className="absolute topLeft flexCenter elementLabel">LAVA</span>
         </div>
         <div id="spikeElement" className={`spikeElement elementButton ${currentElement === "3" ? "elementSelected" : ""}`} onClick={dispatchCurrentElement}>
           <img className="elementImage"></img>
-          <span className = "absolute topLeft flexCenter elementLabel">SPIKE</span>
+          <span className="absolute topLeft flexCenter elementLabel">SPIKE</span>
         </div>
         <div id="goalElement" className={`goalElement elementButton ${currentElement === "4" ? "elementSelected" : ""}`} onClick={dispatchCurrentElement}>
           <img className="elementImage"></img>
-          <span className = "absolute topLeft flexCenter elementLabel">GOAL</span>
+          <span className="absolute topLeft flexCenter elementLabel">GOAL</span>
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ import cors from 'cors'
 import dayjs from 'dayjs'
 import cookieParser from 'cookie-parser'
 import bcrypt from 'bcrypt'
+import https from 'https'
 processEnv.config()
 import PoolGet from 'pg'
 const Pool = PoolGet.Pool
@@ -17,12 +18,13 @@ const pool = new Pool({
     database: "gamecreator"
 })
 
+const fs = require("fs")
 const app = express()
 app.use(express.json())
 app.use(cookieParser());
 app.use(cors({
     credentials: true,
-    origin: `http://localhost:${config.port}`
+    origin: `https://${config.hostname}:${config.port}`
 }));
 
 interface userObj {
@@ -55,6 +57,7 @@ app.post('/token', async (req, res) => {
     }
 })
 app.post('/login', async (req, res) => {
+    console.log('login')
     try {
         const { username, password } = req.body
         const user: userObj = { name: username }
@@ -119,6 +122,9 @@ function generateAccessToken(user: userObj) {
     return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET as string, { expiresIn: '15s' })
 }
 
-app.listen(config.authPort, function listenHandler() {
+https.createServer({
+    key: fs.readFileSync("./lib/key.pem"),
+    cert: fs.readFileSync("./lib/cert.pem"),
+},app).listen(config.authPort, function listenHandler() {
     console.info(`Running on ${config.authPort}`)
 })

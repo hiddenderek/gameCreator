@@ -43,7 +43,7 @@ function GameElement (props: any, ref: any) {
       console.log(gameData)
     }
   }
-
+  console.log('elementRender')
   // this function initializes the properties of elements, including collision properties. Records location of each element on the page for collision purposes.
   function updateElmProps(mode: string) {
     console.log('updateProps!')
@@ -88,4 +88,4 @@ function GameElement (props: any, ref: any) {
 }
 
 const gameRef = React.forwardRef(GameElement)
-export default gameRef
+export default React.memo(gameRef)

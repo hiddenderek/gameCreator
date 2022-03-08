@@ -19,11 +19,15 @@ function GameIcon({gameData, profileData, getData} : any) {
         getGameDislikes()
     }, [gameUserName])
     console.log(gameUserName)
-
+    console.log("render game: " + gameData.game_name )
 
     async function navigateToGame(gameName : string) {
         history.push(`/games/${gameUserName}/${gameName}`)
         console.log(`/games/${gameUserName}/${gameName}`)
+    }
+
+    async function navigateToUser(userName:string) {
+        history.push(`/users/${userName}`)
     }
     async function getUserName(userId : string) {
         try {
@@ -82,7 +86,7 @@ function GameIcon({gameData, profileData, getData} : any) {
             <p className = "right gameStat"><img className = "smallLike" src = "/images/dislike.png"/>{gameDislikes}</p>
             <p className = "right gameStat"><img className = "smallLike" src = "/images/like.png"/>{gameLikes}</p>
             <p className = "flexCenter absolute fullWidth iconText" onClick = {()=>{navigateToGame(gameData.game_name)}}>{gameData.game_name.toUpperCase()}</p>
-            <p className = "bottom flexCenter absolute fullWidth iconText">&nbsp; By: {`${gameUserName}`}</p>
+            <p className = "bottom center absolute iconText userText" onClick = {()=>{navigateToUser(gameUserName)}}>&nbsp; By: {`${gameUserName}`}</p>
             {location.pathname == `/users/${username}` ? <div className = "editIcon" onClick = {()=>{editGame()}}><img className = "fullHeight fullWidth" src = "/images/pencil.png"/></div> : ""}
             {location.pathname == `/users/${username}` ? <div className = "deleteIcon" onClick = {()=>{deleteGame()}}>X</div> : ""}
             <div className = "absolute topLeft fullWidth fullHeight gameEffect"></div>

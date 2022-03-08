@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import SignUp from './SignUp'
 import LogIn from './LogIn'
@@ -19,11 +19,16 @@ import {handleApiData } from './Apicalls'
 import {event, userObject} from '../app/types'
 import Ranks from './Ranks'
 import { characterTrack } from './physics';
+import app from '../server';
 function App () {
-
+  console.log('STARTING APP')
   const [sideBar, setSideBar] = useState(false)
   const defaultProfile: userObject = { username: "" }
   const [profileData, setProfileData] = useState(defaultProfile)
+  const [aspectRatio, setAspectRatio] = useState(1)
+  const [isMobile, setIsMobile] = useState(false)
+  const [sideBarCheck, setSideBarCheck] = useState(false)
+  const [doubleBannerCheck, setDoubleBannerCheck] = useState(false)
   const location: any = useLocation()
   const history = useHistory()
   const dispatch = useAppDispatch()
@@ -51,7 +56,19 @@ function App () {
       }
     }
   }, [])
-
+console.log('STILL STARTING APP!')
+  useEffect(()=>{
+    //checks to see if you're 
+    const ua = typeof navigator !== "undefined" ? navigator?.userAgent : "desktop";
+    const aspectRatio = screen.width/screen.height
+    const isMobile = /Android|webOS|iPhone|iPad|iPod/i.test(ua)
+    const sideBarCheck = (sideBar === false)
+    const doubleBannerCheck = (isMobile === true && aspectRatio < 1 && location.pathname.includes('/games/'))
+    setAspectRatio(aspectRatio)
+    setIsMobile(isMobile)
+    setSideBarCheck(sideBarCheck)
+    setDoubleBannerCheck(doubleBannerCheck)
+  },[location.pathname, sideBar,  typeof screen !== "undefined" ? screen.height : 1920, typeof screen !== "undefined" ? screen.width : 1080])
   // retrieves data from the api. If the path parameter is falsy. 
   // This function accepts 4 parameters: The api endpoint, a callback function to run after the respones from the server, the type of request, and the body content to supply. 
   // if the api endpoint is not supplied, it defaults to the current endpoint.
@@ -84,10 +101,11 @@ function App () {
     setSideBar(true)
   }
 
-  console.log(sideBar)
+  const appClasses = `appContainer ${sideBarCheck ? "noSideBar" : ""} ${doubleBannerCheck ? "doubleBanner" : ""}`
+  console.log(`app classes: ${appClasses}`) 
   return (
-    <div className={sideBar === true ? "appContainer" : "appContainer noSideBar"} tabIndex={0} onKeyDown={(e: any)=>{keyPress(e)}} onKeyUp={(e: any)=>{keyRelease(e)}}>
-      <Banner  profileData = {profileData as userObject} setProfileData = {setProfileData} />
+    <div className={`appContainer ${sideBarCheck ? "noSideBar" : ""} ${doubleBannerCheck ? "doubleBanner" : ""}`} tabIndex={0} onKeyDown={(e: any)=>{keyPress(e)}} onKeyUp={(e: any)=>{keyRelease(e)}}>
+      <Banner  profileData = {profileData as userObject} setProfileData = {setProfileData} aspectRatio = {aspectRatio} isMobile = {isMobile}/>
       <SideBar profileData = {profileData as userObject}/>
       <Switch>
         <Route path="/signup">
