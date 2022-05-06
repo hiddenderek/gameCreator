@@ -5,10 +5,10 @@ const options = {
 }
 const config = {
   resolve: {
-    modules: [path.resolve('./lib'), path.resolve('./node_modules')],
+    modules: [path.resolve('./src'), path.resolve('./node_modules')],
   },
   entry: {
-    main: ['./lib/renderers/dom.tsx'],
+    main: ['./src/renderers/dom.tsx'],
   },
   output: {
     path: path.resolve(__dirname, 'public'),

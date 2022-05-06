@@ -1,0 +1,640 @@
+
+
+@media (max-device-aspect-ratio: 1/1) {
+  :root{
+    --sideContentWidth: 35rem;
+    --topBarWidth: 12rem;
+    --userInfoWidth: 17rem;
+    --editorElementContainer: 18vw;
+    --editorElementIcon: 15vw;
+    --gameIconWidth: 80vw;
+    --gameIconHeight: 40vw;
+    --gameIconPadding: 2rem;
+    --gameStatWidth: 3rem;
+    --gameStatHeight: 3rem;
+    --gameMinimizerHeight: 6rem;
+    --bannerWidth: 7vh;
+    --bannerButtonWidth: 15rem;
+    font-size: calc( (15 * (100vw / 1440)));
+  }
+  select {
+    font-size: 3rem;
+  }
+  .appContainer {
+    grid-template-columns: 100%;
+    grid-template-rows: var(--topBarWidth) auto 30vh var(--bannerWidth);
+    grid-template-areas:
+    "banner"
+    "content"
+    "sideContent"
+    "sideBar"
+    
+  }
+  .noSideBar {
+    grid-template-areas:
+    "banner"
+    "content"
+    "content"
+    "sideBar" !important
+  }
+  .doubleBanner{
+    grid-template-rows: var(--topBarWidth) var(--topBarWidth) auto 30vh var(--bannerWidth) !important;
+    grid-template-areas:
+    "banner"
+    "mobileDoubleBanner"
+    "content"
+    "content"
+    "sideBar" !important 
+  }
+  .signUp {
+    font-size: 2rem;
+  }
+  .login {
+    font-size: 2rem;
+  }
+  .signUpPopup {
+    width: 80%;
+    font-size: 2.8rem;
+  }
+  .sideBar {
+    flex-flow: row;
+    justify-content: space-evenly;
+    z-index: 50;
+  }
+  .sideBarButton {
+    height:  100%;
+    width: 9rem;
+    flex-grow: 1;
+  }
+  .sideIcon {
+    max-height:50%; 
+    max-width:80%;
+  }
+  .sideLabel {
+    font-size: 1.8vh;
+  }
+  .mobileExtraBanner{
+    height: 100%;
+    background-color: rgb(7, 10, 39);
+    grid-area: mobileDoubleBanner;
+    position: relative;
+    font-family: "8bit";
+    font-size: 3rem;
+    color: white;
+  }
+  .gameTitle {
+    width: 100%;
+    display: flex;
+    justify-content: center;;
+    font-family: '8bit';
+    color: white;
+    user-select: none;
+    margin-left: none;
+ }
+ .voteText {
+  font-size: 2rem;
+ }
+  .searchBarForm {
+    display: block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    height: 100%;
+    text-align: left;
+  
+}
+.searchBarInput {
+  position: absolute;
+  max-width: 50%;
+  width: 50rem;
+  top: 5%;
+  left: 1%;
+  height: 90%;
+  box-sizing: border-box;
+  pointer-events: all;
+  float: left;
+  font-size: 3.5rem;
+}
+  .gameBrowser {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: repeat(auto-fill, minmax(40vw, 1fr));
+    justify-items: center;
+    grid-gap: 2rem;
+  }
+
+  .gameBrowserContainer {
+    grid-template-rows: 9.5rem auto var(--topBarWidth);
+  }
+ 
+  .gameBrowserCategory{
+    font-size: 3rem;
+  }
+  .gameBrowserValue {
+    font-size: 3rem;
+    min-width: var(--bannerButtonWidth);
+  }
+  .pageButton {
+    font-size: 3.6rem;
+    flex-basis: 16rem;
+  }
+  .gameIcon {
+    font-size: 1.6rem;
+    padding-left: var(--gameIconPadding);
+    padding-right: var(--gameIconPadding);
+    padding-bottom: var(--gameIconPadding);
+  }
+  .gameEditor{
+    grid-template-columns: 50vw 50vw ;
+    grid-template-rows: 7vw calc(50% - 3.5vw) calc(50% - 3.5vw);
+    grid-template-areas:
+    "editLabel editLabel"
+    "titleChange editSec"
+    "saveBtn editSec";
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    position: relative;
+  }
+  .editSectionContainer{
+    height: 100%;
+    grid-template-columns: repeat(3, var(--editorElementIcon));
+    grid-template-rows: 6vw repeat(3, var(--editorElementContainer));
+    grid-template-areas:
+    "title title title"
+    "elm1 elm2 elm3"
+    "elm4 elm5 elm6"
+    "elm9 elm10 elm11";
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 1.5rem;
+    font-size: 2rem;
+    
+  }
+  .gameEditorTitle{
+    font-size: 3vw;
+  }
+  
+  .editorTitleChange{
+    width: 100%;
+    max-height: 100%;
+    display: flex;
+    flex-flow: column;
+    align-content: center;
+    align-items: center;
+  }
+  .editorTitleChange input{
+    width: 80%;
+    height: 50%;
+    font-size: 4.6vw;
+  }
+  .editorTitleChange label{
+    justify-self: top;
+    height: 50%;
+    font-size: 2.6vw;
+  }
+  .smallLabel {
+    font-size: 2.6vw;
+  }
+  /* ..gameEditorSave{{
+    height: 50%;
+  } */
+  .gameEditorSave{
+    width: 80%;
+    height: 80%;
+    display: flex;
+    justify-content: center;
+  }
+  .saveButton{
+    width: 100%;
+    height: 100%;
+    border-radius: 8%/8% ;
+    color: white;
+    background-color:rgb(47, 58, 122);
+    border: none;
+    font-size: 3vw;
+    font-family: "8bit";
+  }
+  .editSectionContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: scroll;
+    overflow-x: hidden;
+  }
+  .editSectionTitle{
+    font-size: 2.6vw
+  }
+  .elementLabel{
+    font-size: 1.8vw;
+  }
+  .rankLabel {
+    font-size: 2.8rem;
+  }
+  .rankSection {
+    flex-basis: 80%;
+    font-size: 4rem;
+  }
+  .homeLogoCaption{
+    font-size: 2rem;
+  }
+  .homeTrendingLabel{
+    font-size: 1.6rem;
+  }
+  .Home {
+    grid-area: content;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 15rem 5rem 5rem auto;
+  }
+  .iconText{
+    font-size: 2rem;
+  }
+  .smallLike {
+    width: 6rem;
+  }
+  .profileGameLabel{
+    font-size: 3rem;
+  }
+  .gameButton {
+    width: 27rem;
+    height: 8rem;
+    font-size: 1.6rem;
+  }
+  .userProfile {
+    grid-template-rows: var(--userInfoWidth) 6rem auto;
+  }
+  .profileContainer {
+    width: 60rem;
+  }
+  .profileName {
+    font-size: 5rem;
+  }
+  .profileCaption{
+    font-size: 2.8rem;
+  }
+  .gameWrapper {
+    align-self: start;
+  }
+  .gameButtonContainer{
+    bottom: 0;
+    left: 0;
+    height: 50%;
+    z-index: 10;
+    touch-action: manipulation;
+  }
+  .gameButtonsMimized{
+    height: var(--gameMinimizerHeight) !important;
+  }
+  .dpadContainer{
+    width: 60vw;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+  .dpadButtonContainer{
+    width: 100%;
+    max-height: 100%;
+    aspect-ratio: 1/1;
+    align-self: center;
+    justify-self: start;
+    position: relative;
+  }
+  .dpadBtnUp {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30%;
+    height:50%;
+  }
+  .dpadBtnDown{
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30%;
+    height:50%;
+  }
+  .dpadBtnLeft{
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50%;
+    height: 30%;
+  }
+  .dpadBtnRight{
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50%;
+    height:30%;
+  }
+  .jumpContainer{
+    width: 40vw;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+  .jumpButtonContainer{
+    width: 100%;
+    max-height: 100%;
+    aspect-ratio: 1/1;
+    align-self: center;
+    justify-self: end;
+   
+    position: relative;
+    
+  }
+  .jumpBtn{
+    width: 100%;
+    height:100%;
+    top: 0;
+    left: 0;
+  }
+  .gameButtonMinimizer {
+    height: var(--gameMinimizerHeight);
+    background-color: red;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    font-size: 4rem;
+    font-family: arial;
+  }
+
+  .gameEditorButtonHeight{
+    height: calc(100% - var(--gameMinimizerHeight));
+  }
+  h1 {
+    font-size: 5rem;
+  }
+
+  .popupHeader{
+    margin-top: 2rem;
+    font-size: 4.5rem;
+  }
+  .smallHeight{
+    height: 6rem;
+  }
+  .singleLine {
+    height: 8rem;
+    font-size: 4rem;
+  }
+  .singleLine input{
+    box-sizing: border-box;
+    width: 50% !important;
+    height: 80%;
+    font-size: 4rem;
+  }
+  .singleLine button {
+    height: 80%;
+    font-size: 3rem;
+  }
+  .rankList{
+    width: 80%;
+    font-size: 2.5rem;
+  }
+  .retryContainer {
+    width: 40rem;
+    height: 16rem;
+  }
+  .retryButton{
+    font-size: 4rem;
+  }
+  .invert{
+    filter: invert(1);
+  }
+
+  .noSelect {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.noSelect:focus {
+    outline: none !important;
+}
+}
+
+@media (pointer: coarse) and (max-device-aspect-ratio: 1/1) and (max-height: 60rem) {
+  .sideBar{
+    display: none!important
+  }
+  .appContainer {
+    grid-template-columns: 100%;
+    grid-template-rows: var(--topBarWidth) auto 30vh;
+    grid-template-areas:
+    "banner"
+    "content"
+    "sideContent"
+    
+  }
+  .noSideBar {
+    grid-template-areas:
+    "banner"
+    "content"
+    "content"
+  }
+  .gameButtonContainer{
+    display: none;
+  }
+  .gameBrowserContainer {
+    grid-template-rows: 9.5rem auto 0px;
+  }
+
+}
+@media (min-device-aspect-ratio: 1/1) {
+  :root{
+    --sideContentWidth: 30rem;
+    --topBarWidth: 5rem;
+    --userInfoWidth: 6rem;
+    --editorElementContainer: 7vw;
+    --editorElementIcon: 4vw;
+    --gameIconWidth: 38vw;
+    --gameIconHeight: 19vw;
+    --gameIconPadding: 2rem;
+    --gameStatWidth: 3rem;
+    --gameStatHeight: 3rem;
+    --gameMinimizerHeight: 3rem;
+    --bannerWidth: 6vw;
+    --bannerButtonWidth: 10rem;
+    font-size: calc( (15 * (100vw / 1440)));
+  }
+  .appContainer {
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: var(--bannerWidth) 1fr var(--sideContentWidth);
+    grid-template-rows: var(--topBarWidth) auto;
+    grid-template-areas:
+    "sideBar banner banner"
+    "sideBar content sideContent"
+  }
+  .homeLogo{
+    width: 30rem;
+    grid-area: homeLogo;
+    pointer-events: none;
+  }
+  .homeLogoCaption{
+    font-size: 1.2rem;
+  }
+  .homeTrendingLabel{
+    font-size: 1.2rem;
+  }
+  .Home {
+    grid-area: content;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 9rem 2.5rem 2.5rem auto;
+  }
+  .userProfile {
+    grid-template-rows: var(--userInfoWidth) 4rem auto;
+  }
+  .profileContainer {
+    width: 40rem;
+  }
+  .profileName {
+    font-size: 2rem;
+  }
+  .profileCaption{
+    font-size: 1.6rem;
+  }
+  .gameEditor{
+    width: 100%;
+    grid-area: sideContent;
+    display: grid;
+    font-size: 1.7rem;
+    grid-template-columns: 100%;
+    grid-template-rows: 6rem 3rem 5rem 3rem auto;
+    grid-template-areas:
+    "editLabel"
+    "titleChange"
+    "saveBtn"
+    "errorMsg"
+    "editSec";
+    background: rgba(25, 29, 78, 0.911);
+  }
+  .editSectionContainer{
+    height: 100%;
+    grid-template-columns: repeat(3, var(--editorElementIcon));
+    grid-template-rows: 2vw repeat(3, var(--editorElementContainer));
+    grid-template-areas:
+    "title title title"
+    "elm1 elm2 elm3"
+    "elm4 elm5 elm6"
+    "elm9 elm10 elm11";
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.2rem;
+    
+  }
+  .gameWrapper {
+    align-self: start;
+  }
+  .gameButtonContainer{
+    bottom: 0;
+    left: 0;
+    height: 55%;
+    z-index: 20;
+    touch-action: manipulation;
+  }
+  .gameButtonsMimized{
+    height: var(--gameMinimizerHeight) !important;
+  }
+  .dpadContainer{
+    width: calc(50%);
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+  .dpadButtonContainer{
+    width: 100%;
+    max-height: 100%;
+    aspect-ratio: 1/1;
+    align-self: center;
+    justify-self: start;
+    position: relative;
+  }
+  .dpadBtnUp {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30%;
+    height:50%;
+  }
+  .dpadBtnDown{
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30%;
+    height:50%;
+  }
+  .dpadBtnLeft{
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50%;
+    height: 30%;
+  }
+  .dpadBtnRight{
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50%;
+    height:30%;
+  }
+  .jumpContainer{
+    width: calc(50%);
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+  .jumpButtonContainer{
+    width: 100%;
+    max-height: 100%;
+    aspect-ratio: 1/1;
+    align-self: center;
+    justify-self: end;
+   
+    position: relative;
+    
+  }
+  .jumpBtn{
+    width: 100%;
+    height:100%;
+    top: 0;
+    left: 0;
+  }
+  .gameButtonMinimizer {
+    height: var(--gameMinimizerHeight);
+    background-color: red;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-family: arial;
+  }
+
+  .gameEditorButtonHeight{
+    height: calc(100% - var(--gameMinimizerHeight));
+  }
+}
+

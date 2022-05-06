@@ -5,12 +5,15 @@
 <meta name="description" content="Our first page">
 <meta name="keywords" content="html tutorial template">
 <meta name="viewport" content="maximum-scale=1">
-<script>
-</script>
 <link href="/css/style.css" rel="stylesheet" type="text/css">
+<%if (isMobile) {%>
+  <link href="/css/styleMobile.css" rel="stylesheet" type="text/css">
+<%} else if (isDesktop) {%>
+  <link href="/css/styleDesktop.css" rel="stylesheet" type="text/css">
+<% } %>
 </head>
 <body>
-  <div id = "root" class = "pageRoot"><%- data %></div>
+  <div id = "root" class = "pageRoot"><% data %></div>
   <script src = "/bundle.js" charset = "utf-8"></script>
 </body>
 </html>

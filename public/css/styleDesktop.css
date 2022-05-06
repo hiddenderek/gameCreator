@@ -1,0 +1,22 @@
+
+
+@media (pointer:fine) and (min-height: 2000px) {
+  :root{
+    font-size: 200%;
+  }
+}
+@media (pointer:fine) and (max-height: 2000px) and (min-height: 1200px) {
+  :root{
+    font-size: 83.333%;
+  }
+}
+@media (pointer:fine) and (max-height: 1000px) and (min-height: 720px) {
+  :root{
+    font-size: 62.5%;
+  }
+}
+@media (pointer:fine) and (max-height: 720px) {
+  :root{
+    font-size: 50.666%;
+  }
+}

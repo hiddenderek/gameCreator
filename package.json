@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
-    "dev": "set NODE_PATH=./lib&& nodemon --exec ts-node lib/server.ts  --ignore public/",
-    "devAuth": "set NODE_PATH=./lib&& nodemon --exec ts-node lib/authServer.ts  --ignore public/",
+    "dev": "set NODE_PATH=./src&& nodemon --exec ts-node src/server.ts  --ignore public/",
+    "devAuth": "set NODE_PATH=./src&& nodemon --exec ts-node src/authServer.ts  --ignore public/",
     "webpack": "webpack -w --mode development"
   },
   "babel": {

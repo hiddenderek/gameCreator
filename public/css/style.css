@@ -6,14 +6,13 @@ body {
   background-size: 100vw;
   background-image: url('/images/background_main.png');
   padding: 2.5rem;
-  font-size: 62.5% !important;
   scrollbar-gutter: stable;
 }
 form {
   display: inline-block;
 }
 h1 {
-  font-size: 12px;
+  font-size: 1.2rem;
   font-weight: normal;
   padding: none;
   margin: 0;
@@ -28,11 +27,12 @@ p {
 ul {
   list-style-type: none;
   padding: 0;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 li {
   display: flex;
   justify-content: space-between;
-  margin-top: 1rem;
 }
 :root{
   --sideContentWidth: 35rem;
@@ -47,12 +47,15 @@ li {
   --gameStatHeight: 3rem;
   --bannerButtonWidth: 8rem;
   --bannerWidth: 5.5rem;
-  font-size: 62.5% !important;
+  font-size: 62.5%;
 }
 input {
+  display:inline-block;
   box-sizing: border-box;
 }
 select {
+  width: 100%;
+  height: 100%;
   box-sizing: border-box;
 }
 @font-face {
@@ -69,7 +72,7 @@ select {
      /* scroll thumb and track */
 }
 *::-webkit-scrollbar {
-  width: 12px;               /* width of the entire scrollbar */
+  width: 1.2rem;               /* width of the entire scrollbar */
 }
 
 *::-webkit-scrollbar-track {
@@ -78,7 +81,7 @@ select {
 
 *::-webkit-scrollbar-thumb {
   background-color: rgb(100, 201, 247);    /* color of the scroll thumb */
-  border-radius: 20px;       /* roundness of the scroll thumb */
+  border-radius: 2rem;       /* roundness of the scroll thumb */
 }
 #goalElement{
   grid-area: elm4;
@@ -125,8 +128,18 @@ select {
 #lavaElement{
   grid-area: elm2;
 }
-#emptyElement {
+.platformElement{
+  background: transparent;
+  background-image: url("/images/platformElement.png");
+  background-size: 100% 100%;
+  image-rendering: pixelated;
+  z-index: 3
+}
+#platformElement{
   grid-area: elm5;
+}
+#emptyElement {
+  grid-area: elm6;
   background: black;
 }
 .emptyElement {
@@ -175,7 +188,7 @@ select {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(4, var(--editorElementIcon));
-  grid-template-rows: 30px repeat(3, var(--editorElementContainer));
+  grid-template-rows: 3rem repeat(3, var(--editorElementContainer));
   grid-template-areas:
   "title title title title"
   "elm1 elm2 elm3 elm4"
@@ -184,9 +197,9 @@ select {
   grid-area: editSec;
   justify-content: space-evenly;
   align-items: center;
-  gap: 15px;
+  gap: 1.5rem;
   font-family: "8bit";
-  font-size: 10px;
+  font-size: 1rem;
   
 }
 .fullSize{
@@ -221,6 +234,12 @@ select {
 }
 .autoHeight {
   height: auto;
+}
+.width0{
+  width: 0px;
+}
+.height0{
+  height: 0px;
 }
 .halfWidth {
   width: 50%;
@@ -264,6 +283,9 @@ select {
 .largeHeight{
   height: 5rem;
 }
+.flip {
+  transform: scaleX(-1);
+}
 .editorTitleChange {
   width: auto;
   height: 100%;
@@ -283,6 +305,7 @@ select {
   color: white;
   background-color:rgb(47, 58, 122);
   border: none;
+  font-size: 1.5rem;
 }
 .saveButton:hover{
   background-color:rgb(59, 73, 151);
@@ -354,6 +377,7 @@ select {
   backdrop-filter: blur(5rem);
   font-size: 8rem;
   font-family: '8bit';
+  color: white;
   z-index:5;
 }
 .gameLose{
@@ -361,6 +385,7 @@ select {
   backdrop-filter: blur(5rem);
   font-size: 8rem;
   font-family: '8bit';
+  color: white;
   z-index:5;
 }
 .retryContainer {
@@ -496,16 +521,13 @@ select {
 .gameEffect{
   background-color: transparent;
   background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-  background-size: 100% 2px, 3px 100%;
+  background-size: 100% .2rem, .3rem 100%;
   z-index: -1;
 }
 .gameEffect:hover{
   background-color: rgba(174, 170, 236, 0.219);
 }
-.gameIconBig{
-  transform: scale(1.5);
-  transform-origin: top left;
-}
+
 .editIcon {
   position: absolute;
   top: 2%;
@@ -516,12 +538,13 @@ select {
 }
 .iconText{
   margin-left: calc((var(--gameIconPadding) * -1));
-  text-shadow: 3px 2px 2px rgba(251, 12, 12, 0.651), 0px -1px 2px rgba(12, 80, 251, 0.411),-2px 0px 1px rgba(52, 251, 12, 0.452);
+  text-shadow: .3rem .2rem .2rem rgba(251, 12, 12, 0.651), 0px -.1rem .2rem rgba(12, 80, 251, 0.411),-.2rem 0px .1rem rgba(52, 251, 12, 0.452);
   color: rgba(255, 255, 255, 0.84);
 }
 .userText{
   margin-left: calc((var(--gameIconPadding) * -.3)) !important;
-  cursor:pointer
+  cursor:pointer;
+  margin-bottom: calc(var(--gameIconPadding) / 2);
 }
 .userText:hover{
   background: rgba(255, 255, 255, 0.418);
@@ -559,14 +582,54 @@ select {
   background: rgba(255, 255, 255, 0.508);
 }
 .gameBrowserContainer {
+  height: 100%;
   overflow: hidden;
   grid-area: content;
   display: grid;
   grid-template-columns: 100% 100%;
-  grid-template-rows: 5.5rem calc(100vh - var(--topBarWidth) - 4.5rem);
+  grid-template-rows: 5.5rem auto var(--topBarWidth);
   grid-template-areas: 
   "gameBrowserBanner"
   "gameBrowser"
+  "pageBrowser";
+}
+.pageBrowserContainer {
+  grid-area: pageBrowser;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(47, 59, 112, 0.616);
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+}
+.arrow {
+  height: 50%;
+  display: flex;
+  align-self: center;
+  align-content: center;
+  align-items: center;
+  image-rendering: pixelated;
+  user-select: none;
+}
+.arrowHidden {
+  opacity: 50%;
+  pointer-events: none;
+}
+.pageButton{
+  height: 100%;
+  flex-basis: 8rem;
+  margin-top: 0px;
+  font-size: 1.2rem;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "8bit";
+  user-select: none;
+}
+.pageHighlight{
+  background-color: rgba(255, 255, 255, 0.295);
 }
 .gameBrowserBanner {
   width: 100%;
@@ -579,7 +642,7 @@ select {
   font-family: arial;
   font-size: 1.4rem;
   grid-area: gameBrowserBanner;
-  gap: 10px;
+  gap: 1rem;
 }
 .gameBrowserGroup {
   display: inline-flex; 
@@ -630,7 +693,6 @@ select {
   grid-template-rows: repeat(auto-fill, minmax(18rem, 1fr));
   justify-items: center;
   grid-gap: 1rem;
-  padding: 1rem;
 }
 
 
@@ -638,9 +700,10 @@ select {
   z-index: 10;
   background:rgba(75, 61, 136, 0.767);
   backdrop-filter: blur(5rem);
+  color: white;
 }
 .rankList {
-  width: 400px;
+  width: 40rem;
   font-size: .8rem;
   font-family: "8bit";
 }
@@ -650,7 +713,7 @@ select {
   flex-flow: row wrap;
 }
 .rankSection {
-  flex-basis: 300px;
+  flex-basis: 30rem;
   color: white;
   font-size: 1.5rem;
   font-family: arial;
@@ -766,6 +829,9 @@ select {
   color: rgb(255, 255, 255);
   font-family: "8bit";
 }
+.profileCaption{
+  font-size: 1.8rem;
+}
 
 .gameButton {
   width: 17rem;
@@ -806,7 +872,7 @@ select {
   justify-content: center;
   align-items: center;
   justify-items: center;
-  text-shadow: 3px 2px 2px rgba(251, 12, 12, 0.651), 0px -1px 2px rgba(12, 80, 251, 0.411),-2px 0px 1px rgba(52, 251, 12, 0.452);
+  text-shadow: .3rem .2rem .2rem rgba(251, 12, 12, 0.651), 0px -.1rem .2rem rgba(12, 80, 251, 0.411),-.2rem 0px .1rem rgba(52, 251, 12, 0.452);
 }
 .smallLike {
   width: 2.3rem;
@@ -856,8 +922,8 @@ select {
 }
 .searchBarInput {
   max-width: 50%;
-  width: 500px;
-  height: 32px;
+  width: 50rem;
+  height: 3.2rem;
   box-sizing: border-box;
   pointer-events: all;
 
@@ -875,15 +941,15 @@ select {
 }
 .singleLine{
   width: 95%;
-  height: 25px;
+  height: 2.5rem;
   display: flex;
   flex-flow: row;
   justify-content: space-between;
   align-items: center;
   margin-left: 50%;
   transform: translateX(-50%);
-  margin-top: 4px;
-  padding-bottom: 4px;
+  margin-top: .4rem;
+  padding-bottom: .4rem;
   white-space: nowrap;
   color:rgb(120, 192, 236);
 }
@@ -895,18 +961,9 @@ select {
   background: lightGray;
 }
 .popupHeader {
-  color: rgb(240, 210, 233);
-  text-shadow: 
-  0px 0px .5rem rgb(247, 100, 215), 
-  0px 0px .5rem rgb(247, 100, 215), 
-  0px 0px .5rem rgb(247, 100, 215), 
-  0px 0px .8rem rgb(247, 100, 215), 
-  0px 0px .8rem rgb(235, 100, 247),  
-  0px 0px 1rem rgb(235, 100, 247),  
-  0px 0px 1.3rem rgb(235, 100, 247),  
-  0px 0px 2.2rem rgb(235, 100, 247); 
-  font-family: neonLights;
-  font-size: 3rem;
+  color: rgb(255, 255, 255);
+  font-family: "8bit";
+  font-size: 2rem;
   height: 5rem;
   display: flex;
   justify-content: center;
@@ -920,7 +977,7 @@ select {
 }
 .signUpPopup {
   max-width: 94%;
-  width: 350px;
+  width: 35rem;
   background: rgb(21,43,102);
   font-family: Arial;
   font-size: 1.4rem;
@@ -990,6 +1047,24 @@ select {
   overflow: hidden;
   background: transparent;
 }
+.scrollContent {
+  grid-area: content;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  background: transparent;
+}
+.gameContent {
+  max-height: calc((var(--vh, 1vh) * 100) - var(--topBarWidth));
+  grid-area: content;
+  overflow: hidden;
+  background: transparent;
+  position: relative;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 100%;
+  justify-content: center;
+  align-content: center;
+}
 .footer {
   grid-area: footer;
   background: blue;
@@ -1009,295 +1084,8 @@ select {
   height: 100%;
   display: grid;
   grid-template-columns: var(--bannerWidth) 1fr var(--sideContentWidth);
-  grid-template-rows: var(--topBarWidth) auto auto;
+  grid-template-rows: var(--topBarWidth) auto;
   grid-template-areas:
   "sideBar banner banner"
   "sideBar content sideContent"
-  "sideBar content sideContent"
-  "sideBar content sideContent"
 }
-@media (pointer: coarse) and (max-device-aspect-ratio: 1/1) {
-  :root{
-    --sideContentWidth: 35rem;
-    --topBarWidth: 12rem;
-    --userInfoWidth: 17rem;
-    --editorElementContainer: 18vw;
-    --editorElementIcon: 15vw;
-    --gameIconWidth: 80vw;
-    --gameIconHeight: 40vw;
-    --gameIconPadding: 1rem;
-    --gameStatWidth: 3rem;
-    --gameStatHeight: 3rem;
-    --bannerWidth: 7vh;
-    --bannerButtonWidth: 15rem;
-    font-size: 62.5% !important;
-  }
-  .appContainer {
-    grid-template-columns: 100%;
-    grid-template-rows: var(--topBarWidth) auto 30vh var(--bannerWidth);
-    grid-template-areas:
-    "banner"
-    "content"
-    "sideContent"
-    "sideBar"
-    
-  }
-  .noSideBar {
-    grid-template-areas:
-    "banner"
-    "content"
-    "content"
-    "sideBar" !important
-  }
-  .doubleBanner{
-    grid-template-rows: var(--topBarWidth) var(--topBarWidth) auto 30vh var(--bannerWidth) !important;
-    grid-template-areas:
-    "banner"
-    "mobileDoubleBanner"
-    "content"
-    "content"
-    "sideBar" !important 
-  }
-  .signUp {
-    font-size: 2rem;
-  }
-  .login {
-    font-size: 2rem;
-  }
-  .sideBar {
-    flex-flow: row;
-    justify-content: space-evenly;
-    z-index: 50;
-  }
-  .sideBarButton {
-    height:  100%;
-    width: 9rem;
-    flex-grow: 1;
-  }
-  .sideIcon {
-    max-height:50%; 
-    max-width:80%;
-  }
-  .sideLabel {
-    font-size: 1.8vh;
-  }
-  .mobileExtraBanner{
-    height: 100%;
-    background-color: rgb(7, 10, 39);
-    grid-area: mobileDoubleBanner;
-    position: relative;
-    font-family: "8bit";
-    font-size: 3rem;
-    color: white;
-  }
-  .gameTitle {
-    width: 100%;
-    display: flex;
-    justify-content: center;;
-    font-family: '8bit';
-    color: white;
-    user-select: none;
-    margin-left: none;
- }
- .voteText {
-  font-size: 2rem;
- }
-  .searchBarForm {
-    display: block;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 100%;
-    height: 100%;
-    text-align: left;
-  
-}
-.searchBarInput {
-  position: absolute;
-  max-width: 50%;
-  width: 500px;
-  top: 5%;
-  left: 1%;
-  height: 90%;
-  box-sizing: border-box;
-  pointer-events: all;
-  float: left;
-  font-size: 3.5rem;
-}
-.gameBrowserBanner {
-  transform: scale(1);
-}
-  .gameBrowser {
-    display: grid;
-    grid-template-columns: 100%;
-    grid-template-rows: repeat(auto-fill, minmax(40vw, 1fr));
-    justify-items: center;
-    grid-gap: 2rem;
-    padding: 1rem;
-  }
-  .gameBrowserContainer {
-    grid-template-rows: 9.5rem calc(100vh - var(--topBarWidth) - 4.5rem);
-  }
-  .gameBrowserCategory{
-    font-size: 3rem;
-  }
-  .gameBrowserValue {
-    font-size: 3rem;
-    min-width: var(--bannerButtonWidth);
-  }
-  .gameIcon {
-    font-size: 1.6rem;
-  }
-  .gameEditor{
-    grid-template-columns: 50vw 50vw ;
-    grid-template-rows: 7vw calc(50% - 3.5vw) calc(50% - 3.5vw);
-    grid-template-areas:
-    "editLabel editLabel"
-    "titleChange editSec"
-    "saveBtn editSec";
-    justify-content: center;
-    justify-items: center;
-    align-items: center;
-    position: relative;
-  }
-  .editSectionContainer{
-    height: 100%;
-    grid-template-columns: repeat(3, var(--editorElementIcon));
-    grid-template-rows: 6vw repeat(3, var(--editorElementContainer));
-    grid-template-areas:
-    "title title title"
-    "elm1 elm2 elm3"
-    "elm4 elm5 elm6"
-    "elm9 elm10 elm11";
-    justify-content: space-evenly;
-    align-items: center;
-    gap: 15px;
-    font-size: 20px;
-    
-  }
-  .gameEditorTitle{
-    font-size: 3vw;
-  }
-  
-  .editorTitleChange{
-    width: 100%;
-    max-height: 100%;
-    display: flex;
-    flex-flow: column;
-    align-content: center;
-    align-items: center;
-  }
-  .editorTitleChange input{
-    width: 80%;
-    height: 50%;
-    font-size: 4.6vw;
-  }
-  .editorTitleChange label{
-    justify-self: top;
-    height: 50%;
-    font-size: 2.6vw;
-  }
-  .smallLabel {
-    font-size: 2.6vw;
-  }
-  /* ..gameEditorSave{{
-    height: 50%;
-  } */
-  .gameEditorSave{
-    width: 80%;
-    height: 80%;
-    display: flex;
-    justify-content: center;
-  }
-  .saveButton{
-    width: 100%;
-    height: 100%;
-    border-radius: 8%/8% ;
-    color: white;
-    background-color:rgb(47, 58, 122);
-    border: none;
-    font-size: 3vw;
-    font-family: "8bit";
-  }
-  .editSectionContainer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    overflow: scroll;
-    overflow-x: hidden;
-  }
-  .editSectionTitle{
-    font-size: 2.6vw
-  }
-  .elementLabel{
-    font-size: 1.8vw;
-  }
-  .rankLabel {
-    font-size: 2.8rem;
-  }
-  .rankSection {
-    flex-basis: 80%;
-    font-size: 4rem;
-  }
-  .homeLogoCaption{
-    font-size: 2rem;
-  }
-  .homeTrendingLabel{
-    font-size: 1.6rem;
-  }
-  .Home {
-    grid-area: content;
-    display: grid;
-    grid-template-columns: 100%;
-    grid-template-rows: 15rem 5rem 5rem auto;
-  }
-  .iconText{
-    font-size: 2rem;
-  }
-  .profileGameLabel{
-    font-size: 3rem;
-  }
-  .userProfile {
-    grid-template-rows: var(--userInfoWidth) 6rem auto;
-  }
-}
-
-@media (pointer: coarse) and (max-height: 60rem) {
-  .sideBar{
-    display: none!important
-  }
-  .appContainer {
-    grid-template-columns: 100%;
-    grid-template-rows: var(--topBarWidth) auto 30vh;
-    grid-template-areas:
-    "banner"
-    "content"
-    "sideContent"
-    
-  }
-  .noSideBar {
-    grid-template-areas:
-    "banner"
-    "content"
-    "content"
-  }
-
-}
-@media (pointer: coarse) and (min-device-aspect-ratio: 1/1) {
-  .Home {
-    grid-area: content;
-    display: grid;
-    grid-template-columns: 100%;
-    grid-template-rows: 6rem 3rem 3rem auto;
-    grid-template-areas: 
-    "homeLogo"
-    "homeCaption"
-    "homeTrendingLabel"
-    "homeTrending";
-    align-items: center;
-  }
-  .homeLogo{
-    width: 20rem;
-  }
-}
-
