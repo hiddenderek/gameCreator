@@ -4,6 +4,7 @@ import { toggleGravity, changeY, setY, setX, jump, removeHealth, changeMoveAmoun
 import { toggleSpace } from '../features/keyPress/keyPress-slice'
 import { evalTime, winGame } from '../features/gameEvents/gameEvents-slice'
 import { clearCounts } from './GameEvents'
+import { refreshRate, moveRate, gravityRate} from './physicsConfig'
 let gravityLoop: NodeJS.Timeout
 let characterLoop: NodeJS.Timeout
 let lavaCount = 0
@@ -14,7 +15,7 @@ export function gravityManage(action: boolean) {
     store.dispatch(toggleGravity(action))
     const getStore = store.getState()
     if (getStore.character.gravity == true && !getStore.userInterface.rankView) {
-        store.dispatch(changeY(1.8))
+        store.dispatch(changeY(gravityRate))
     }
 }
 
@@ -117,7 +118,7 @@ export function characterTrack(ref: any) {
                         clearInterval(spaceLoop)
                     }
                 } else if ((gameData[gameElmLocationLeft1]?.type == "0" || gameData[gameElmLocationLeft2]?.type == "0")) {
-                    store.dispatch(changeMoveAmount(.8))
+                    store.dispatch(changeMoveAmount(moveRate))
                 }
                 if ((gameData[gameElmLocationRight1]?.type == "1" || gameData[gameElmLocationRight2]?.type == "1") && (gameData[gameElmLocationTop1]?.type == "0" || gameData[gameElmLocationTop2]?.type == "0") && getStore.keyPress.right) {
                     store.dispatch(changeMoveAmount(0))
@@ -135,7 +136,7 @@ export function characterTrack(ref: any) {
                         clearInterval(spaceLoop)
                     }
                 } else if ((gameData[gameElmLocationRight1]?.type == "0" || gameData[gameElmLocationRight2]?.type == "0")) {
-                    store.dispatch(changeMoveAmount(.8))
+                    store.dispatch(changeMoveAmount(moveRate))
                 }
                 //actions for type 2 of game element.
                 if (gameData[gameElmLocation1]?.type == "2" || gameData[gameElmLocation2]?.type == "2") {
@@ -175,7 +176,7 @@ export function characterTrack(ref: any) {
                 clearCounts()
             }
         }
-    }, 33.333)
+    }, refreshRate)
 }
 
 export function clearCharacterTrack() {

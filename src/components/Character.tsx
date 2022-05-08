@@ -8,7 +8,6 @@ function Character (props: any, ref: any) {
   const character = useAppSelector((state) => state.character)
   // manages collision for character
 
-  console.log('character!')
   // manages gravity for character if the gravity property on the character is true
   //calls collision management and gravity management 60 times per second
   useEffect(() => {
@@ -17,10 +16,10 @@ function Character (props: any, ref: any) {
       characterTrack(ref)
   },[location.pathname])
   return (
-    <div id="character" className={`${character.jump ? "characterJump" : "character"} ${character.health < 7 &&  character.health >= 4 ? "characterLightDamage" : character.health < 4 && character.health> 1 ? "characterMediumDamage" : character.health == 1 ? "characterHighDamage" : null}`} style={{ transform: `${character.direction == "left" ? "scaleX(-1)" : "scaleX(1)"}`, top: `${character.y}%`, left: `${character.x}%`}}>
+    <div id="character" className={`${character.jump ? "characterJump" : "character"} ${character.health < 7 &&  character.health >= 4 ? "characterLightDamage" : character.health < 4 && character.health> 1 ? "characterMediumDamage" : character.health == 1 ? "characterHighDamage" : null}`} style={{ transform: `translate(${character.x * 32}%, ${character.y * (character.jump ? 7.2 : 9)}%) ${character.direction == "left" ? "scaleX(-1)" : "scaleX(1)"}`}}>
     </div>
   );
 }
 
 const gameRef = React.forwardRef(Character)
-export default React.memo(gameRef)
+export default gameRef

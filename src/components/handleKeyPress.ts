@@ -3,6 +3,7 @@ import { toggleGravity, changeX, changeY, setY, jump, changeMoveAmount } from '.
 import { toggleSpace, toggleLeft, toggleRight, toggleCtrl, toggleZ, toggleY } from '../features/keyPress/keyPress-slice'
 import { undo, redo } from '../features/gameData/gameData-slice'
 import { event } from '../app/types'
+import { refreshRate, moveRate, jumpAmountRate, jumpDecreaseRate, jumpArcPeak} from './physicsConfig'
 export let spaceLoop : NodeJS.Timeout
 export let rightLoop : NodeJS.Timeout
 export let leftLoop : NodeJS.Timeout
@@ -10,29 +11,28 @@ export let leftLoop : NodeJS.Timeout
 let jumpDecrease = 0
 export function handleKeyPress(e: event) {
     const getStore = store.getState()
-    console.log(e)
     if (e!.target.tagName !== "INPUT") {
         if ((e!.key == "ArrowRight" || e!.key == "d") && getStore.keyPress.right == false) {
             console.log("Left")
             store.dispatch(toggleRight(true))
-            store.dispatch(changeMoveAmount(.8))
+            store.dispatch(changeMoveAmount(moveRate * -1))
             rightLoop = setInterval(() => {
                 const getNewStore = store.getState()
                 if (getNewStore.character.x < 95.9 &&  !getNewStore.userInterface.rankView) {
                     store.dispatch(changeX(getNewStore.character.moveAmount))
                 }
-            }, 33.333)
+            }, refreshRate)
         }
         if ((e!.key == "ArrowLeft" || e!.key == "a") && getStore.keyPress.left == false) {
             console.log("Right")
             store.dispatch(toggleLeft(true))
-            store.dispatch(changeMoveAmount(.8))
+            store.dispatch(changeMoveAmount(moveRate))
             leftLoop = setInterval(() => {
                 const getNewStore = store.getState()
                 if (getNewStore.character.x >= 0 && !getNewStore.userInterface.rankView) {
                     store.dispatch(changeX(getNewStore.character.moveAmount * -1))
                 }
-            }, 33.333)
+            }, refreshRate)
         }
         if (e!.key == "ArrowUp" || e!.key == "w") {
             console.log("Up")
@@ -62,7 +62,6 @@ export function handleKeyPress(e: event) {
                 store.dispatch(redo())
             }
         }
-        console.log(getStore.keyPress.space)
         //if you press the space key, and space key isnt already active, and gravity is not currently active, then trigger the jump arc. 
         if (e!.key == " " && jumpDecrease == 0 && !getStore.keyPress.space && getStore.character.gravity == false) {
             store.dispatch(jump(true))
@@ -71,16 +70,14 @@ export function handleKeyPress(e: event) {
             spaceLoop = setInterval(() => {
                 const getStore = store.getState()
                 if (!getStore.userInterface.rankView) {
-                    console.log('jump')
                     //jump arc starts at -1.2 (negative is up) and gradually slows until it peaks at 0 and then starts going downward (positive)
                     //limit is 1.2, then the jump arc stops
-                    jumpDecrease = jumpDecrease + .25
-                    let jumpAmount = -2.8 + jumpDecrease
+                    jumpDecrease = jumpDecrease + jumpDecreaseRate
+                    let jumpAmount = jumpAmountRate + jumpDecrease
                     // if the jump arc hasnt completed yet (< 1.2 and you havent released space yet (gravity is stopped), execute jump arc
-                    if (jumpAmount < 1.8 && getStore.character.gravity === false) {
-                        console.log('jumpmove')
+                    if (jumpAmount < jumpArcPeak && getStore.character.gravity === false) {
                         store.dispatch(changeY(jumpAmount))
-                    } else if (jumpAmount >= 1.8) {
+                    } else if (jumpAmount >= jumpArcPeak) {
                         //if you're still holding down space and havent released it yet, but the jump arc has completed, release the jump action.
                         clearInterval(spaceLoop)
                         store.dispatch(jump(false))
@@ -88,7 +85,7 @@ export function handleKeyPress(e: event) {
                         jumpDecrease = 0
                     }
                 }
-            }, 33.333)
+            }, refreshRate)
         }
     }
 }

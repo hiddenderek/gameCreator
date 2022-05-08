@@ -119,7 +119,6 @@ console.log('STILL STARTING APP!')
   console.log('hi')
   //several key  events are set on loading the app. These are handled in a seperate key handler module.
   function keyPress(e: event) {
-    console.log('key')
     handleKeyPress(e)
   }
   function keyRelease(e: event) {
