@@ -1,0 +1,11 @@
+node_modules
+Dockerfile_auth
+Dockerfile_db
+Dockerfile_web
+docker-compose-dev.yml
+docker-compose-prod.yml
+docker-compose.yml
+.dockerignore
+.git
+.gitignore
+pgdata

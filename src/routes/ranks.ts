@@ -4,7 +4,7 @@ const Pool = PoolGet.Pool
 const pool = new Pool({
     user: "postgres",
     password: "D@c77357",
-    host: "localhost",
+    host: "postgres",
     port: 5432,
     database: "gamecreator"
 })

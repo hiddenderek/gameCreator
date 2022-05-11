@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import config from '../config'
 import { useLocation, useHistory } from 'react-router-dom';
 import {handleApiData} from './Apicalls'
+
 function LogIn({setProfileData} : any) {
   const location = useLocation()
   const history = useHistory()

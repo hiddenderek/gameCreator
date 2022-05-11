@@ -11,12 +11,12 @@ let leftLoop: NodeJS.Timeout
 let rightLoop: NodeJS.Timeout
 let jumpDecrease = 0
 function GameButtons() {
-  const dispatch = useAppDispatch()
   const location = useLocation()
   const gravity = useAppSelector((state)=>state.character.gravity)
   const [buttonPressed, setButtonPressed] = useState('')
   const [jumpPressed, setJumpPressed] = useState(false)
   const [minimized, setMinimized] = useState(false)
+  const dispatch = useAppDispatch()
 
   useEffect(()=>{
     if (buttonPressed === "dpadRight") {

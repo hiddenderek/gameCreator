@@ -1,6 +1,7 @@
 import React from 'react'
 import { userObject } from '../app/types';
 import { useLocation, useHistory } from 'react-router-dom';
+
 function SideBar ({profileData} : {profileData : userObject}) {
   const history = useHistory()
   const location = useLocation()

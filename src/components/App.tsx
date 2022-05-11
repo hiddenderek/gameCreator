@@ -20,7 +20,6 @@ import {handleApiData } from './Apicalls'
 import {event, userObject} from '../app/types'
 import Ranks from './Ranks'
 
-
 function App () {
   console.log('STARTING APP')
   const [sideBar, setSideBar] = useState(false)

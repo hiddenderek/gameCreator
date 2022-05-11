@@ -1,4 +1,5 @@
 import React from 'react';
+
 const HealthBarBlock = function () {
   return (
     <div id="healthBarBlock" className="healthBarBlock">

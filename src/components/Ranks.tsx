@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import {useLocation} from 'react-router'
 import { handleApiData } from './Apicalls';
 import {useHistory} from 'react-router-dom'
+
 function Ranks () {
     const [highScoreRanks, setHighScoreRanks] = useState([])
     const [likeRanks, setLikeRanks] = useState([])

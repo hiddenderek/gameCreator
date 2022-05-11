@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from "react"
 
-
-
 function GameBrowserPages ({page, pageList, changePage, gameDisplayLimit, pageDisplayLimit} : {page: number, pageList: object[], changePage: Function, gameDisplayLimit: number, pageDisplayLimit: number}) {
     console.log('PAGE RENDER')
     const [pageOffset, setPageOffset] = useState(0)

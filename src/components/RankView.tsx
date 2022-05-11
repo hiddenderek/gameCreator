@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState, useReducer } from 'react';
 import { handleApiData } from './Apicalls';
 import { useHistory } from 'react-router';
 import { userObject} from '../app/types'
+
 function RankView({ profileData }: { profileData: userObject }) {
   const [rankData, setRankData] = useState([])
   const history = useHistory()

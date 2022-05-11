@@ -1,7 +1,6 @@
 import React from 'react';
 import {useAppSelector } from '../app/hooks';
 
-;
 function GameResult() {
   const characterHealth = useAppSelector((state) => state.character.health)
   const playTimeSeconds = useAppSelector((state) => state.gameEvents.playTimeSeconds)

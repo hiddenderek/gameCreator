@@ -1,0 +1,3 @@
+FROM postgres
+ENV POSTGRES_DB gamecreator
+COPY src/data/database.sql /docker-entrypoint-initdb.d/

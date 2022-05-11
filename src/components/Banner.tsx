@@ -5,6 +5,7 @@ import {useAppSelector, useAppDispatch} from '../app/hooks';
 import {setSearchTerm, setRankView} from '../features/userInterface/userInterface-slice'
 import { handleApiData } from './Apicalls';
 import config from '../config';
+
 function Banner ({setProfileData, profileData, aspectRatio, isMobile} : any) {
   const {username} = profileData
   const location = useLocation()

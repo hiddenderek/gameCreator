@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { getAccessToken, getApiData, handleApiData } from './Apicalls'
-import config from '../config'
+import { handleApiData } from './Apicalls'
+
 function GameIcon({gameData, profileData, getData} : any) {
     const {username} = profileData
     const history = useHistory()
@@ -9,6 +9,7 @@ function GameIcon({gameData, profileData, getData} : any) {
     const [gameUserName, setGameUserName] = useState('')
     const [gameLikes, setGameLikes] = useState(0)
     const [gameDislikes, setGameDislikes] = useState(0)
+    
     useEffect(()=>{
         getUserName(gameData.user_id) 
         getGameLikes()

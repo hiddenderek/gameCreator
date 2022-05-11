@@ -357,7 +357,7 @@
   }
   .gameButtonMinimizer {
     height: var(--gameMinimizerHeight);
-    background-color: red;
+    background-color: rgb(0, 0, 0);
     color: white;
     display: flex;
     justify-content: center;
@@ -623,7 +623,7 @@
   }
   .gameButtonMinimizer {
     height: var(--gameMinimizerHeight);
-    background-color: red;
+    background-color: rgb(0, 0, 0);
     color: white;
     display: flex;
     justify-content: center;

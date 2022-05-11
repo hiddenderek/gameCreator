@@ -15,7 +15,6 @@ import { useLocation } from 'react-router'
 import { handleApiData } from './Apicalls';
 import { userObject } from '../app/types'
 
-
 function Game({ profileData, aspectRatio, isMobile }: { profileData: userObject, aspectRatio: number, isMobile: boolean }) {
   const gameData: elementObj[] = useAppSelector((state) => state.gameData.gameData)
   const characterHealth = useAppSelector((state) => state.character.health)

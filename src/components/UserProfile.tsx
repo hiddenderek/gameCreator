@@ -4,6 +4,7 @@ import { useAppSelector } from '../app/hooks';
 import GameIcon from './GameIcon'
 import { handleApiData } from './Apicalls';
 import {userObject} from '../app/types'
+
 function UserProfile ({profileData}: {profileData: userObject}) {
     const {username} = profileData
     const history = useHistory()

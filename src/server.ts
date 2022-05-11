@@ -17,7 +17,7 @@ const app = express()
 app.use(express.json({ limit: "2mb" }))
 app.use(cors({
     credentials: true,
-    origin: `https://192.168.1.5:${config.port}`
+    origin: `https://${config.hostname}:${config.port}`
 }));
 app.use(cookieParser());
 app.use(express.static('public'));

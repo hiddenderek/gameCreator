@@ -1,0 +1,32 @@
+version: "3"
+services:
+  node-app:
+    build: 
+      context: .
+      dockerfile: Dockerfile_web
+    ports:
+      - "8100:8100"
+    restart: always
+    depends_on:
+      - postgres
+  auth-app:
+    build: 
+      context: .
+      dockerfile: Dockerfile_auth
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      - postgres
+  postgres:
+    build: 
+      context: .
+      dockerfile: Dockerfile_db
+    volumes:
+      - ./pgdata/:/var/lib/postgresql/data
+    ports: 
+      - "5432:5432"
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=D@c77357
+      - POSTGRES_DB=gamecreator

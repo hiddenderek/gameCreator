@@ -1,11 +1,11 @@
 import { store } from '../../src/app/store'
-import { leftLoop, rightLoop, spaceLoop } from './handleKeyPress';
+import { spaceLoop } from './handleKeyPress';
 import { toggleGravity, changeY, setY, setX, jump, removeHealth, changeMoveAmount } from '../features/character/character-slice';
 import { toggleSpace } from '../features/keyPress/keyPress-slice'
 import { evalTime, winGame } from '../features/gameEvents/gameEvents-slice'
 import { clearCounts } from './GameEvents'
 import { refreshRate, moveRate, gravityRate} from './physicsConfig'
-let gravityLoop: NodeJS.Timeout
+
 let characterLoop: NodeJS.Timeout
 let lavaCount = 0
 let spikeCount = 0

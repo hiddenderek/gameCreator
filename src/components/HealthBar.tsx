@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useAppSelector } from '../app/hooks';
 import HealthBarBlock from './HealthBarBlock';
 import _ from 'lodash'
+
 function HealthBar () {
   const characterHealth = useAppSelector((state) => state.character.health)
 

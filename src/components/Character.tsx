@@ -3,6 +3,7 @@ import { useAppSelector } from '../app/hooks';
 import { useLocation } from 'react-router-dom'
 import {characterTrack, clearCharacterTrack} from './physics'
 import {resetGame} from './GameEvents'
+
 function Character (props: any, ref: any) {
   const location = useLocation()
   const character = useAppSelector((state) => state.character)

@@ -1,8 +1,9 @@
-import React, { MutableRefObject, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom'
 import { ProgressPlugin } from 'webpack';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { modifyGame, modifyEvent } from '../features/gameData/gameData-slice';
+
 function GameElement (props: any, ref: any) {
   const location = useLocation()
   const elementRef = useRef<HTMLDivElement>(null);

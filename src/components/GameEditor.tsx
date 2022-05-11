@@ -1,11 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { loadGame, setGameSize } from '../features/gameData/gameData-slice';
 import { setCurrentElement } from '../features/gameEditor/gameEditor-slice';
 import { handleApiData } from './Apicalls';
 import html2canvas from 'html2canvas'
+
 function GameEditor ({turnOnSideBar, profileData} : any) {
+  const {username} = profileData
   const gameData = useAppSelector((state) => state.gameData.gameData)
   const curGameName = useAppSelector((state) => state.gameData.gameName)
   const currentElement = useAppSelector((state) => state.gameEditor.currentElement)
@@ -13,7 +14,7 @@ function GameEditor ({turnOnSideBar, profileData} : any) {
   const [gameName, setGameName] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const dispatch = useAppDispatch()
-  const {username} = profileData
+  
   useEffect(()=>{
     console.log('sideBarON!!!')
     turnOnSideBar()

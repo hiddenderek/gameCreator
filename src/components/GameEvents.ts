@@ -1,4 +1,3 @@
-import { clear } from 'console';
 import { store } from '../../src/app/store'
 import { eventReset, toggleSpikeStatus, countTime } from '../features/gameEvents/gameEvents-slice';
 import { gameEditorReset } from '../features/gameEditor/gameEditor-slice'
@@ -8,6 +7,7 @@ import { clearCharacterTrack } from './physics'
 let spikeAlternater: NodeJS.Timer | undefined
 let timeCounter: NodeJS.Timer | undefined
 typeof window != "undefined" ? window.addEventListener("popstate", (e) => { clearInterval(spikeAlternater as NodeJS.Timer); clearInterval(timeCounter as NodeJS.Timer) }) : ""
+
 export function spikeAlternate() {
     if (!spikeAlternater) {
         spikeAlternater = setInterval(() => {

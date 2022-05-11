@@ -1,0 +1,36 @@
+version: "3"
+services:
+  node-app:
+    build:
+      context: .
+      args:
+        NODE_ENV: development
+    volumes:
+      - ./public:/app/public
+      - ./src:/app/src
+      - type: bind
+        source: tsconfig.json
+        target: /app/tsconfig.json
+      - type: bind
+        source: webpack.config.js
+        target: /app/webpack.config.js
+    environment:
+      - NODE_ENV=development
+    command: npm run dev && npm run webpack
+  auth-app:
+    build:
+      context: .
+      args:
+        NODE_ENV: development
+    volumes:
+      - ./public:/app/public
+      - ./src:/app/src
+      - type: bind
+        source: tsconfig.json
+        target: /app/tsconfig.json
+      - type: bind
+        source: webpack.config.js
+        target: /app/webpack.config.js
+    environment:
+      - NODE_ENV=development
+    command: npm run devAuth

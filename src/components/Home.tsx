@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import {useLocation} from 'react-router'
 import GameIcon from './GameIcon'
 import { handleApiData } from './Apicalls';
 import { userObject } from '../app/types';
+
 function Home ({profileData} : {profileData: userObject}) {
     const [featuredGames, setFeaturedGames] = useState([])
     useEffect(()=>{
         handleApiData(`/trending`, setFeaturedGames, "get", null)
     },[])
+
     console.log('homeRender!')
     return (
         <div className="Home content" >
