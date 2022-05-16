@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import config from '../config'
 import { useLocation, useHistory } from 'react-router-dom';
-import {handleApiData} from './Apicalls'
+import {handleApiData} from '../utils/apicalls';
 
 function LogIn({setProfileData} : any) {
   const location = useLocation()

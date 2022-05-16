@@ -1,8 +1,8 @@
-import React, { useRef, useEffect, useState, useReducer } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useAppSelector } from '../app/hooks';
 import GameIcon from './GameIcon'
-import { handleApiData } from './Apicalls';
+import {handleApiData} from '../utils/apicalls';
 import {userObject} from '../app/types'
 
 function UserProfile ({profileData}: {profileData: userObject}) {

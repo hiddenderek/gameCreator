@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { handleApiData } from './Apicalls';
+import {handleApiData} from '../utils/apicalls';
 import {useHistory} from 'react-router-dom'
 
 function Ranks () {

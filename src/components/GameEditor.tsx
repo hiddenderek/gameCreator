@@ -1,8 +1,8 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { setCurrentElement } from '../features/gameEditor/gameEditor-slice';
-import { handleApiData } from './Apicalls';
+import {handleApiData} from '../utils/apicalls';
 import html2canvas from 'html2canvas'
 
 function GameEditor ({turnOnSideBar, profileData} : any) {

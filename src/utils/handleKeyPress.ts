@@ -1,21 +1,22 @@
 import { store } from '../../src/app/store'
-import { toggleGravity, changeX, changeY, setY, jump, changeMoveAmount } from '../features/character/character-slice';
+import { toggleGravity, changeX, changeY, jump, changeMoveAmount } from '../features/character/character-slice';
 import { toggleSpace, toggleLeft, toggleRight, toggleCtrl, toggleZ, toggleY } from '../features/keyPress/keyPress-slice'
 import { undo, redo } from '../features/gameData/gameData-slice'
 import { event } from '../app/types'
-import { refreshRate, moveRate, jumpAmountRate, jumpDecreaseRate, jumpArcPeak} from './physicsConfig'
+import { refreshRate, jumpAmountRate, jumpDecreaseRate, jumpArcPeak} from './physicsConfig'
 export let spaceLoop : NodeJS.Timeout
 export let rightLoop : NodeJS.Timeout
 export let leftLoop : NodeJS.Timeout
 
 let jumpDecrease = 0
-export function handleKeyPress(e: event) {
+export function handleKeyPress(e: KeyboardEvent) {
+    const targetElm = e.target as HTMLElement
     const getStore = store.getState()
-    if (e!.target.tagName !== "INPUT") {
+    if (targetElm.tagName !== "INPUT") {
         if ((e!.key == "ArrowRight" || e!.key == "d") && getStore.keyPress.right == false) {
-            console.log("Left")
+            console.log("Right")
+            store.dispatch(toggleLeft(false))
             store.dispatch(toggleRight(true))
-            store.dispatch(changeMoveAmount(moveRate * -1))
             rightLoop = setInterval(() => {
                 const getNewStore = store.getState()
                 if (getNewStore.character.x < 95.9 &&  !getNewStore.userInterface.rankView) {
@@ -24,12 +25,13 @@ export function handleKeyPress(e: event) {
             }, refreshRate)
         }
         if ((e!.key == "ArrowLeft" || e!.key == "a") && getStore.keyPress.left == false) {
-            console.log("Right")
+            console.log("Left")
+            store.dispatch(toggleRight(false))
             store.dispatch(toggleLeft(true))
-            store.dispatch(changeMoveAmount(moveRate))
             leftLoop = setInterval(() => {
                 const getNewStore = store.getState()
                 if (getNewStore.character.x >= 0 && !getNewStore.userInterface.rankView) {
+                    console.log(getNewStore.character.x)
                     store.dispatch(changeX(getNewStore.character.moveAmount * -1))
                 }
             }, refreshRate)
@@ -90,7 +92,7 @@ export function handleKeyPress(e: event) {
     }
 }
 
-export function handleKeyRelease(e: event) {
+export function handleKeyRelease(e: KeyboardEvent) {
     const getStore = store.getState()
     if ((e!.key == "ArrowRight" || e!.key == "d") && getStore.keyPress.right == true) {
         console.log("Right")

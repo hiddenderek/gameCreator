@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';;
 import { useAppSelector } from '../app/hooks';
 import { useLocation } from 'react-router-dom'
-import {characterTrack, clearCharacterTrack} from './physics'
+import {characterTrack, clearCharacterTrack} from '../utils/physics'
 import {resetGame} from './GameEvents'
 
 function Character (props: any, ref: any) {
@@ -16,6 +16,7 @@ function Character (props: any, ref: any) {
       resetGame()
       characterTrack(ref)
   },[location.pathname])
+
   return (
     <div id="character" className={`${character.jump ? "characterJump" : "character"} ${character.health < 7 &&  character.health >= 4 ? "characterLightDamage" : character.health < 4 && character.health> 1 ? "characterMediumDamage" : character.health == 1 ? "characterHighDamage" : null}`} style={{ transform: `translate(${character.x * 32}%, ${character.y * (character.jump ? 7.2 : 9)}%) ${character.direction == "left" ? "scaleX(-1)" : "scaleX(1)"}`}}>
     </div>

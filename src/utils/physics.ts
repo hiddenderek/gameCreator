@@ -1,9 +1,9 @@
-import { store } from '../../src/app/store'
+import { store } from '../app/store'
 import { spaceLoop } from './handleKeyPress';
 import { toggleGravity, changeY, setY, setX, jump, removeHealth, changeMoveAmount } from '../features/character/character-slice';
 import { toggleSpace } from '../features/keyPress/keyPress-slice'
 import { evalTime, winGame } from '../features/gameEvents/gameEvents-slice'
-import { clearCounts } from './GameEvents'
+import { clearCounts } from '../components/GameEvents'
 import { refreshRate, moveRate, gravityRate} from './physicsConfig'
 
 let characterLoop: NodeJS.Timeout

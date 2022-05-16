@@ -1,11 +1,11 @@
-import React, { useRef, useEffect, useState, useReducer } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import {useAppDispatch, useAppSelector} from '../app/hooks'
 import { toggleGravity, changeX, changeY,jump, changeMoveAmount } from '../features/character/character-slice';
 import {  toggleLeft, toggleRight} from '../features/keyPress/keyPress-slice'
-import { refreshRate, moveRate, jumpAmountRate, jumpDecreaseRate, jumpArcPeak} from './physicsConfig'
+import { refreshRate, moveRate, jumpAmountRate, jumpDecreaseRate, jumpArcPeak} from '../utils/physicsConfig'
 import { store } from '../../src/app/store'
-import e from 'express';
+
 let jumpLoop: NodeJS.Timeout
 let leftLoop: NodeJS.Timeout
 let rightLoop: NodeJS.Timeout

@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useState, useReducer } from 'react';
-import { handleApiData } from './Apicalls';
+import React, { useEffect, useState } from 'react';
+import {handleApiData} from '../utils/apicalls';
 import { useHistory } from 'react-router';
 import { userObject} from '../app/types'
 

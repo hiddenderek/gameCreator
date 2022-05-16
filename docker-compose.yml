@@ -6,15 +6,20 @@ services:
       dockerfile: Dockerfile_web
     ports:
       - "8100:8100"
+    env_file:
+    - .env
     restart: always
     depends_on:
       - postgres
+      - auth-app
   auth-app:
     build: 
       context: .
       dockerfile: Dockerfile_auth
     ports:
-      - "8080:8080"
+      - "8090:8090"
+    env_file:
+    - .env
     restart: always
     depends_on:
       - postgres

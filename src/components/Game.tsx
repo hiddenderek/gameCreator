@@ -12,7 +12,7 @@ import { spikeAlternate, timeCount, resetGame } from './GameEvents';
 import { characterReset } from '../features/character/character-slice';
 import { setRankView } from '../features/userInterface/userInterface-slice';
 import { useLocation } from 'react-router'
-import { handleApiData } from './Apicalls';
+import {handleApiData} from '../utils/apicalls';
 import { userObject } from '../app/types'
 
 function Game({ profileData, aspectRatio, isMobile }: { profileData: userObject, aspectRatio: number, isMobile: boolean }) {

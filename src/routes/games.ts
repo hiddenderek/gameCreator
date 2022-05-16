@@ -111,14 +111,16 @@ router.get('/api/games', async (req: any, res: any) => {
         if (selectGames.rows) {
             res.status(200)
             res.json(selectGames.rows)
+            console.log('got games')
         } else {
             res.status(404)
             res.json('Failed getting games.')
+            console.log('could not get any games')
         }
-    } catch (e) {
+    } catch (e : any) {
         console.log('SEARCH ERROR: ' + e)
         res.status(400)
-        res.json('Failed getting games.')
+        res.json('Failed getting games.'+ e.message)
     }
 })
 router.get('/api/games/:userName', async (req: any, res: any) => {

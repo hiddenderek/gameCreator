@@ -1,11 +1,8 @@
-import { response } from 'express';
-import { result } from 'lodash';
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useHistory } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../app/hooks';
-import { handleApiData } from './Apicalls';
+import {handleApiData} from '../utils/apicalls';
 import { userObject } from '../app/types';
-import config from '../config'
 import GameIcon from './GameIcon'
 import GameBrowserPages from './GameBrowserPages';
 import _ from 'lodash'
@@ -41,6 +38,7 @@ function GameBrowser({ profileData }: { profileData: userObject }) {
                 console.log('Invalid URL error: '  + e)
         }
     },[])
+
     useEffect(() => {
         console.log('reload')
         console.log(queryMode)

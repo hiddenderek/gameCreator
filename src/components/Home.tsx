@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import GameIcon from './GameIcon'
-import { handleApiData } from './Apicalls';
+import { handleApiData } from '../utils/apicalls';
 import { userObject } from '../app/types';
 
 function Home ({profileData} : {profileData: userObject}) {

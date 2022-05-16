@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { useLocation } from 'react-router'
 import {useAppSelector, useAppDispatch} from '../app/hooks';
 import {setSearchTerm, setRankView} from '../features/userInterface/userInterface-slice'
-import { handleApiData } from './Apicalls';
+import {handleApiData} from '../utils/apicalls';
 import config from '../config';
 
 function Banner ({setProfileData, profileData, aspectRatio, isMobile} : any) {

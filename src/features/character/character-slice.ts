@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'; 
+import {moveRate} from '../../utils/physicsConfig'
 
 interface characterProps {
         gravity: boolean,
@@ -21,7 +22,7 @@ const initialState: characterProps = {
         jump: false,
         direction: "right",
         characterLoop: {},
-        moveAmount: .8,
+        moveAmount: moveRate,
 
 }
 

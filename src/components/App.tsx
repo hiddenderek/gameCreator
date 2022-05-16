@@ -10,13 +10,12 @@ import Game from './Game'
 import GameEditor from './GameEditor'
 import Banner from './Banner'
 import SideBar from './SideBar'
-import { handleKeyPress, handleKeyRelease } from './handleKeyPress'
+import { handleKeyPress, handleKeyRelease } from '../utils/handleKeyPress'
 import { useLocation, useHistory } from 'react-router'
 import { useAppDispatch} from '../app/hooks';
 import {gameEditorReset} from '../features/gameEditor/gameEditor-slice'
 import {resetGame} from './GameEvents'
-import {setUser} from '../features/userInterface/userInterface-slice';
-import {handleApiData } from './Apicalls'
+import {handleApiData} from '../utils/apicalls';
 import {event, userObject} from '../app/types'
 import Ranks from './Ranks'
 
@@ -117,10 +116,10 @@ console.log('STILL STARTING APP!')
   console.log(profileData.username)
   console.log('hi')
   //several key  events are set on loading the app. These are handled in a seperate key handler module.
-  function keyPress(e: event) {
+  function keyPress(e: KeyboardEvent) {
     handleKeyPress(e)
   }
-  function keyRelease(e: event) {
+  function keyRelease(e: KeyboardEvent) {
     handleKeyRelease(e)
   }
   function turnOnSideBar() {
