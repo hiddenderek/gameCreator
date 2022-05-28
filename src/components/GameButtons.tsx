@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
-import {useAppDispatch, useAppSelector} from '../app/hooks'
-import { toggleGravity, changeX, changeY,jump, changeMoveAmount } from '../features/character/character-slice';
-import {  toggleLeft, toggleRight} from '../features/keyPress/keyPress-slice'
-import { refreshRate, moveRate, jumpAmountRate, jumpDecreaseRate, jumpArcPeak} from '../utils/physicsConfig'
-import { store } from '../../src/app/store'
+import { useAppSelector} from '../app/hooks'
+import { clearJump, clearLeft, clearRight, moveJump, moveLeft, moveRight } from '../utils/handleKeyPress';
 
-let jumpLoop: NodeJS.Timeout
-let leftLoop: NodeJS.Timeout
-let rightLoop: NodeJS.Timeout
 let jumpDecrease = 0
 function GameButtons() {
   const location = useLocation()
@@ -16,64 +10,25 @@ function GameButtons() {
   const [buttonPressed, setButtonPressed] = useState('')
   const [jumpPressed, setJumpPressed] = useState(false)
   const [minimized, setMinimized] = useState(false)
-  const dispatch = useAppDispatch()
 
   useEffect(()=>{
     if (buttonPressed === "dpadRight") {
-      clearInterval(leftLoop)
-      store.dispatch(toggleRight(true))
-      store.dispatch(changeMoveAmount(moveRate * -1))
-      rightLoop = setInterval(() => {
-        const getNewStore = store.getState()
-        if (getNewStore.character.x < 95.9 &&  !getNewStore.userInterface.rankView) {
-            store.dispatch(changeX(getNewStore.character.moveAmount))
-        }
-    }, refreshRate)
+      clearLeft()
+      moveRight()
     } else if (buttonPressed === "dpadLeft") {
-      clearInterval(rightLoop)
-      store.dispatch(toggleLeft(true))
-      store.dispatch(changeMoveAmount(moveRate))
-      leftLoop = setInterval(() => {
-        const getNewStore = store.getState()
-        if (getNewStore.character.x >= 0 && !getNewStore.userInterface.rankView) {
-            store.dispatch(changeX(getNewStore.character.moveAmount * -1))
-        }
-    }, refreshRate)
+      clearRight()
+      moveLeft()
     } else if (!buttonPressed) {
-      clearInterval(leftLoop)
-      clearInterval(rightLoop)
+      clearRight()
+      clearLeft()
     }
   }, [buttonPressed])
 
   useEffect(()=>{
     if (jumpPressed && jumpDecrease == 0 && gravity == false) {
-      dispatch(jump(true))
-      jumpLoop = setInterval(() => {
-          const getStore = store.getState()
-          if (!getStore.userInterface.rankView) {
-              //jump arc starts at -1.2 (negative is up) and gradually slows until it peaks at 0 and then starts going downward (positive)
-              //limit is 1.2, then the jump arc stops
-              jumpDecrease = jumpDecrease + jumpDecreaseRate
-              let jumpAmount = jumpAmountRate + jumpDecrease
-              // if the jump arc hasnt completed yet (< 1.2 and you havent released space yet (gravity is stopped), execute jump arc
-              if (jumpAmount < jumpArcPeak && getStore.character.gravity === false) {
-                  store.dispatch(changeY(jumpAmount))
-              } else if (jumpAmount >= jumpArcPeak) {
-                  //if you're still holding down space and havent released it yet, but the jump arc has completed, release the jump action.
-                  clearInterval(jumpLoop)
-                  store.dispatch(jump(false))
-                  store.dispatch(toggleGravity(true))
-                  jumpDecrease = 0
-              }
-          }
-      }, refreshRate)
+      moveJump()
     } else if (!jumpPressed){
-      clearInterval(jumpLoop)
-      jumpDecrease = 0
-      if (gravity === false) {
-        dispatch(toggleGravity(true))
-      }
-      dispatch(jump(false))
+      clearJump()
     }
   }, [jumpPressed])
 
