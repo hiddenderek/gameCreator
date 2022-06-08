@@ -35,16 +35,22 @@ const initialState: gameDataState = {
     gameSize: {width: 0, height: 0}
 }
 let historyCycle = 0
-let gameHistory : gameDataState[] = []
+export let gameHistory : gameDataState[] = []
 const gameDataSlice = createSlice({
     name: "gameData",
     initialState,
     reducers: {
         gameReset: () => { 
-            return initialState
+            historyCycle = 0
+            gameHistory = []
+            return initialState 
         },
         loadGame(state, action: PayloadAction<elementObj[]>) {
             state.gameData = action.payload
+            const currentState = JSON.parse(JSON.stringify(state))
+            gameHistory = []
+            gameHistory.push(currentState)
+            historyCycle = 1
             for (let i = 0; i < 576; i++) {
                 state.eventData.push({})
             }
@@ -63,22 +69,20 @@ const gameDataSlice = createSlice({
             } else if (modifier === "delete"){
                 console.log('delete collison!')
                 state.gameData[index].type = "0"
-                delete state.gameData[index][property]
+                delete state.gameData[index].collision
             }
             if (record) {
                 const currentState = JSON.parse(JSON.stringify(state))
                 const historyLength = gameHistory.length
                 const canvasHistoryTruncate = gameHistory.filter((item, index) => index <= historyLength - historyCycle) as []
-                console.log(canvasHistoryTruncate)
-                if (historyCycle > 0) {
+                if (historyCycle > 1) {
                     gameHistory = canvasHistoryTruncate
-                    historyCycle = 0
+                    historyCycle = 1
                 }
                 if (currentState !== null && Object.keys(currentState).length > 0) {
                     console.log('pushHistory')
                     gameHistory.push(currentState)
                 }
-                console.log(gameHistory)
             }
         },
         modifyEvent(state, action: PayloadAction<modifyGame>) {
@@ -95,13 +99,12 @@ const gameDataSlice = createSlice({
         undo(state){
             try {
                 const historyLength = gameHistory.length
-                console.log(gameHistory)
                 if (historyCycle < historyLength)  {
                     historyCycle += 1
                 } else {
                     historyCycle = historyLength
                 }
-                console.log(historyCycle)
+                console.log("historyLength: " + historyLength + " history cycle: " + historyCycle)
                 const newState = gameHistory[historyLength - historyCycle]
                 return newState
             } catch (e) {

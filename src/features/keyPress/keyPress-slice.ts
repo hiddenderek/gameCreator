@@ -23,6 +23,9 @@ const keyPressSlice = createSlice({
     name: "keyPress",
     initialState,
     reducers: {
+        resetKeys(state) {
+            return initialState
+        },
         toggleSpace(state, action: PayloadAction<boolean>) {
             console.log('space' + action.payload)
             state.space = action.payload
@@ -48,5 +51,5 @@ const keyPressSlice = createSlice({
     }
 })
 
-export const {toggleSpace, toggleLeft, toggleRight, toggleZ, toggleY, toggleCtrl} = keyPressSlice.actions
+export const {resetKeys, toggleSpace, toggleLeft, toggleRight, toggleZ, toggleY, toggleCtrl} = keyPressSlice.actions
 export default keyPressSlice.reducer;

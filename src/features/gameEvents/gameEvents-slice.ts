@@ -35,15 +35,13 @@ const gameEventsSlice = createSlice({
             if (state.playTimeSeconds === 0 && state.playTimeMinutes === 0 && state.playTimeHours === 0) {
                 console.log(state.timer)
                 state.playTimeSeconds = state.timer
-                if (state.timer > 60) {
-                    state.playTimeMinutes = state.timer / 60
-                }
-                if (state.playTimeMinutes > 1) {
-                    state.playTimeSeconds = Number(((state.playTimeMinutes % 1) * 60).toFixed(1))
-                }
-                if (state.playTimeMinutes > 60) {
-                    state.playTimeHours = Math.round((state.playTimeMinutes / 60))
-                    state.playTimeSeconds = Number((((state.playTimeMinutes / 60) % 1) * 3600).toFixed(1))
+                if (state.timer > 59 && state.timer <= 3599) {
+                    state.playTimeMinutes = Math.floor(Number(((state.timer / 60) % 60)))
+                    state.playTimeSeconds = Number((((state.timer / 60) % 1) * 60).toFixed(0))
+                } else if (state.timer > 3599) {
+                    state.playTimeHours = Math.floor(Number(((state.timer / 60 / 60))))
+                    state.playTimeMinutes = Math.floor(Number(((state.timer / 60) % 60)))
+                    state.playTimeSeconds = Number((((state.timer / 60) % 1) * 60).toFixed(0))
                 }
                 console.log(state.playTimeSeconds)
                 console.log(state.playTimeMinutes)
