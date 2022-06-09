@@ -33,18 +33,12 @@ function GameElement (props: any, ref: any) {
   //changes the element when you click on it and have an element type selected in the game editor.
   function changeElement() {
     if (location.pathname.includes('/gameEditor/')) {
-      console.log(elementType)
       dispatch(modifyGame({ index: props.index, property: "type", modifier: elementType, record: true }))
       updateElmProps(elementType)
-      console.log(gameData)
     }
   }
-  console.log('elementRender')
   // this function initializes the properties of elements, including collision properties. Records location of each element on the page for collision purposes.
   function updateElmProps(mode: string) {
-    console.log('updateProps!')
-    console.log(gameData[props.index].type)
-    console.log(mode)
     if ((mode == "0") && typeof window !== "undefined") {
       dispatch(modifyGame({
         index: props.index, property: "collision", modifier: "delete", record: false
@@ -72,7 +66,6 @@ function GameElement (props: any, ref: any) {
         },
         record: false
       }))
-      console.log('modProps!')
     }
 
   }
@@ -98,7 +91,7 @@ function GameElement (props: any, ref: any) {
     }
   }
   return (
-    <div id={props.id} ref={elementRef} className={`${elementDetect(gameData[props.index]?.type, eventData ? eventData[props.index]?.collisionActive : false)} ${location.pathname.includes('/gameEditor/') ? 'editorElement' : ""} ${gameData[props.index - 32]?.type == "0" ? 'topElement' : ""}`} onClick={changeElement}>
+    <div data-testid = "game_element" id={props.id} ref={elementRef} className={`${elementDetect(gameData[props.index]?.type, eventData ? eventData[props.index]?.collisionActive : false)} ${location.pathname.includes('/gameEditor/') ? 'editorElement' : ""} ${gameData[props.index - 32]?.type == "0" ? 'topElement' : ""}`} onClick={changeElement}>
       {props.text}
     </div>
   );

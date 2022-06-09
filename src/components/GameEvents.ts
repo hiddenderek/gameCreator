@@ -21,6 +21,7 @@ export function spikeAlternate() {
         }, 4000)
     }
 }
+
 export function timeCount() {
     if (!timeCounter) {
         timeCounter = setInterval(() => {

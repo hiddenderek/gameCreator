@@ -120,7 +120,7 @@ function Banner ({setProfileData, profileData, aspectRatio, isMobile} : any) {
       <div className="banner">
         {location.pathname.includes('/games') && !location.pathname.includes('/games/') || location.pathname.includes('/users/') ?
           <form className="searchBarForm">
-            <input className="searchBarInput" placeholder="Search" onInput={changeSearchTerm} value={searchTerm}></input>
+            <input data-testid = "banner_search_bar_input" className="searchBarInput" placeholder="Search" onInput={changeSearchTerm} value={searchTerm}></input>
           </form>
           : ""}
         {location.pathname.includes('/games/') && gameName && aspectRatio >= 1 ?

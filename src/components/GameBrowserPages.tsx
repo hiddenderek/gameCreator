@@ -26,7 +26,7 @@ function GameBrowserPages ({page, pageList, changePage, gameDisplayLimit, pageDi
             let limitPageCounter = 1;
             let pageCounter = 1 + pageOffset;
             const initalPage = pageCounter
-            pageArray.push(<div className={`pageButton ${page == (pageOffset) ? "pageHighlight" : ""}`} key={"page" + initalPage} onClick={() => { changePage(initalPage - 1) }}>{initalPage}</div>)
+            pageArray.push(<div data-testid = "page_browser_number" className={`pageButton ${page == (pageOffset) ? "pageHighlight" : ""}`} key={"page" + initalPage} onClick={() => { changePage(initalPage - 1) }}>{initalPage}</div>)
             for (let i = 0; i < pageList.length; i++) {
                 counter++;
                 console.log(counter)
@@ -39,11 +39,13 @@ function GameBrowserPages ({page, pageList, changePage, gameDisplayLimit, pageDi
                     console.log("i is: " + i)
                     console.log("i is limit: " + (pageList.length - 16))
                     if ((limitPageCounter <= pageDisplayLimit) && (i < (pageList.length - ((initalPage - 1) * gameDisplayLimit)))) {
+                        //curPage is the page that is currently being created
+                        //page is the page that is currently being displayed
                         const curPage = pageCounter
                         console.log('is highlight page: ' + page)
                         console.log('is highlight curPage: ' + curPage)
                         console.log('is highlight: ' + (page == (curPage - 1)))
-                        pageArray.push(<p className={`pageButton ${page == (curPage - 1) ? "pageHighlight" : ""}`} key={"page" + curPage} onClick={() => { changePage(curPage - 1) }}>{curPage}</p>)
+                        pageArray.push(<p data-testid = "page_browser_number" className={`pageButton ${page == (curPage - 1) ? "pageHighlight" : ""}`} key={"page" + curPage} onClick={() => { changePage(curPage - 1) }}>{curPage}</p>)
                     }
                 }
             }
@@ -55,14 +57,14 @@ function GameBrowserPages ({page, pageList, changePage, gameDisplayLimit, pageDi
     return(
         <ul className="pageBrowserContainer">
             {(pageList.length / gameDisplayLimit) > pageDisplayLimit ?
-            <li className = {`fullHeight ${pageOffset === 0 ? "arrowHidden" : ""}`} onClick = {()=>{changePageOffset(-1)}}>
-                <img  className = "arrow" src = "/images/arrow.png" />
+            <li data-testid = "page_browser_left_arrow" className = {`fullHeight ${pageOffset === 0 ? "arrowHidden" : ""}`} onClick = {()=>{changePageOffset(-1)}}>
+                <img className = "arrow" src = "/images/arrow.png" />
             </li>
             : ""}
             {getPages()}
             {(pageList.length / gameDisplayLimit) > pageDisplayLimit ?
-            <li className = {`fullHeight ${pageOffset >= ((pageList.length / gameDisplayLimit) - pageDisplayLimit)  ? "arrowHidden" : ""}`} onClick = {()=>{changePageOffset(1)}}>
-                <img  className = "arrow flip" src = "/images/arrow.png" />
+            <li data-testid = "page_browser_right_arrow" className = {`fullHeight ${pageOffset >= ((pageList.length / gameDisplayLimit) - pageDisplayLimit)  ? "arrowHidden" : ""}`} onClick = {()=>{changePageOffset(1)}}>
+                <img className = "arrow flip" src = "/images/arrow.png" />
             </li>
             : ""}
         </ul>

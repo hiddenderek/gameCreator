@@ -63,7 +63,6 @@ const gameDataSlice = createSlice({
         },
         modifyGame(state, action: PayloadAction<modifyGame>){
             const {index, property, modifier, record} = action.payload
-            console.log(modifier)
             if (modifier !== "delete") {
                 state.gameData[index][property] = modifier
             } else if (modifier === "delete"){
@@ -114,13 +113,11 @@ const gameDataSlice = createSlice({
         redo(state){
             try {
                 const historyLength = gameHistory.length
-                console.log(gameHistory)
                 if (historyCycle > 1) { 
                     historyCycle -= 1
                 } else {
                     historyCycle = 1
                 }
-                console.log(historyCycle)
                 const newState = gameHistory[historyLength - historyCycle]
                 return newState
             } catch (e) {

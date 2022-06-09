@@ -15,69 +15,42 @@ test('Toggle Space', () => {
     expect(keyPressState.space).toBe(true)
 })
 
-test('T', () => {
-    let gameEventState = store.getState().gameEvents
-    expect(gameEventState.timer).toBe(0)
-    dispatch(countTime())
-    gameEventState = store.getState().gameEvents
-    expect(gameEventState.timer).toBe(1)
-    dispatch(countTime())
-    gameEventState = store.getState().gameEvents
-    expect(gameEventState.timer).toBe(2)
-    dispatch(countTime())
-    gameEventState = store.getState().gameEvents
-    expect(gameEventState.timer).toBe(3)
+test('Toggle Left', () => {
+    let keyPressState = store.getState().keyPress
+    expect(keyPressState.left).toBe(false)
+    dispatch(toggleLeft(true))
+    keyPressState = store.getState().keyPress
+    expect(keyPressState.left).toBe(true)
 })
 
-test('Eval Time Seconds', () => {
-    let gameEventState = store.getState().gameEvents
-    expect(gameEventState.playTimeHours).toBe(0)
-    expect(gameEventState.playTimeMinutes).toBe(0)
-    expect(gameEventState.playTimeSeconds).toBe(0)
-    for (let i = 0; i < 55; i++) {
-        dispatch(countTime())
-    }
-    dispatch(evalTime())
-    gameEventState = store.getState().gameEvents
-    expect(gameEventState.playTimeHours).toBe(0)
-    expect(gameEventState.playTimeMinutes).toBe(0)
-    expect(gameEventState.playTimeSeconds).toBe(55)
+test('Toggle Right', () => {
+    let keyPressState = store.getState().keyPress
+    expect(keyPressState.right).toBe(false)
+    dispatch(toggleRight(true))
+    keyPressState = store.getState().keyPress
+    expect(keyPressState.right).toBe(true)
 })
 
-test('Eval Time Minute +', () => {
-    let gameEventState = store.getState().gameEvents
-    expect(gameEventState.playTimeHours).toBe(0)
-    expect(gameEventState.playTimeMinutes).toBe(0)
-    expect(gameEventState.playTimeSeconds).toBe(0)
-    for (let i = 0; i < 650; i++) {
-        dispatch(countTime())
-    }
-    dispatch(evalTime())
-    gameEventState = store.getState().gameEvents
-    expect(gameEventState.playTimeHours).toBe(0)
-    expect(gameEventState.playTimeMinutes).toBe(10)
-    expect(gameEventState.playTimeSeconds).toBe(50)
+test('Toggle Z', () => {
+    let keyPressState = store.getState().keyPress
+    expect(keyPressState.z).toBe(false)
+    dispatch(toggleZ(true))
+    keyPressState = store.getState().keyPress
+    expect(keyPressState.z).toBe(true)
 })
 
-test('Eval Time Hour + ', () => {
-    let gameEventState = store.getState().gameEvents
-    expect(gameEventState.playTimeHours).toBe(0)
-    expect(gameEventState.playTimeMinutes).toBe(0)
-    expect(gameEventState.playTimeSeconds).toBe(0)
-    for (let i = 0; i < 4000; i++) {
-        dispatch(countTime())
-    }
-    dispatch(evalTime())
-    gameEventState = store.getState().gameEvents
-    expect(gameEventState.playTimeHours).toBe(1)
-    expect(gameEventState.playTimeMinutes).toBe(6)
-    expect(gameEventState.playTimeSeconds).toBe(40)
+test('Toggle Y', () => {
+    let keyPressState = store.getState().keyPress
+    expect(keyPressState.y).toBe(false)
+    dispatch(toggleY(true))
+    keyPressState = store.getState().keyPress
+    expect(keyPressState.y).toBe(true)
 })
 
-test('Win game + ', () => {
-    let gameEventState = store.getState().gameEvents
-    expect(gameEventState.winGame).toBe(false)
-    dispatch(winGame())
-    gameEventState = store.getState().gameEvents
-    expect(gameEventState.winGame).toBe(true)
+test('Toggle Ctrl', () => {
+    let keyPressState = store.getState().keyPress
+    expect(keyPressState.ctrl).toBe(false)
+    dispatch(toggleCtrl(true))
+    keyPressState = store.getState().keyPress
+    expect(keyPressState.ctrl).toBe(true)
 })

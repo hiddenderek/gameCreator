@@ -15,6 +15,11 @@ import { useLocation } from 'react-router'
 import {handleApiData} from '../utils/apicalls';
 import { userObject } from '../app/types'
 
+interface elementObj {
+  type: string,
+  [key: string]: any
+}
+
 function Game({ profileData, aspectRatio, isMobile }: { profileData: userObject, aspectRatio: number, isMobile: boolean }) {
   const gameData: elementObj[] = useAppSelector((state) => state.gameData.gameData)
   const characterHealth = useAppSelector((state) => state.character.health)
@@ -29,21 +34,15 @@ function Game({ profileData, aspectRatio, isMobile }: { profileData: userObject,
   const location: any = useLocation()
   const dispatch = useAppDispatch()
 
-  interface elementObj {
-    type: string,
-    [key: string]: any
-  }
-  interface specialProps {
-    collisionActive: boolean
-  }
+
+
   useEffect(() => {
-    console.log('new game')
-    setTimeout(() => {
-      dispatch(setRankView(false))
-      dispatch(setGameSize({ width: gameGet?.width, height: gameGet?.height }))
-      getGameData()
-    }, location.pathname.includes('/gameEditor/') ? 100 : 0)
+    console.log(location.pathname)
+    dispatch(setRankView(false))
+    dispatch(setGameSize({ width: gameGet?.width, height: gameGet?.height }))
+    getGameData()
   }, [location.pathname])
+
   useEffect(() => {
     if (gameWin === true) {
       console.log('posting score!')
@@ -61,22 +60,16 @@ function Game({ profileData, aspectRatio, isMobile }: { profileData: userObject,
 
   async function getGameData() {
     try {
-      console.log('getting1')
       let responseDataResult = await handleApiData(null, setGameProps, "get", null)
-      console.log(responseDataResult)
       if (!responseDataResult) {
         responseDataResult = await handleApiData(null, setGameProps, "get", null)
       }
-      console.log('got')
-      console.log(responseDataResult)
       if (responseDataResult?.data) {
         const gameParse = typeof responseDataResult?.data === "string" ? JSON.parse(responseDataResult?.data) : responseDataResult?.data
         dispatch(loadGame(gameParse?.game_data[gameScreen]?.gameData))
         dispatch(setGameName(gameParse?.game_name))
         dispatch(setGameLikes(gameParse?.likes))
         const addView = await handleApiData(null, null, "patch", { plays: gameParse?.plays + 1 })
-        console.log('geting2')
-        console.log(addView)
         dispatch(characterReset())
         spikeAlternate()
         timeCount()

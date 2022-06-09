@@ -11,6 +11,10 @@ import { setSearchTerm } from '../features/userInterface/userInterface-slice';
 const gameDisplayLimit = 16
 const pageDisplayLimit = 4
 
+type gameObject = {
+    game_name: string
+}
+
 function GameBrowser({ profileData }: { profileData: userObject }) {
     const [gameList, setGameList] = useState([])
     const [pageList, setPageList] = useState([] as object[])
@@ -22,9 +26,6 @@ function GameBrowser({ profileData }: { profileData: userObject }) {
     const location = useLocation()
     const searchTerm = useAppSelector((state) => state.userInterface.searchTerm)
     const dispatch = useAppDispatch()
-    type gameObject = {
-        game_name: string
-    }
 
     useEffect(()=>{
         try {
@@ -40,14 +41,9 @@ function GameBrowser({ profileData }: { profileData: userObject }) {
     },[])
 
     useEffect(() => {
-        console.log('reload')
-        console.log(queryMode)
         const oldURL = location.pathname + location.search
         const newURL = `/games?mode=${queryMode}&uploaddate=${uploadDate}&direction=${resultDirection}&page=${page}${(searchTerm || searchTerm == "") ? `&search=${searchTerm}` : ""}`
-        console.log(oldURL)
-        console.log(newURL)
         if (oldURL !== newURL) {
-            console.log('urlChange')
             history.push(newURL)
         } else {
             handleApiData(location.pathname + location.search, setGameList, "get", null)
@@ -64,9 +60,7 @@ function GameBrowser({ profileData }: { profileData: userObject }) {
         }
     },[searchTerm, uploadDate])
 
-    console.log(pageList)
     function changeQueryMode(query: string) {
-        console.log(query)
         setQueryMode(query)
 
     }
@@ -87,15 +81,15 @@ function GameBrowser({ profileData }: { profileData: userObject }) {
                 <div className="gameBrowserBanner">
                     <div className="gameBrowserGroup">
                         <div className="gameBrowserCategory">Sort By: </div>
-                        <div className={`gameBrowserValue ${queryMode === "time_created" ? "gameValueSelected" : ""}`} onClick={() => { changeQueryMode('time_created') }}>Date</div>
-                        <div className={`gameBrowserValue ${queryMode === "game_name" ? "gameValueSelected" : ""}`} onClick={() => { changeQueryMode('game_name') }}>Name</div>
-                        <div className={`gameBrowserValue ${queryMode === "likes" ? "gameValueSelected" : ""}`} onClick={() => { changeQueryMode('likes') }}>Likes</div>
-                        <div className={`gameBrowserValue ${queryMode === "plays" ? "gameValueSelected" : ""}`} onClick={() => { changeQueryMode('plays') }}>Plays</div>
+                        <div data-testid = "sort_by_time_created" className={`gameBrowserValue ${queryMode === "time_created" ? "gameValueSelected" : ""}`} onClick={() => { changeQueryMode('time_created') }}>Date</div>
+                        <div data-testid = "sort_by_game_name" className={`gameBrowserValue ${queryMode === "game_name" ? "gameValueSelected" : ""}`} onClick={() => { changeQueryMode('game_name') }}>Name</div>
+                        <div data-testid = "sort_by_likes" className={`gameBrowserValue ${queryMode === "likes" ? "gameValueSelected" : ""}`} onClick={() => { changeQueryMode('likes') }}>Likes</div>
+                        <div data-testid = "sort_by_plays" className={`gameBrowserValue ${queryMode === "plays" ? "gameValueSelected" : ""}`} onClick={() => { changeQueryMode('plays') }}>Plays</div>
                     </div>
                     <div className="gameBrowserGroup">
                         <div className="gameBrowserCategory" >Order: </div>
-                        <div className={`gameBrowserValue ${resultDirection === "ASC" ? "gameValueSelected" : ""}`} onClick={() => { changeResultDirection('ASC') }}>Ascending</div>
-                        <div className={`gameBrowserValue ${resultDirection === "DESC" ? "gameValueSelected" : ""}`} onClick={() => { changeResultDirection('DESC') }}>Descending</div>
+                        <div data-testid = "change_search_result_asc" className={`gameBrowserValue ${resultDirection === "ASC" ? "gameValueSelected" : ""}`} onClick={() => { changeResultDirection('ASC') }}>Ascending</div>
+                        <div data-testid = "change_search_result_desc" className={`gameBrowserValue ${resultDirection === "DESC" ? "gameValueSelected" : ""}`} onClick={() => { changeResultDirection('DESC') }}>Descending</div>
                         <div className="gameBrowserCategory" > Limit to: </div>
                         <form className="gameBrowserValue">
                             <select value={uploadDate} onChange={(e: any) => { changeUploadDate(e.target.value) }}>
@@ -111,7 +105,7 @@ function GameBrowser({ profileData }: { profileData: userObject }) {
                 </div>
                 <div className="gameBrowserContentContainer">
                     <div id="gameBrowser" className="gameBrowser ">
-                        {typeof gameList.map !== "undefined" ? gameList.map((item: gameObject) => { return <GameIcon key={item.game_name} gameData={item} profileData={profileData} /> }) : ""}
+                        {typeof gameList.map !== "undefined" ? gameList.map((item: gameObject, index) => { return <GameIcon key={item.game_name} index = {index} gameData={item} profileData={profileData} /> }) : ""}
                     </div>
                 </div>
                 {pageList.length > gameDisplayLimit ? <GameBrowserPages page = {page} pageList = {pageList} changePage = {changePage} gameDisplayLimit = {gameDisplayLimit} pageDisplayLimit = {pageDisplayLimit}/> : ""}

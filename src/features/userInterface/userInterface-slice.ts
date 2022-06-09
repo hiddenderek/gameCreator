@@ -17,6 +17,9 @@ const userInterfaceSlice = createSlice({
     name: "userInterface",
     initialState,
     reducers: {
+        userInterfaceReset(state) {
+            return initialState
+        },
         setUser(state, action: PayloadAction<string>) {
             state.currentUser = action.payload
         },
@@ -29,5 +32,5 @@ const userInterfaceSlice = createSlice({
     }
 })
 
-export const {setUser, setSearchTerm, setRankView} = userInterfaceSlice.actions
+export const {userInterfaceReset, setUser, setSearchTerm, setRankView} = userInterfaceSlice.actions
 export default userInterfaceSlice.reducer;

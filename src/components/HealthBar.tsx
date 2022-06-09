@@ -5,10 +5,7 @@ import _ from 'lodash'
 
 function HealthBar () {
   const characterHealth = useAppSelector((state) => state.character.health)
-
-  // reflects current health status of character
-  useEffect(() => {
-  },[])
+  
   return (
     <div id="healthBarContainer" className="healthBarContainer">
         {_.times(characterHealth, i => <HealthBarBlock key = {i} />)}

@@ -19,11 +19,13 @@ function GameEditor ({turnOnSideBar, profileData} : any) {
     console.log('sideBarON!!!')
     turnOnSideBar()
   },[])
+  
   useEffect(()=>{
     if (location.pathname !== `/gameEditor/${username}/new`) {
       setGameName(curGameName)
     }
   },[curGameName])
+
   function dispatchCurrentElement(event: React.MouseEvent) {
     const target = event.target as HTMLDivElement
     const elementId = target.id
@@ -51,6 +53,7 @@ function GameEditor ({turnOnSideBar, profileData} : any) {
     setGameName(e.target.value)
     console.log(gameName)
   }
+  
   async function saveGameEdit(e: any) {
     e.preventDefault()
     const gridCanvas = await html2canvas(document.getElementById('gameGrid') as HTMLElement, { backgroundColor: null })
@@ -64,6 +67,7 @@ function GameEditor ({turnOnSideBar, profileData} : any) {
     }
     console.log(saveGameResult)
   }
+
   return (
     <div id="gameEditor" className="gameEditor sideContent" >
       <h1 id="title" className="gameEditorTitle flexCenter">GAME EDITOR</h1>

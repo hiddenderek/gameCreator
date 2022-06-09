@@ -4,6 +4,7 @@ import { useAppSelector} from '../app/hooks'
 import { clearJump, clearLeft, clearRight, moveJump, moveLeft, moveRight } from '../utils/handleKeyPress';
 
 let jumpDecrease = 0
+
 function GameButtons() {
   const location = useLocation()
   const gravity = useAppSelector((state)=>state.character.gravity)
