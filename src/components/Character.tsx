@@ -18,7 +18,7 @@ function Character (props: any, ref: any) {
   },[location.pathname])
 
   return (
-    <div id="character" className={`${character.jump ? "characterJump" : "character"} ${character.health < 7 &&  character.health >= 4 ? "characterLightDamage" : character.health < 4 && character.health> 1 ? "characterMediumDamage" : character.health == 1 ? "characterHighDamage" : null}`} style={{ transform: `translate(${character.x * 32}%, ${character.y * (character.jump ? 7.2 : 9)}%) ${character.direction == "left" ? "scaleX(-1)" : "scaleX(1)"}`}}>
+    <div data-testid = "game_character" id="character" className={`${character.jump ? "characterJump" : "character"} ${character.health < 7 &&  character.health >= 4 ? "characterLightDamage" : character.health < 4 && character.health> 1 ? "characterMediumDamage" : character.health == 1 ? "characterHighDamage" : null}`} style={{ transform: `translate(${character.x * 32}%, ${character.y * (character.jump ? 7.2 : 9)}%) ${character.direction == "left" ? "scaleX(-1)" : "scaleX(1)"}`}}>
     </div>
   );
 }

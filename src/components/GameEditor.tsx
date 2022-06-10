@@ -79,39 +79,39 @@ function GameEditor ({turnOnSideBar, profileData} : any) {
             <label className="left flexCenter smallLabel autoWidth fullHeight">
               {location.pathname === `/gameEditor/${username}/new` ? "SET TITLE" : "CHANGE TITLE"}
             </label>
-            <input className="right fullHeight"
+            <input data-testid = "game_title_input" className="right fullHeight"
               value={'location.pathname' == `/gameEditor/${username}/new` ? '' : gameName}
               placeholder="Game Name..." onInput={specifyGameName}>
             </input>
           </div>
           <form className="gameEditorSave flexCenter fullWidth" onSubmit={e => {saveGameEdit(e)}}>
-            <button id="saveButton" className="saveButton">Save Game</button>
+            <button data-testid = "game_save_btn" id="saveButton" className="saveButton">Save Game</button>
           </form>
           <p className="gameEditorError flexCenter fullWidth">{errorMessage.toUpperCase()}</p>
         </>
       }
       <div id="editSection1Container" className="editSectionContainer" >
         <div id="editSection1Title" className="editSectionTitle">SELECT ELEMENTS</div>
-        <div id="emptyElement" className={`emptyElement elementButton  ${currentElement === "0" ? "elementSelected" : ""}`} onClick={dispatchCurrentElement}>
+        <div data-testid = "empty_element_btn" id="emptyElement" className={`emptyElement elementButton  ${currentElement === "0" ? "elementSelected" : ""}`} onClick={dispatchCurrentElement}>
           <span className="absolute topLeft flexCenter elementLabel">REMOVE</span>
         </div>
-        <div id="groundElement" className={`groundElement elementButton ${currentElement === "1" ? "elementSelected" : ""}`} onClick={dispatchCurrentElement}>
+        <div data-testid = "ground_element_btn" id="groundElement" className={`groundElement elementButton ${currentElement === "1" ? "elementSelected" : ""}`} onClick={dispatchCurrentElement}>
           <img className="elementImage"></img>
           <span className="absolute topLeft flexCenter elementLabel">GROUND</span>
         </div>
-        <div id="lavaElement" className={`lavaElement elementButton ${currentElement === "2" ? "elementSelected" : ""}`} onClick={dispatchCurrentElement}>
+        <div data-testid = "lava_element_btn" id="lavaElement" className={`lavaElement elementButton ${currentElement === "2" ? "elementSelected" : ""}`} onClick={dispatchCurrentElement}>
           <img className="elementImage"></img>
           <span className="absolute topLeft flexCenter elementLabel">LAVA</span>
         </div>
-        <div id="spikeElement" className={`spikeElement elementButton ${currentElement === "3" ? "elementSelected" : ""}`} onClick={dispatchCurrentElement}>
+        <div data-testid = "spike_element_btn" id="spikeElement" className={`spikeElement elementButton ${currentElement === "3" ? "elementSelected" : ""}`} onClick={dispatchCurrentElement}>
           <img className="elementImage"></img>
           <span className="absolute topLeft flexCenter elementLabel">SPIKE</span>
         </div>
-        <div id="goalElement" className={`goalElement elementButton ${currentElement === "4" ? "elementSelected" : ""}`} onClick={dispatchCurrentElement}>
+        <div data-testid = "goal_element_btn" id="goalElement" className={`goalElement elementButton ${currentElement === "4" ? "elementSelected" : ""}`} onClick={dispatchCurrentElement}>
           <img className="elementImage"></img>
           <span className="absolute topLeft flexCenter elementLabel">GOAL</span>
         </div>
-        <div id="platformElement" className={`platformElement elementButton ${currentElement === "5" ? "elementSelected" : ""}`} onClick={dispatchCurrentElement}>
+        <div data-testid = "platform_element_btn" id="platformElement" className={`platformElement elementButton ${currentElement === "5" ? "elementSelected" : ""}`} onClick={dispatchCurrentElement}>
           <img className="elementImage"></img>
           <span className="absolute topLeft flexCenter elementLabel">PLATFORM</span>
         </div>

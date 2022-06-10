@@ -40,10 +40,10 @@ jest.mock('../utils/apicalls', () => {
 jest.useFakeTimers()
 
 beforeEach(()=>{
-    store.dispatch(gameReset())
-    store.dispatch(gameEditorReset())
-    store.dispatch(characterReset())
-    store.dispatch(eventReset())
+    dispatch(gameReset())
+    dispatch(gameEditorReset())
+    dispatch(characterReset())
+    dispatch(eventReset())
     renderWithRouter(
         <Router>
             <Provider store = {store}>
