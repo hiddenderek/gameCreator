@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {handleApiData} from '../utils/apicalls';
 import { useHistory } from 'react-router';
-import { userObject} from '../app/types'
+import { userObject, rankItem} from '../app/types'
 
 function RankView({ profileData }: { profileData: userObject }) {
   const [rankData, setRankData] = useState([])
   const history = useHistory()
-  type rankItem = {
-    score: number,
-    username: string
-  }
+
   useEffect(() => {
     handleApiData(`${location.pathname}/scores`, setRankData, "get", null)
   }, [])
@@ -24,7 +21,7 @@ function RankView({ profileData }: { profileData: userObject }) {
       <p>&nbsp;</p>
       <ul className = "rankList">
         {rankData.length > 0 ? 
-        rankData.map((item: rankItem, index)=><li className = "noClick"><p className = "click rankText" onClick = {()=>{navigateToUser(item.username)}}>{`${index + 1}. ${item.username.toUpperCase()}`}</p><p>{`SCORE: ${item.score} second(s)`}</p></li>)
+        rankData.map((item: rankItem, index)=><li className = "noClick"><p className = "click rankText" onClick = {()=>{navigateToUser(item.username)}}>{`${index + 1}. ${item.username.toUpperCase()}`}</p><p data-testid = "rank_item" >{`SCORE: ${item.score} second(s)`}</p></li>)
         : `None. Win to get the best score!`}
         {profileData?.username ? "" : 
         <>

@@ -43,6 +43,7 @@
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.13",
     "@types/express-useragent": "^1.0.2",
+    "@types/html2canvas": "^1.0.0",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/lodash": "^4.14.182",
     "@types/node": "^17.0.21",

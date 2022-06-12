@@ -86,32 +86,33 @@ function SignUp() {
       <div className="signUpPopup">
         <h1 className="popupHeader" >Sign Up</h1>
         <div className="singleLine">
-          <label>User Name: </label><input type="text" onInput={specifyUserName} ></input>
+          <label>User Name: </label>
+          <input data-testid = "user_input" type="text" onInput={specifyUserName} ></input>
         </div>
         <div className="singleLine">
           <label>Password: </label>
-          <input type="password" onInput={specifyPassword}></input>
+          <input data-testid = "pswd_input" type="password" onInput={specifyPassword}></input>
         </div>
         <div className="singleLine">
           <label>Confirm Password: </label>
-          <input type="password" onInput={specifyConfirmPassword}></input>
+          <input data-testid = "c_pswd_input" type="password" onInput={specifyConfirmPassword}></input>
         </div>
         <div className="singleLine">
           <div className="center">{passwordMatch}</div>
         </div>
         <div className="singleLine">
           <label>Date of Birth: </label>
-          <input type="date" onInput={specifyDateOfBirth}></input>
+          <input data-testid = "dob_input" type="date" onChange={specifyDateOfBirth}></input>
         </div>
         <div className="singleLine">
           <div className="center">{dateOfBirth ? "Date of birth specified!" : "No date of birth specified."}</div>
         </div>
         <form className="singleLine" onSubmit={(e) => { signUp(e) }}>
-          <button className={errorMessage ? "inactiveButton center" : "activeButton center"}>Submit</button>
+          <button data-testid = "signup_btn" className={errorMessage ? "inactiveButton center" : "activeButton center"}>Submit</button>
         </form>
         {errorMessage ?
           <div className="singleLine" style = {{whiteSpace: "normal"}}>
-            <p className="center" style = {{minWidth: "100%"}}>Error: {errorMessage}</p>
+            <p data-testid = "error_message" className="center" style = {{minWidth: "100%"}}>Error: {errorMessage}</p>
           </div> : ""}
         {!errorMessage && signUpMessage ? 
         <div className="fullWidth">
@@ -119,7 +120,7 @@ function SignUp() {
               <p className="center">Sign up successfull!</p>
             </div>
             <div className= "singleLine" >
-              <button className="center" onClick={profileNavigate}>Continue to login</button>
+              <button data-testid = "sign_up_log_in_nav" className="center" onClick={profileNavigate}>Continue to login</button>
             </div>
         </div> : ""}
       </div>

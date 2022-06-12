@@ -20,11 +20,8 @@ const dispatch = store.dispatch
 jest.mock('../utils/apicalls', () => {
     return {
         handleApiData: async (path: string, setState: Function, action: string, body: object) => {
-            console.log('SET STATE: ' + setState)
-            console.log('PATH: ' + path + " ACTION: " + action)
             if (path === null && action === "get") {
                 const testGameData = fs.readFileSync("./src/data/gameData.txt", {encoding: "utf-8"})
-                console.log('TEST GAME DATA: ' + testGameData.length)
                 act(() => {
                     setState ? setState(testGameData) : ""
                 })

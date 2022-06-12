@@ -54,11 +54,11 @@ function LogIn({setProfileData} : any) {
         <div className = "fullWidth">
           <div className="singleLine">
             <label>User Name: </label>
-            <input type="text" onInput={specifyUserName} ></input>
+            <input data-testid = "user_login_input" type="text" onInput={specifyUserName} ></input>
           </div>
           <div className="singleLine">
             <label>Password: </label>
-            <input type="password" onInput={specifyPassword}></input>
+            <input data-testid = "pswd_login_input" type="password" onInput={specifyPassword}></input>
           </div>
         </div>
         <form className="singleLine" onSubmit={(e) => { logIn(e) }}>

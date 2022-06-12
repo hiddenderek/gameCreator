@@ -26,18 +26,18 @@ type fakeGameData = {
     dislikes: number,
     grid_image: string,
     userId: string,
-    userName: string,
+    username: string,
     [key: string]: any
 }
 
 const testGameData: fakeGameData[] = [
-    { game_name: "Test Game 1", time_created: "12/27/1994", plays: 120, likes: 40, dislikes: 15, grid_image: "", userId: "asdf1234", userName: "testUser1" },
-    { game_name: "Test Game 2", time_created: "9/17/1996", plays: 100, likes: 35, dislikes: 5, grid_image: "", userId: "ghjk5678", userName: "testUser2" },
-    { game_name: "Test Game 3", time_created: "5/15/1995", plays: 186, likes: 95, dislikes: 25, grid_image: "", userId: "lzxc9012", userName: "testUser3" },
-    { game_name: "Best Game", time_created: "8/7/1997", plays: 500, likes: 105, dislikes: 1, grid_image: "", userId: "vbnm3456", userName: "testUser4" },
-    { game_name: "Worst Game", time_created: "11/22/1998", plays: 90, likes: 1, dislikes: 85, grid_image: "", userId: "qwer7890", userName: "testUser4" },
-    { game_name: "Mediocre Game", time_created: "10/1/1999", plays: 85, likes: 25, dislikes: 25, grid_image: "", userId: "tyui1234", userName: "testUser4" },
-    { game_name: "Ignored game", time_created: "7/4/2010", plays: 2, likes: 0, dislikes: 0, grid_image: "", userId: "opas5678", userName: "testUser5" }
+    { game_name: "Test Game 1", time_created: "12/27/1994", plays: 120, likes: 40, dislikes: 15, grid_image: "", userId: "asdf1234", username: "testUser1" },
+    { game_name: "Test Game 2", time_created: "9/17/1996", plays: 100, likes: 35, dislikes: 5, grid_image: "", userId: "ghjk5678", username: "testUser2" },
+    { game_name: "Test Game 3", time_created: "5/15/1995", plays: 186, likes: 95, dislikes: 25, grid_image: "", userId: "lzxc9012", username: "testUser3" },
+    { game_name: "Best Game", time_created: "8/7/1997", plays: 500, likes: 105, dislikes: 1, grid_image: "", userId: "vbnm3456", username: "testUser4" },
+    { game_name: "Worst Game", time_created: "11/22/1998", plays: 90, likes: 1, dislikes: 85, grid_image: "", userId: "qwer7890", username: "testUser4" },
+    { game_name: "Mediocre Game", time_created: "10/1/1999", plays: 85, likes: 25, dislikes: 25, grid_image: "", userId: "tyui1234", username: "testUser4" },
+    { game_name: "Ignored game", time_created: "7/4/2010", plays: 2, likes: 0, dislikes: 0, grid_image: "", userId: "opas5678", username: "testUser5" }
 ]
 
 jest.mock('../utils/apicalls', () => {
@@ -60,7 +60,7 @@ jest.mock('../utils/apicalls', () => {
                     status: 200
                 })
             } else if (path.includes('/actions/like')) {
-                const curGameName = getFromBetween.get(path, "/games/", "/actions/like")[0].split('/').join('')
+                const curGameName = path.split('/')[3]
                 const curGame = testGameData.filter((item: fakeGameData) => item.game_name === curGameName)[0]
                 act(() => {
                     setState ? setState(curGame.likes) : ""
@@ -70,7 +70,7 @@ jest.mock('../utils/apicalls', () => {
                     status: 200
                 })
             } else if (path.includes('/actions/dislike')) {
-                const curGameName = getFromBetween.get(path, "/games/", "/actions/dislike")[0].split('/').join('')
+                const curGameName = path.split('/')[3]
                 const curGame = testGameData.filter((item: fakeGameData) => item.game_name === curGameName)[0]
                 act(() => {
                     setState ? setState(curGame.dislikes) : ""
@@ -81,12 +81,12 @@ jest.mock('../utils/apicalls', () => {
                 })
             } else if (path.includes('/users/')) {
                 const curUserId = getAfterLastCharacter({ string: path, character: '/' })
-                const curUser = testGameData.filter((item: fakeGameData) => item.userId === curUserId)
+                const curGame = testGameData.filter((item: fakeGameData) => item.userId === curUserId)[0]
                 act(() => {
                     setState ? setState() : ""
                 })
                 return Promise.resolve({
-                    data: { username: curUser },
+                    data: { username: curGame.username },
                     status: 200
                 })
             }

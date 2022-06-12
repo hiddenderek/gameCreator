@@ -66,7 +66,6 @@ const gameDataSlice = createSlice({
             if (modifier !== "delete") {
                 state.gameData[index][property] = modifier
             } else if (modifier === "delete"){
-                console.log('delete collison!')
                 state.gameData[index].type = "0"
                 delete state.gameData[index].collision
             }
@@ -79,7 +78,6 @@ const gameDataSlice = createSlice({
                     historyCycle = 1
                 }
                 if (currentState !== null && Object.keys(currentState).length > 0) {
-                    console.log('pushHistory')
                     gameHistory.push(currentState)
                 }
             }
@@ -103,7 +101,6 @@ const gameDataSlice = createSlice({
                 } else {
                     historyCycle = historyLength
                 }
-                console.log("historyLength: " + historyLength + " history cycle: " + historyCycle)
                 const newState = gameHistory[historyLength - historyCycle]
                 return newState
             } catch (e) {

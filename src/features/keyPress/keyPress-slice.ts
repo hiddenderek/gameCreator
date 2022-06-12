@@ -27,19 +27,15 @@ const keyPressSlice = createSlice({
             return initialState
         },
         toggleSpace(state, action: PayloadAction<boolean>) {
-            console.log('space' + action.payload)
             state.space = action.payload
         },
         toggleLeft(state, action: PayloadAction<boolean>) {
-            console.log('space' + action.payload)
             state.left = action.payload
         },
         toggleRight(state, action: PayloadAction<boolean>) {
-            console.log('space' + action.payload)
             state.right = action.payload
         },
         toggleZ(state, action: PayloadAction<boolean>) {
-            console.log('z' + action.payload)
             state.z = action.payload
         },   
         toggleY(state, action: PayloadAction<boolean>) {

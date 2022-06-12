@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react"
 
 function GameBrowserPages ({page, pageList, changePage, gameDisplayLimit, pageDisplayLimit} : {page: number, pageList: object[], changePage: Function, gameDisplayLimit: number, pageDisplayLimit: number}) {
-    console.log('PAGE RENDER')
     const [pageOffset, setPageOffset] = useState(0)
 
     function changePageOffset(direction: number) {
@@ -9,13 +8,9 @@ function GameBrowserPages ({page, pageList, changePage, gameDisplayLimit, pageDi
             setPageOffset(prevState=>prevState + direction)
         }
     }
-    console.log("THE PAGE IS : "+page)
     useEffect(()=>{
         if ((Number(page) + 1) > (pageDisplayLimit + pageOffset)) {
-            console.log("NEW PAGE OFFSET DISPLAY LIMIT: " + pageDisplayLimit)
-            console.log("NEW PAGE: " + page)
             const newPageOffset = (Number(page) + 1) - Number(pageDisplayLimit)
-            console.log("NEW PAGE OFFSET: " + newPageOffset)
             setPageOffset(newPageOffset)
         }
     },[page])
@@ -29,27 +24,18 @@ function GameBrowserPages ({page, pageList, changePage, gameDisplayLimit, pageDi
             pageArray.push(<div data-testid = "page_browser_number" className={`pageButton ${page == (pageOffset) ? "pageHighlight" : ""}`} key={"page" + initalPage} onClick={() => { changePage(initalPage - 1) }}>{initalPage}</div>)
             for (let i = 0; i < pageList.length; i++) {
                 counter++;
-                console.log(counter)
                 if ((counter) > (gameDisplayLimit - 1)) {
                     counter = 0;
-                    console.log(pageCounter)
                     limitPageCounter++
                     pageCounter++
-                    console.log('pageCounter i is: ' + pageCounter)
-                    console.log("i is: " + i)
-                    console.log("i is limit: " + (pageList.length - 16))
                     if ((limitPageCounter <= pageDisplayLimit) && (i < (pageList.length - ((initalPage - 1) * gameDisplayLimit)))) {
                         //curPage is the page that is currently being created
                         //page is the page that is currently being displayed
                         const curPage = pageCounter
-                        console.log('is highlight page: ' + page)
-                        console.log('is highlight curPage: ' + curPage)
-                        console.log('is highlight: ' + (page == (curPage - 1)))
                         pageArray.push(<p data-testid = "page_browser_number" className={`pageButton ${page == (curPage - 1) ? "pageHighlight" : ""}`} key={"page" + curPage} onClick={() => { changePage(curPage - 1) }}>{curPage}</p>)
                     }
                 }
             }
-            console.log(pageArray)
         }
         return pageArray
     }

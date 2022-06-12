@@ -82,7 +82,6 @@ function Game({ profileData, aspectRatio, isMobile }: { profileData: userObject,
     }
   }
 
-  console.log('gameReRender')
 
   return (
     <div className="gameContent">
