@@ -56,7 +56,7 @@ function UserProfile ({profileData}: {profileData: userObject}) {
                     </div>
                 </div>
                 { displayedUserName === username ? 
-                <div className="right gameButton" onClick={createGame}>
+                <div data-testid = "profile_create_game" className="right gameButton" onClick={createGame}>
                     <p className="plusIcon">+</p>
                     <p>CREATE GAME</p>
                 </div>
@@ -64,7 +64,7 @@ function UserProfile ({profileData}: {profileData: userObject}) {
             </div>
             <div className="profileGameLabel center">{displayedUserName === username ?  "YOUR GAMES:" : `${displayedUserName.toUpperCase()}'S GAMES:`}</div>
             <div className="gameBrowserContentContainer profileGameBrowser">
-                <div id="gameInfo" className="gameBrowser">{typeof userGames.map == "function" ? userGames?.map((item: gameObject) => { console.log(item); return <GameIcon key={item.game_name} gameData={item} getData={getData} profileData={profileData}/> }) : ""}</div>
+                <div id="gameInfo" className="gameBrowser">{typeof userGames.map == "function" ? userGames?.map((item: gameObject, index) => { console.log(item); return <GameIcon key={item.game_name} index={index}  gameData={item} getData={getData} profileData={profileData}/> }) : ""}</div>
             </div>
         </div>
     );

@@ -20,19 +20,19 @@ function SideBar ({profileData} : {profileData : userObject}) {
   }
   return (
     <div className = "sideBar">
-        <div className = {`sideBarButton ${location.pathname.includes('/home') ? 'sideBarButtonSelected' : ""}`} onClick = {()=>{showHome()}}>
+        <div data-testid = "sidebar_home_btn" className = {`sideBarButton ${location.pathname.includes('/home') ? 'sideBarButtonSelected' : ""}`} onClick = {()=>{showHome()}}>
           <img className = "sideIcon" src = "/images/homeButton.png"></img>
           <div className = "sideLabel" >Home</div>
         </div>
-        <div className = {`sideBarButton ${location.pathname.includes('/games') ? 'sideBarButtonSelected' : ""}`} onClick = {()=>{showGames()}}>
+        <div data-testid = "sidebar_browse_btn" className = {`sideBarButton ${location.pathname.includes('/games') ? 'sideBarButtonSelected' : ""}`} onClick = {()=>{showGames()}}>
           <img className = "sideIcon" src = "/images/browseButton.png"></img>
           <div className = "sideLabel">Browse</div>
         </div>
-        <div className = {`sideBarButton ${location.pathname.includes('/gameEditor') ? 'sideBarButtonSelected' : ""}`} onClick = {()=>{showEditor()}}>
+        <div data-testid = "sidebar_create_btn" className = {`sideBarButton ${location.pathname.includes('/gameEditor') ? 'sideBarButtonSelected' : ""}`} onClick = {()=>{showEditor()}}>
           <img className = "sideIcon" src = "/images/pencil2.png"></img>
           <div className = "sideLabel">Create</div>
         </div>
-        <div className = {`sideBarButton ${location.pathname.includes('/rankings') ? 'sideBarButtonSelected' : ""}`} onClick = {()=>{showRankings()}}>
+        <div data-testid = "sidebar_ranks_btn" className = {`sideBarButton ${location.pathname.includes('/rankings') ? 'sideBarButtonSelected' : ""}`} onClick = {()=>{showRankings()}}>
           <img className = "sideIcon" src = "/images/trophy.png"></img>
           <div className = "sideLabel">Ranks</div>
         </div>  

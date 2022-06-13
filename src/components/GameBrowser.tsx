@@ -29,12 +29,22 @@ function GameBrowser({ profileData }: { profileData: userObject }) {
 
     useEffect(()=>{
         try {
-            const {mode, uploaddate, direction, page, search} = JSON.parse('{"' + decodeURI(location.search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}')
-            setQueryMode(mode)
-            setUploadDate(uploaddate)
-            setResultDirection(direction)
-            setPage(page)
-            dispatch(setSearchTerm(search))
+            const { mode, uploaddate, direction, page, search } = JSON.parse('{"' + decodeURI(location.search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}')
+            if (mode) {
+                setQueryMode(mode)
+            }
+            if (uploaddate) {
+                setUploadDate(uploaddate)
+            }
+            if (direction) {
+                setResultDirection(direction)
+            }
+            if (page || page === 0) {
+                setPage(page)
+            }
+            if (searchTerm) {
+                dispatch(setSearchTerm(search))
+            }
             } catch (e) {
                 console.log('Invalid URL error: '  + e)
         }

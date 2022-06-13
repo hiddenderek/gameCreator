@@ -10,7 +10,7 @@ export let leftLoop : NodeJS.Timeout
 let jumpDecrease = 0
 export function moveRight() {
     console.log("Right")
-    store.dispatch(toggleLeft(false))
+    clearLeft()
     store.dispatch(toggleRight(true))
     rightLoop = setInterval(() => {
         const getNewStore = store.getState()
@@ -22,7 +22,7 @@ export function moveRight() {
 
 export function moveLeft() {
     console.log("Left")
-    store.dispatch(toggleRight(false))
+    clearRight()
     store.dispatch(toggleLeft(true))
     leftLoop = setInterval(() => {
         const getNewStore = store.getState()

@@ -17,7 +17,7 @@ function Home ({profileData} : {profileData: userObject}) {
             <span className = "homeTrendingLabel flexCenter">TRENDING GAMES: </span>
             <div className = "trendingGames">
                 <div id = "gameInfo" className = "gameBrowser gameBrowserBig">
-                    {typeof featuredGames.map == "function" ? featuredGames?.map((item : {game_name: string})=>{console.log(item);return <GameIcon key={item.game_name} gameData={item} profileData = {profileData}/>}) : ""}
+                    {typeof featuredGames.map == "function" ? featuredGames?.map((item : {game_name: string}, index)=>{console.log(item);return <GameIcon key={item.game_name} index = {index} gameData={item} profileData = {profileData}/>}) : ""}
                 </div>
             </div>
         </div>

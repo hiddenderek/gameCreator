@@ -125,17 +125,17 @@ function Banner ({setProfileData, profileData, aspectRatio, isMobile} : any) {
           : ""}
         {location.pathname.includes('/games/') && gameName && aspectRatio >= 1 ?
           <span className="inlineFlex flexCenter fullHeight absolute gameTitle">
-            <div className="bannerButton voteText" onClick={changeRankView}>
+            <div data-testid = "banner_rank_toggle" className="bannerButton voteText" onClick={changeRankView}>
               <div className="height66 autoWidth left autoFitContainer noClick" >
                 <img className="fullHeight autoWidth pixelate noClick" src="/images/trophy.png" />
               </div>
               <p>&nbsp;&nbsp;Ranks</p>
             </div>&nbsp;&nbsp;{gameName.toUpperCase()}&nbsp;&nbsp;
-            <div className={`bannerButton voteText ${like ? "voteSelected" : ""}`} onClick={() => { rateGame("like") }}>
+            <div data-testid = "banner_like_btn" className={`bannerButton voteText ${like ? "voteSelected" : ""}`} onClick={() => { rateGame("like") }}>
               <p>Like</p>
               <img className="halfHeight autoWidth pixelate noClick" src="/images/like.png" />
             </div>
-            <div className={`bannerButton voteText ${dislike ? "voteSelected" : ""}`} onClick={() => { rateGame("dislike") }}>
+            <div data-testid = "banner_dislike_btn" className={`bannerButton voteText ${dislike ? "voteSelected" : ""}`} onClick={() => { rateGame("dislike") }}>
               <p>Dislike</p>
               <img className="halfHeight autoWidth pixelate noClick" src="/images/dislike.png" />
             </div>
@@ -143,13 +143,13 @@ function Banner ({setProfileData, profileData, aspectRatio, isMobile} : any) {
           : ""}
         {!username ?
           <>
-            <div className="inlineItem right login" onClick={() => { logIn() }}>LOGIN</div>
-            <div className="inlineItem right signUp" onClick={() => { signUp() }}>SIGN UP</div>
+            <div data-testid = "banner_log_in" className="inlineItem right login" onClick={() => { logIn() }}>LOGIN</div>
+            <div data-testid = "banner_sign_up" className="inlineItem right signUp" onClick={() => { signUp() }}>SIGN UP</div>
           </>
           :
           <>
-            <div className="inlineItem right login" onClick={() => { profileNav() }}>{username.toUpperCase()}</div>
-            <div className="inlineItem right signUp" onClick={() => { logOut() }}>LOG OUT</div>
+            <div data-testid = "banner_profile" className="inlineItem right login" onClick={() => { profileNav() }}>{username.toUpperCase()}</div>
+            <div data-testid = "banner_log_out" className="inlineItem right signUp" onClick={() => { logOut() }}>LOG OUT</div>
           </>
         }
       </div>

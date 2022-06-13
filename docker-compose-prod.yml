@@ -16,3 +16,6 @@ services:
     environment:
       - NODE_ENV=production
     command: npm devAuth
+  postgres:
+    volumes:
+      - ./pgdata/:/var/lib/postgresql/data

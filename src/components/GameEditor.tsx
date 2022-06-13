@@ -62,6 +62,8 @@ function GameEditor ({turnOnSideBar, profileData} : any) {
     const saveGameResult = await handleApiData(`/games/${username}/${curGameName}`, null, location.pathname == `/gameEditor/${username}/new` ? 'post' : 'patch', { screen: "1-1", gameData: gameData, newGameName: gameName, gridImage: gridImage })
     if (saveGameResult?.status as number >= 400) {
       setErrorMessage(saveGameResult?.data)
+    } else if (saveGameResult?.status === 200){
+      setErrorMessage('Game Saved Successfully!')
     } else {
       setErrorMessage('')
     }
@@ -87,7 +89,7 @@ function GameEditor ({turnOnSideBar, profileData} : any) {
           <form className="gameEditorSave flexCenter fullWidth" onSubmit={e => {saveGameEdit(e)}}>
             <button data-testid = "game_save_btn" id="saveButton" className="saveButton">Save Game</button>
           </form>
-          <p className="gameEditorError flexCenter fullWidth">{errorMessage.toUpperCase()}</p>
+          <p className="gameEditorError flexCenter fullWidth">{errorMessage?.toUpperCase()}</p>
         </>
       }
       <div id="editSection1Container" className="editSectionContainer" >

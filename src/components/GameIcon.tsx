@@ -83,13 +83,13 @@ function GameIcon({index, gameData, profileData, getData} : any) {
             <img className = "absolute topLeft fullWidth fullHeight"  src = '/images/background_sunset.png' style = {{zIndex: -1}}/>
             <img className = "absolute topLeft fullWidth fullHeight click"  src = {gameData.grid_image} style = {{zIndex: -1}} />
             <p data-testid = {`game_icon_plays_${index}`} className = "left gameStat ">PLAYS:&nbsp; {gameData.plays}</p>
-            <p className = "right gameStat"><img className = "smallLike" src = "/images/dislike.png"/>{gameDislikes}</p>
-            <p className = "right gameStat"><img className = "smallLike" src = "/images/like.png"/>{gameLikes}</p>
-            <p data-testid = {`game_icon_name_${index}`} className = "flexCenter absolute fullWidth iconText" >{gameData.game_name.toUpperCase()}</p>
+            <p data-testid = "game_icon_dislikes" className = "right gameStat"><img className = "smallLike" src = "/images/dislike.png"/>{gameDislikes}</p>
+            <p data-testid = "game_icon_likes" className = "right gameStat"><img className = "smallLike" src = "/images/like.png"/>{gameLikes}</p>
+            <p data-testid = {`game_icon_name_${index}`} className = "flexCenter absolute fullWidth iconText" >{gameData?.game_name?.toUpperCase()}</p>
             <p data-testid = {`game_icon_user_${index}`} className = "bottom center absolute iconText userText" onClick = {()=>{navigateToUser(gameUserName)}}>&nbsp; By: {`${gameUserName}`}</p>
             {location.pathname == `/users/${username}` ? <div className = "editIcon" onClick = {()=>{editGame()}}><img className = "fullHeight fullWidth" src = "/images/pencil.png"/></div> : ""}
-            {location.pathname == `/users/${username}` ? <div className = "deleteIcon" onClick = {()=>{deleteGame()}}>X</div> : ""}
-            <div className = "absolute topLeft fullWidth fullHeight gameEffect" onClick = {()=>{navigateToGame(gameData.game_name)}}></div>
+            {location.pathname == `/users/${username}` ? <div data-testid = {`game_icon_delete_${index}`} className = "deleteIcon" onClick = {()=>{deleteGame()}}>X</div> : ""}
+            <div data-testid = "game_icon_navigate" className = "absolute topLeft fullWidth fullHeight gameEffect" onClick = {()=>{navigateToGame(gameData.game_name)}}></div>
         </div>
     );
 }

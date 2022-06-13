@@ -85,12 +85,13 @@ router.get('/api/games', async (req: any, res: any) => {
         }
         console.log(parameters)
         console.log("COUNT GAMES: " + req?.query?.countgames)
-        const selectGames = await pool.query(`
-        SELECT game_name, ${req?.query?.countgames ? "" : "game_data, user_id,  grid_image, "} id, plays, time_created, (like_count - dislike_count) AS likes FROM (
-            SELECT DISTINCT d.game_name, ${req?.query?.countgames ? "" : "d.game_data, d.user_id, d.grid_image,"} d.id, d.plays, d.time_created,
-            COUNT(CASE WHEN a.game_id = d.id AND a.action = 'like' THEN a.game_id ELSE NULL END)::int AS like_count, 
-            COUNT(CASE WHEN a.game_id = d.id AND a.action = 'dislike' THEN a.game_id ELSE NULL END)::int AS dislike_count 
-            FROM gamedata d, gameactions a GROUP BY d.id
+        const actionCheck = await pool.query(`SELECT * FROM gameactions`)
+        console.log(`
+        SELECT game_name, ${req?.query?.countgames ? "" : "game_data, user_id, grid_image, "} id, plays, time_created${actionCheck?.rows?.length > 0 ? ", (like_count - dislike_count) AS likes" : "" } FROM (
+            SELECT DISTINCT d.game_name, ${req?.query?.countgames ? "" : "d.game_data, d.user_id, d.grid_image,"} d.id, d.plays, d.time_created
+            ${actionCheck?.rows?.length > 0 ? ", COUNT(CASE WHEN a.game_id = d.id AND a.action = 'like' THEN a.game_id ELSE NULL END)::int AS like_count" : "" } 
+            ${actionCheck?.rows?.length > 0 ? ", COUNT(CASE WHEN a.game_id = d.id AND a.action = 'dislike' THEN a.game_id ELSE NULL END)::int AS dislike_count"  : "" }
+            FROM gamedata d${actionCheck?.rows?.length > 0 ? ", gameactions a" : ""} GROUP BY d.id
             ) AS q1 
             ${req?.query?.search || req?.query?.uploaddate ?
                 'WHERE' : ""} 
@@ -100,7 +101,30 @@ router.get('/api/games', async (req: any, res: any) => {
                 "AND" : ""} 
             ${req?.query?.uploaddate ? 
                 `time_created > NOW() - ${uploadDateFormat}` : ""} 
-                ${orderByFormat} 
+            ${orderByFormat} 
+            ${req?.query?.direction === "ASC" ? 
+                "ASC" : req?.query.direction === "DESC" ? "DESC" : ""} 
+            ${req?.query?.countgames ?
+                "" : "LIMIT 16"} 
+            ${req?.query?.page && !req?.query?.countgames ?
+                `OFFSET ${req?.query?.search ? "$2" : "$1"}` : ""}
+        `)
+        const selectGames = await pool.query(`
+        SELECT game_name, ${req?.query?.countgames ? "" : "game_data, user_id, grid_image, "} id, plays, time_created${actionCheck?.rows?.length > 0 ? ", (like_count - dislike_count) AS likes" : "" } FROM (
+            SELECT DISTINCT d.game_name, ${req?.query?.countgames ? "" : "d.game_data, d.user_id, d.grid_image,"} d.id, d.plays, d.time_created
+            ${actionCheck?.rows?.length > 0 ? ", COUNT(CASE WHEN a.game_id = d.id AND a.action = 'like' THEN a.game_id ELSE NULL END)::int AS like_count" : "" } 
+            ${actionCheck?.rows?.length > 0 ? ", COUNT(CASE WHEN a.game_id = d.id AND a.action = 'dislike' THEN a.game_id ELSE NULL END)::int AS dislike_count"  : "" }
+            FROM gamedata d${actionCheck?.rows?.length > 0 ? ", gameactions a" : ""} GROUP BY d.id
+            ) AS q1 
+            ${req?.query?.search || req?.query?.uploaddate ?
+                'WHERE' : ""} 
+            ${req?.query?.search ?
+                `game_name ILIKE $1` : ""} 
+            ${req?.query?.uploaddate && req?.query?.search ? 
+                "AND" : ""} 
+            ${req?.query?.uploaddate ? 
+                `time_created > NOW() - ${uploadDateFormat}` : ""} 
+            ${orderByFormat} 
             ${req?.query?.direction === "ASC" ? 
                 "ASC" : req?.query.direction === "DESC" ? "DESC" : ""} 
             ${req?.query?.countgames ?

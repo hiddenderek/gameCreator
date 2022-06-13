@@ -62,7 +62,7 @@ function LogIn({setProfileData} : any) {
           </div>
         </div>
         <form className="singleLine" onSubmit={(e) => { logIn(e) }}>
-          <button className={!userName || !password ? "inactiveButton center" : "activeButton center"}>Log In</button>
+          <button data-testid = "log_in_button" className={!userName || !password ? "inactiveButton center" : "activeButton center"}>Log In</button>
         </form>
         {signUpOutcome ? 
           <div className="singleLine"><div className="center">Log in result: {signUpOutcome}</div></div> : ""}
