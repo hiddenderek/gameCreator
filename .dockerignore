@@ -1,5 +1,4 @@
 node_modules
-Dockerfile_auth
 Dockerfile_db
 Dockerfile_web
 docker-compose-dev.yml
@@ -9,3 +8,7 @@ docker-compose.yml
 .git
 .gitignore
 pgdata
+cypress
+src/__tests__
+src/setupTests.ts
+src/utils/testHelperFunctions.ts

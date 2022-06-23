@@ -1,2 +1,3 @@
 node_modules
 pgdata
+public/bundle.js
