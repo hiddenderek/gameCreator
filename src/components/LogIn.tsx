@@ -17,6 +17,7 @@ function LogIn({setProfileData} : any) {
     e.preventDefault()
     try {
       console.log(location)
+      console.log(`https://${config.hostname}:${config.authPort}/login`)
       const signUpResult = await fetch(`https://${config.hostname}:${config.authPort}/login`, {
         method: 'POST',
         credentials: 'include',
