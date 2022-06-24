@@ -49,10 +49,10 @@ app.get('/*', async (req: any, res: any) => {
 })
 
 https.createServer({
-  key: fs.readFileSync("./src/key.pem"),
-  cert: fs.readFileSync("./src/cert.pem"),
-},app).listen(config.port, function listenHandler() {
-    console.info(`Running on ${config.port}`)
-})
+    key: fs.readFileSync("./src/ssl/dchapman-portfolio_key.pem"),
+    cert: fs.readFileSync("./src/ssl/dchapman-portfolio_site.crt")
+  },app).listen(config.port, function listenHandler() {
+      console.info(`Running on ${config.port}`)
+  })
 
 export default app

@@ -123,8 +123,8 @@ function generateAccessToken(user: userObj) {
 }
 
 https.createServer({
-    key: fs.readFileSync("./src/key.pem"),
-    cert: fs.readFileSync("./src/cert.pem"),
+    key: fs.readFileSync("./src/ssl/dchapman-portfolio_key.pem"),
+    cert: fs.readFileSync("./src/ssl/dchapman-portfolio_site.crt")
 },app).listen(config.authPort, function listenHandler() {
     console.info(`Running on ${config.authPort}`)
 })
