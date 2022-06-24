@@ -16,7 +16,6 @@ function GameEditor ({turnOnSideBar, profileData} : any) {
   const dispatch = useAppDispatch()
   
   useEffect(()=>{
-    console.log('sideBarON!!!')
     turnOnSideBar()
   },[])
   
@@ -51,14 +50,12 @@ function GameEditor ({turnOnSideBar, profileData} : any) {
 
   function specifyGameName(e: any) {
     setGameName(e.target.value)
-    console.log(gameName)
   }
   
   async function saveGameEdit(e: any) {
     e.preventDefault()
     const gridCanvas = await html2canvas(document.getElementById('gameGrid') as HTMLElement, { backgroundColor: null })
     const gridImage = gridCanvas.toDataURL()
-    console.log(gridImage)
     const saveGameResult = await handleApiData(`/games/${username}/${curGameName}`, null, location.pathname == `/gameEditor/${username}/new` ? 'post' : 'patch', { screen: "1-1", gameData: gameData, newGameName: gameName, gridImage: gridImage })
     if (saveGameResult?.status as number >= 400) {
       setErrorMessage(saveGameResult?.data)
@@ -67,7 +64,6 @@ function GameEditor ({turnOnSideBar, profileData} : any) {
     } else {
       setErrorMessage('')
     }
-    console.log(saveGameResult)
   }
 
   return (

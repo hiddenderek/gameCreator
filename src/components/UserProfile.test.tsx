@@ -2,18 +2,15 @@
  * @jest-environment jsdom
  */
 import React from 'react'
-import { screen, render, act } from '@testing-library/react'
+import { screen, act } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { store } from '../app/store'
 import { BrowserRouter as Router } from 'react-router-dom'
 import UserProfile from './UserProfile'
 import Banner from './Banner'
 import { getAfterLastCharacter } from '../utils/stringParse'
-import { userData } from '../app/types'
 import { renderWithRouter } from '../utils/testHelperFunctions'
 import userEvent from '@testing-library/user-event'
-
-const dispatch = store.dispatch
 
 //total score == high scores achieved
 //score count == total likes recieved

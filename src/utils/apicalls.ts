@@ -39,7 +39,6 @@ export async function postApiData(pathName: string, body: string | object | null
             body: body ? body as string : "{}",
             signal: controller.signal
         })
-        console.log(responseData)
         return Promise.resolve(responseData)
     } catch (e) {
         return Promise.resolve({ data: "", status: 500, text: ()=>"" })
@@ -106,7 +105,7 @@ export async function sendRequest(pathName: string | null, setState: Function | 
             body = JSON.stringify(body as object)
         } 
     } catch (e) {
-        console.log('error proccessing object')
+        console.error('error proccessing object')
     }
     let responseData
 
@@ -135,7 +134,6 @@ export async function handleRequest(pathName: string | null, setState: Function 
     const responseData = await sendRequest(pathName, setState, action, body, port)
     if (successStatus.includes(responseData?.status as number)) {
         const responseResult = await responseData?.text()
-        console.log(responseResult)
         try {
             const responseDataResult = responseResult ? JSON.parse(responseResult) : responseData
             if (typeof setState !== "undefined" && setState) {
@@ -143,21 +141,17 @@ export async function handleRequest(pathName: string | null, setState: Function 
             }
             return Promise.resolve({data: responseDataResult, status: responseData?.status})
         } catch (e) {
-            console.log(e)
+            console.error('Error handling request: ' + e)
             return Promise.resolve({data: responseResult, status: responseData?.status})
         }
         
     } else if (needsRefreshStatus.includes(responseData?.status as number)) {
-        console.log('token not valid, requesting refresh')
         const refreshData = await getAccessToken()
-        console.log('refresh')
         //if, after requesting the access token, the response status is still requiring a refresh or is failed, do nothing.
         if (needsRefreshStatus.includes(refreshData.status) || failedStatus.includes(refreshData.status)) {
-            console.log('refresh unsuccessful')
             return Promise.resolve({data: null, status: refreshData.status})
         } else {
             //if the accesss token request gives a response status is succesfull, set the status to indicate a request retry is needed.
-            console.log('refresh successful!')
             return Promise.resolve({data: null, status: 503})
         }
     } else if (failedStatus.includes(responseData?.status as number)) {
@@ -169,7 +163,7 @@ export async function handleRequest(pathName: string | null, setState: Function 
             const responseDataResult = responseResult ? JSON.parse(responseResult) : responseData
             return Promise.resolve({data: responseDataResult, status: responseData?.status})
         } catch (e) {
-            console.log('ERROR PROCESSING DATA: ' + e)
+            console.error('ERROR PROCESSING DATA: ' + e)
             return Promise.resolve({data: null, status: responseData?.status})
         }
     } else {

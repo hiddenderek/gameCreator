@@ -21,7 +21,7 @@ function GameBrowserPages ({page, pageList, changePage, gameDisplayLimit, pageDi
             let limitPageCounter = 1;
             let pageCounter = 1 + pageOffset;
             const initalPage = pageCounter
-            pageArray.push(<div data-testid = "page_browser_number" className={`pageButton ${page == (pageOffset) ? "pageHighlight" : ""}`} key={"page" + initalPage} onClick={() => { changePage(initalPage - 1) }}>{initalPage}</div>)
+            pageArray.push(<a data-testid = "page_browser_number" className={`pageButton ${page == (pageOffset) ? "pageHighlight" : ""}`} key={"page" + initalPage} onClick={(e) => {e.preventDefault(); changePage(initalPage - 1) }}>{initalPage}</a>)
             for (let i = 0; i < pageList.length; i++) {
                 counter++;
                 if ((counter) > (gameDisplayLimit - 1)) {
@@ -32,7 +32,7 @@ function GameBrowserPages ({page, pageList, changePage, gameDisplayLimit, pageDi
                         //curPage is the page that is currently being created
                         //page is the page that is currently being displayed
                         const curPage = pageCounter
-                        pageArray.push(<p data-testid = "page_browser_number" className={`pageButton ${page == (curPage - 1) ? "pageHighlight" : ""}`} key={"page" + curPage} onClick={() => { changePage(curPage - 1) }}>{curPage}</p>)
+                        pageArray.push(<a data-testid = "page_browser_number" className={`pageButton ${page == (curPage - 1) ? "pageHighlight" : ""}`} key={"page" + curPage} onClick={(e) => {e.preventDefault(); changePage(curPage - 1) }}>{curPage}</a>)
                     }
                 }
             }

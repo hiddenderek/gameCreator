@@ -95,7 +95,6 @@ export function characterTrack(ref: any) {
                     gravityManage(true)
                 }
                 if (gameData[gameElmLocationTop1]?.type == "1" || gameData[gameElmLocationTop2]?.type == "1") {
-                    console.log('detected top ground element!')
                     if (character.jump === true) {
                         store.dispatch(jump(false))
                         store.dispatch(toggleSpace(false))
@@ -142,7 +141,6 @@ export function characterTrack(ref: any) {
                 if (gameData[gameElmLocation1]?.type == "2" || gameData[gameElmLocation2]?.type == "2") {
                     lavaCount++
                     if (lavaCount > 1) {
-                        console.log('lava!!!!')
                         store.dispatch(removeHealth(1))
                         lavaCount = 0
                     }
@@ -158,7 +156,6 @@ export function characterTrack(ref: any) {
                 ) {
                     spikeCount++
                     if (spikeCount > 3) {
-                        console.log('spike!!')
                         store.dispatch(removeHealth(1))
                         spikeCount = 0
                     }

@@ -12,8 +12,6 @@ import GameIcon from './GameIcon'
 import { renderWithRouter } from '../utils/testHelperFunctions'
 import { getAfterLastCharacter } from '../utils/stringParse'
 
-const dispatch = store.dispatch
-
 type fakeGameData = {
     game_name: string,
     plays: number,

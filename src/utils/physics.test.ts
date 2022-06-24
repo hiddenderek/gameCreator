@@ -1,7 +1,7 @@
 import {gravityManage, characterTrack} from './physics'
 import { store } from '../app/store'
 import { characterReset } from "../features/character/character-slice";
-import { gameReset, loadGame } from "../features/gameData/gameData-slice";
+import { gameReset } from "../features/gameData/gameData-slice";
 
 test('gravity test', ()=>{
     jest.useFakeTimers();

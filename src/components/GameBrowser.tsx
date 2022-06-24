@@ -46,7 +46,7 @@ function GameBrowser({ profileData }: { profileData: userObject }) {
                 dispatch(setSearchTerm(search))
             }
             } catch (e) {
-                console.log('Invalid URL error: '  + e)
+                console.error('Invalid URL error: '  + e)
         }
     },[])
 
@@ -78,7 +78,6 @@ function GameBrowser({ profileData }: { profileData: userObject }) {
         setResultDirection(direction)
     }
     function changeUploadDate(value: string) {
-        console.log(value)
         setUploadDate(value)
     }
     function changePage(page: number) {

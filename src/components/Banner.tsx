@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useMemo} from 'react'
+import React, {useState, useEffect} from 'react'
 import { useHistory } from 'react-router-dom';
 import { useLocation } from 'react-router'
 import {useAppSelector, useAppDispatch} from '../app/hooks';
@@ -6,7 +6,7 @@ import {setSearchTerm, setRankView} from '../features/userInterface/userInterfac
 import {handleApiData} from '../utils/apicalls';
 import config from '../config';
 
-function Banner ({setProfileData, profileData, aspectRatio, isMobile} : any) {
+function Banner ({setProfileData, profileData, aspectRatio} : any) {
   const {username} = profileData
   const location = useLocation()
   const history = useHistory()
@@ -24,7 +24,6 @@ function Banner ({setProfileData, profileData, aspectRatio, isMobile} : any) {
       const getSearch1 = location.search.lastIndexOf('&search=')
       const getSearch2 = location.search.substring(getSearch1)
       const getSearch = getSearch2.split('&search=').join('')
-      console.log(getSearch)
       changeSearchTerm(getSearch)
     }
   },[])
@@ -51,12 +50,10 @@ function Banner ({setProfileData, profileData, aspectRatio, isMobile} : any) {
   //the search term is set, if the value is either truthy or blank. 
   //Blank is falsy so we have to account for that in the ternary statement.
   function changeSearchTerm(e: any) {
-    console.log(e?.target?.value)
     dispatch(setSearchTerm(e?.target?.value || e?.target?.value === "" ? e.target.value : e))
   }
   // handles log outs. Doesnt use the api module, as we need special headers for this.
   async function logOut() {
-    console.log('logout')
     try {
       const signUpResult = await fetch(`https://${config.hostname}:${config.authPort}/logout`, {
         method: 'DELETE',
@@ -74,7 +71,7 @@ function Banner ({setProfileData, profileData, aspectRatio, isMobile} : any) {
         history.push('/home')
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   }
   async function rateGame(rating : string) {
@@ -103,7 +100,7 @@ function Banner ({setProfileData, profileData, aspectRatio, isMobile} : any) {
           }
         } 
     } catch (e) {
-        console.log('ERROR GETTING LIKES: ' + e)
+        console.error('ERROR GETTING LIKES: ' + e)
     }
 }
 
@@ -143,12 +140,12 @@ function Banner ({setProfileData, profileData, aspectRatio, isMobile} : any) {
           : ""}
         {!username ?
           <>
-            <div data-testid = "banner_log_in" className="inlineItem right login" onClick={() => { logIn() }}>LOGIN</div>
-            <div data-testid = "banner_sign_up" className="inlineItem right signUp" onClick={() => { signUp() }}>SIGN UP</div>
+            <a data-testid = "banner_log_in" className="inlineItem right login" onClick={(e) => {e.preventDefault(); logIn() }}>LOGIN</a>
+            <a data-testid = "banner_sign_up" className="inlineItem right signUp" onClick={(e) => {e.preventDefault(); signUp() }}>SIGN UP</a>
           </>
           :
           <>
-            <div data-testid = "banner_profile" className="inlineItem right login" onClick={() => { profileNav() }}>{username.toUpperCase()}</div>
+            <a data-testid = "banner_profile" className="inlineItem right profileName" onClick={(e) => {e.preventDefault(); profileNav() }}>{username.toUpperCase()}</a>
             <div data-testid = "banner_log_out" className="inlineItem right signUp" onClick={() => { logOut() }}>LOG OUT</div>
           </>
         }

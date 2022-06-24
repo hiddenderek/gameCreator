@@ -1,5 +1,5 @@
 declare const window: Window & { gameAudio : any }
-import React, { useRef, useEffect, useState, useReducer } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { loadGame, setGameLoaded, setGameName, setGameLikes, setGameSize } from '../features/gameData/gameData-slice';
 import GameElement from './GameElement'
@@ -8,7 +8,7 @@ import HealthBar from './HealthBar'
 import GameResult from './GameResult'
 import RankView from './RankView'
 import GameButtons from './GameButtons'
-import { spikeAlternate, timeCount, resetGame } from './GameEvents';
+import { spikeAlternate, timeCount } from './GameEvents';
 import { characterReset } from '../features/character/character-slice';
 import { setRankView } from '../features/userInterface/userInterface-slice';
 import { useLocation } from 'react-router'
@@ -37,7 +37,6 @@ function Game({ profileData, aspectRatio, isMobile }: { profileData: userObject,
 
 
   useEffect(() => {
-    console.log(location.pathname)
     dispatch(setRankView(false))
     dispatch(setGameSize({ width: gameGet?.width, height: gameGet?.height }))
     getGameData()
@@ -45,7 +44,6 @@ function Game({ profileData, aspectRatio, isMobile }: { profileData: userObject,
 
   useEffect(() => {
     if (gameWin === true) {
-      console.log('posting score!')
       handleApiData(`${location.pathname}/scores/${profileData.username}`, null, "post", { score: timePlayed })
     }
     const audio = window?.gameAudio?.gameMusic_1
@@ -77,7 +75,7 @@ function Game({ profileData, aspectRatio, isMobile }: { profileData: userObject,
       }
       return Promise.resolve('gameLoaded')
     } catch (e) {
-      console.log(e)
+      console.error(e)
       return Promise.resolve('gameLoadFailed')
     }
   }

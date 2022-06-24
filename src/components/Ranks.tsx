@@ -14,7 +14,7 @@ function Ranks () {
         handleApiData(`/ranks/likes`, setLikeRanks, "get", null)
         handleApiData(`/ranks/plays`, setPlayRanks, "get", null)
     },[])
-    console.log('homeRender!')
+
     async function navigateToUser(userName: string) {
         history.push(`/users/${userName}`)
     }
@@ -26,7 +26,7 @@ function Ranks () {
                 <ul>{typeof highScoreRanks.map === "function" ? 
                     highScoreRanks.map((item: userData, index)=>
                         <li key = {"High Score Rank " + index} className = "rankEntry">
-                            <p data-testid = {`high_score_rank_${index}`} className = "userText" onClick = {()=>{ navigateToUser(item.username)}}>{`${index + 1}: ${item.username}`}</p>
+                            <a data-testid = {`high_score_rank_${index}`} className = "userText" onClick = {(e)=>{e.preventDefault(); navigateToUser(item.username)}}>{`${index + 1}: ${item.username}`}</a>
                             <p className = "right">{`${item.score_count} high scores`}</p>
                         </li>) : ""}
                 </ul>  
@@ -36,7 +36,7 @@ function Ranks () {
                 <ul>{typeof likeRanks.map === "function" ? 
                     likeRanks.map((item: userData, index)=>
                         <li key = {"Like Rank " + index} className = "rankEntry">
-                            <p data-testid = {`likes_rank_${index}`} className = "userText" onClick = {()=>{ navigateToUser(item.username)}}>{`${index + 1}: ${item.username}`}</p>
+                            <a data-testid = {`likes_rank_${index}`} className = "userText" onClick = {(e)=>{e.preventDefault(); navigateToUser(item.username)}}>{`${index + 1}: ${item.username}`}</a>
                             <p className = "right">{`${item.total_score} likes`}</p>
                         </li>) : ""}
                 </ul>  
@@ -46,7 +46,7 @@ function Ranks () {
                 <ul>{typeof playRanks.map === "function" ?
                     playRanks.map((item: userData, index) =>
                         <li key = {"Play Rank " + index} className="rankEntry">
-                            <p data-testid = {`plays_rank_${index}`} className="userText" onClick={() => { navigateToUser(item.username) }}>{`${index + 1}: ${item.username}`}</p>
+                            <a data-testid = {`plays_rank_${index}`} className="userText" onClick={(e) => {e.preventDefault(); navigateToUser(item.username) }}>{`${index + 1}: ${item.username}`}</a>
                             <p className="right">{`${item.play_count} plays`}</p>
                         </li>) : ""}
                 </ul>

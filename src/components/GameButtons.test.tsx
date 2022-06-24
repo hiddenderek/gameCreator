@@ -10,8 +10,6 @@ import userEvent from '@testing-library/user-event'
 import GameButtons from './GameButtons'
 import { renderWithRouter } from '../utils/testHelperFunctions'
 
-const dispatch = store.dispatch
-
 beforeEach(async () => {
     await act(async () => {
         renderWithRouter(

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { useLocation, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { handleApiData, successStatus } from '../utils/apicalls';
 
 function SignUp() {
-  const location = useLocation()
   const history = useHistory()
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')

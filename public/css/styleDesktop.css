@@ -20,3 +20,12 @@
     font-size: 50.666%;
   }
 }
+
+@media (pointer:fine) and (max-width: 1000px) {
+  :root{
+    font-size: 50.666%;
+  }
+  .searchBarInput{
+    width: 30%;
+  }
+}

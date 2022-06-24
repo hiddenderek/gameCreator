@@ -42,7 +42,6 @@ export function clearCounts() {
 }
 
 export function resetGame() {
-    const getStore = store.getState()
     store.dispatch(gameReset())
     store.dispatch(gameEditorReset())
     store.dispatch(characterReset())

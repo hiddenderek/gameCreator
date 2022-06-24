@@ -10,8 +10,6 @@ import userEvent from '@testing-library/user-event'
 import GameBrowserPages from './GameBrowserPages'
 import { renderWithRouter } from '../utils/testHelperFunctions'
 
-const dispatch = store.dispatch
-
 type fakeGameData = {
     game_name: string,
     plays: number,

@@ -7,7 +7,6 @@ import { Provider } from 'react-redux'
 import { store } from '../app/store'
 import { BrowserRouter as Router } from 'react-router-dom'
 import RankView from './RankView'
-import { removeHealth } from '../features/character/character-slice'
 import { rankItem } from '../app/types'
 
 

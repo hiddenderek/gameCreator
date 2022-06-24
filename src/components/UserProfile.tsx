@@ -16,17 +16,12 @@ function UserProfile ({profileData}: {profileData: userObject}) {
     const displayedUserName = location.pathname.split('/users/').join('')
 
     async function getData() {
-        console.log("SEARCH: "+ `/games/${displayedUserName}${location.search}`)
         handleApiData(`/games/${displayedUserName}${location.search}`, setUserGames, "get", null)
     }
     useEffect(() => {
-        console.log('reload')
         const oldURL = location.pathname + location.search
         const newURL = location.pathname + `?${(searchTerm || searchTerm == "") ? `search=${searchTerm}` : ""}`
-        console.log(oldURL)
-        console.log(newURL)
         if (oldURL !== newURL) {
-            console.log('urlChange')
             history.push(newURL)
         } else {
             getData()
@@ -38,7 +33,6 @@ function UserProfile ({profileData}: {profileData: userObject}) {
         getData()
     }, [displayedUserName, username, location.search])
     
-    console.log("userName: " + username)
     function createGame() {
         history.push(`/gameEditor/${username}/new`)
     }
@@ -56,10 +50,10 @@ function UserProfile ({profileData}: {profileData: userObject}) {
                     </div>
                 </div>
                 { displayedUserName === username ? 
-                <div data-testid = "profile_create_game" className="right gameButton" onClick={createGame}>
+                <a data-testid = "profile_create_game" className="right gameButton" onClick={(e)=>{e.preventDefault();createGame();}}>
                     <p className="plusIcon">+</p>
                     <p>CREATE GAME</p>
-                </div>
+                </a>
                 : ""}
             </div>
             <div className="profileGameLabel center">{displayedUserName === username ?  "YOUR GAMES:" : `${displayedUserName.toUpperCase()}'S GAMES:`}</div>

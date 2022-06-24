@@ -7,10 +7,7 @@
  import { store } from '../app/store'
  import { BrowserRouter as Router } from 'react-router-dom'
  import Ranks from './Ranks'
- import { removeHealth } from '../features/character/character-slice'
  import {userData} from '../app/types'
- 
- const dispatch = store.dispatch
 
  //total score == high scores achieved
  //score count == total likes recieved

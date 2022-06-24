@@ -17,7 +17,7 @@ export const getFromBetween = {
           let TP = string1.length + string2.indexOf(sub2);
           return this.string.substring(SP, TP) as string;
       } catch (e) {
-          console.log('GET FROM BETWEEN ERROR: ' + e)
+          console.error('GET FROM BETWEEN ERROR: ' + e)
           console.trace();
           return 
       }
@@ -28,7 +28,7 @@ export const getFromBetween = {
           let removal = sub1 + this.getFromBetween(sub1, sub2) + sub2;
           this.string = this.string.replace(removal, "");
       } catch (e) {
-          console.log('REMOVE FROM BETWEEN ERROR: ' + e)
+          console.error('REMOVE FROM BETWEEN ERROR: ' + e)
           console.trace();
           return
       }
@@ -51,7 +51,7 @@ export const getFromBetween = {
           }
           else return;
       } catch (e) {
-          console.log('GET ALL RESULTS ERROR: ' + e)
+          console.error('GET ALL RESULTS ERROR: ' + e)
           console.trace();
           return
       }

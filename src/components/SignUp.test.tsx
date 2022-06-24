@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import React from 'react'
-import { screen, render, fireEvent, act } from '@testing-library/react'
+import { screen, render, fireEvent } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { store } from '../app/store'
 import { BrowserRouter as Router } from 'react-router-dom'

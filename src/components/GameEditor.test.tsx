@@ -17,8 +17,6 @@ const dispatch = store.dispatch
 jest.mock('../utils/apicalls', () => {
     return {
         handleApiData: async (path: string, setState: Function, action: string, body: object) => {
-            console.log('SET STATE: ' + setState)
-            console.log('PATH: ' + path + " ACTION: " + action)
             if (path.includes('/games/')) {
                 act(() => {
                     setState ? setState() : ""

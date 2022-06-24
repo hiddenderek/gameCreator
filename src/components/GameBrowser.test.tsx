@@ -3,21 +3,15 @@
  */
 
 import React from 'react'
-import { render, screen, act } from '@testing-library/react'
+import { screen, act } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { store } from '../app/store'
 import { BrowserRouter as Router } from 'react-router-dom'
 import userEvent from '@testing-library/user-event'
 import GameBrowser from './GameBrowser'
 import Banner from './Banner'
-import { gameReset } from '../features/gameData/gameData-slice'
-import { gameEditorReset } from '../features/gameEditor/gameEditor-slice'
-import { characterReset, removeHealth } from '../features/character/character-slice'
-import { eventReset, winGame } from '../features/gameEvents/gameEvents-slice'
 import { renderWithRouter } from '../utils/testHelperFunctions'
-import { getFromBetween, getAfterLastCharacter } from '../utils/stringParse'
-
-const dispatch = store.dispatch
+import { getAfterLastCharacter } from '../utils/stringParse'
 
 type fakeGameData = {
     game_name: string,

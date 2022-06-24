@@ -23,7 +23,6 @@ function GameIcon({index, gameData, profileData, getData} : any) {
 
     async function navigateToGame(gameName : string) {
         history.push(`/games/${gameUserName}/${gameName}`)
-        console.log(`/games/${gameUserName}/${gameName}`)
     }
 
     async function navigateToUser(userName:string) {
@@ -33,10 +32,9 @@ function GameIcon({index, gameData, profileData, getData} : any) {
     async function getUserName(userId : string) {
         try {
             const userObj = await handleApiData(`/users/${userId}`, null,  "get", null)
-            console.log(userObj)
             setGameUserName(userObj?.data?.username)
         } catch (e) {
-            console.log("GET USER ERROR: " + e)
+            console.error("GET USER ERROR: " + e)
         }
     }
     async function getGameLikes() {
@@ -46,7 +44,7 @@ function GameIcon({index, gameData, profileData, getData} : any) {
             handleApiData(`/games/${gameUserName}/${gameData.game_name}/actions/like`, setGameLikes, "get", null)
             }
         } catch (e) {
-            console.log('ERROR GETTING LIKES: ' + e)
+            console.error('ERROR GETTING LIKES: ' + e)
         }
     }
 
@@ -56,7 +54,7 @@ function GameIcon({index, gameData, profileData, getData} : any) {
             handleApiData(`/games/${gameUserName}/${gameData.game_name}/actions/dislike`, setGameDislikes, "get", null)
             }
         } catch (e) {
-            console.log('ERROR GETTING DISLIKES: ' + e)
+            console.error('ERROR GETTING DISLIKES: ' + e)
         }
     }
 
@@ -64,10 +62,9 @@ function GameIcon({index, gameData, profileData, getData} : any) {
         if (location.pathname == `/users/${username}` && confirm("Are you sure you want to delete this game?") === true) {
             try {
                 const deleteGame = await handleApiData(`/games/${username}/${gameData.game_name}`, null,  "delete", {screen: "", mode: "game"})
-                console.log(deleteGame)
                 getData()
             } catch (e) {
-                console.log(e)
+                console.error('Error deleting game: ' + e)
             }
         }
     }
@@ -89,7 +86,7 @@ function GameIcon({index, gameData, profileData, getData} : any) {
             <p data-testid = {`game_icon_user_${index}`} className = "bottom center absolute iconText userText" onClick = {()=>{navigateToUser(gameUserName)}}>&nbsp; By: {`${gameUserName}`}</p>
             {location.pathname == `/users/${username}` ? <div className = "editIcon" onClick = {()=>{editGame()}}><img className = "fullHeight fullWidth" src = "/images/pencil.png"/></div> : ""}
             {location.pathname == `/users/${username}` ? <div data-testid = {`game_icon_delete_${index}`} className = "deleteIcon" onClick = {()=>{deleteGame()}}>X</div> : ""}
-            <div data-testid = "game_icon_navigate" className = "absolute topLeft fullWidth fullHeight gameEffect" onClick = {()=>{navigateToGame(gameData.game_name)}}></div>
+            <a data-testid = "game_icon_navigate" className = "absolute topLeft fullWidth fullHeight gameEffect" onClick = {(e)=>{e.preventDefault(); navigateToGame(gameData.game_name)}}></a>
         </div>
     );
 }

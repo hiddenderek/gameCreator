@@ -9,7 +9,6 @@ function Home ({profileData} : {profileData: userObject}) {
         handleApiData(`/trending`, setFeaturedGames, "get", null)
     },[])
 
-    console.log('homeRender!')
     return (
         <div className="Home content" >
             <img src = "/images/gamecreator.png" className = "homeLogo center"></img>

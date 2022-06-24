@@ -9,7 +9,6 @@ export let leftLoop : NodeJS.Timeout
 
 let jumpDecrease = 0
 export function moveRight() {
-    console.log("Right")
     clearLeft()
     store.dispatch(toggleRight(true))
     rightLoop = setInterval(() => {
@@ -21,7 +20,6 @@ export function moveRight() {
 }
 
 export function moveLeft() {
-    console.log("Left")
     clearRight()
     store.dispatch(toggleLeft(true))
     leftLoop = setInterval(() => {
@@ -33,13 +31,11 @@ export function moveLeft() {
 }
 
 export function clearRight(){
-    console.log("Right")
     store.dispatch(toggleRight(false))
     clearInterval(rightLoop)
 }
 
 export function clearLeft(){
-    console.log("Left")
     store.dispatch(toggleLeft(false))
     clearInterval(leftLoop)
 }
@@ -91,15 +87,12 @@ export function handleKeyPress(e: KeyboardEvent) {
             moveLeft()
         }
         if (e!.key == "ArrowUp" || e!.key == "w") {
-            console.log("Up")
         }
         if (e!.key == "ArrowDown" || e!.key == "s") {
-            console.log("Down")
         }
         if (e!.key == "z") {
             store.dispatch(toggleZ(true))
             if (getStore.keyPress.ctrl) {
-                console.log('undoing things!')
                 store.dispatch(undo())
             }
         }

@@ -16,8 +16,6 @@ function LogIn({setProfileData} : any) {
   async function logIn(e:any) {
     e.preventDefault()
     try {
-      console.log(location)
-      console.log(`https://${config.hostname}:${config.authPort}/login`)
       const signUpResult = await fetch(`https://${config.hostname}:${config.authPort}/login`, {
         method: 'POST',
         credentials: 'include',
@@ -35,7 +33,7 @@ function LogIn({setProfileData} : any) {
         handleApiData(`/users/${userData.username}`, setProfileData, "get", null)
       }
     } catch (e) {
-      console.log(e)
+      console.error('Login Error: ' + e)
     }
   }
 
