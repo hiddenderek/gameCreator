@@ -123,7 +123,7 @@ function Banner ({setProfileData, profileData, aspectRatio} : any) {
         {location.pathname.includes('/games/') && gameName && aspectRatio >= 1 ?
           <span className="inlineFlex flexCenter fullHeight absolute gameTitle">
             <div data-testid = "banner_rank_toggle" className="bannerButton voteText" onClick={changeRankView}>
-              <div className="height66 autoWidth left autoFitContainer noClick" >
+              <div className="height66 halfWidth noClick" >
                 <img className="fullHeight autoWidth pixelate noClick" src="/images/trophy.png" />
               </div>
               <p>&nbsp;&nbsp;Ranks</p>

@@ -83,12 +83,14 @@ function Game({ profileData, aspectRatio, isMobile }: { profileData: userObject,
     }
   }
 
+  const isEditor = location.pathname.includes('/gameEditor/')
+
 
   return (
     <div className="gameContent">
-      <div id="gameWrapper" ref={gameRef} className="gameWrapper"  >
+      <div id="gameWrapper" ref={gameRef} className={`gameWrapper ${"wrapperAdjustDesktop"}`}  >
         <img className="fullWidth fullHeight noClick absolute pixelate topLeft" src="/images/background_sunset.png"></img>
-        {((characterHealth == 0 || gameWin) || location.pathname.includes('/gameEditor/')) || !gameLoaded ? "" : <p className="absolute topRight timerFont">{timePlayed}</p>}
+        {((characterHealth == 0 || gameWin) || isEditor) || !gameLoaded ? "" : <p className="absolute topRight timerFont">{timePlayed}</p>}
         {characterHealth == 0 || gameWin ? "" : <HealthBar />}
         {characterHealth == 0 || gameWin ? "" : <Character ref={gameRef} />}
         <div id="gameGrid" className="gameGrid">

@@ -302,6 +302,7 @@
   }
   .dpadButtonContainer{
     width: 100%;
+    max-width: 100%;
     max-height: 100%;
     aspect-ratio: 1/1;
     align-self: center;
@@ -553,6 +554,7 @@
     left: 0;
     height: 55%;
     z-index: 20;
+    background-color: rgba(49, 49, 49, 0.745);
     touch-action: manipulation;
   }
   .gameButtonsMimized{
@@ -568,6 +570,7 @@
   }
   .dpadButtonContainer{
     width: 100%;
+    max-width: calc(((var(--vh, 1vh) * 100) - var(--topBarWidth) / 2) * .5);
     max-height: 100%;
     aspect-ratio: 1/1;
     align-self: center;
@@ -612,6 +615,7 @@
   }
   .jumpButtonContainer{
     width: 100%;
+    max-width: calc(((var(--vh, 1vh) * 100) - var(--topBarWidth) / 2) * .5);
     max-height: 100%;
     aspect-ratio: 1/1;
     align-self: center;
@@ -640,6 +644,11 @@
 
   .gameEditorButtonHeight{
     height: calc(100% - var(--gameMinimizerHeight));
+    margin-right: 4rem;
+  }
+  .gameTitle {
+    width: auto;
+    font-size: .9rem;
   }
 }
 

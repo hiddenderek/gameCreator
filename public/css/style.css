@@ -346,6 +346,7 @@ select {
 }
 .gameWrapper {
   width: 100%;
+  max-width: calc((((var(--vh, 1vh) * 100) - var(--topBarWidth)) / .5625) );
   max-height: 100%;
   aspect-ratio: 16/9;
   align-self: center;
@@ -354,6 +355,7 @@ select {
   position: relative;
   color: white;
 }
+
 .gameTextContainer {
   width: 100%;
   height: 20rem;
@@ -440,9 +442,6 @@ select {
   position: absolute;
   left: 0;
   right: 0;
-  -webkit-mask-box-image: url("/images/character.png");
-  mask-image: url("/images/character.png");
-  mask-mode: alpha;
   background-image: url("/images/character.png");
   background-size: 100% 100%;
   image-rendering: pixelated;
@@ -454,26 +453,20 @@ select {
   position: absolute;
   left: 0;
   right: 0;
-  -webkit-mask-box-image: url("/images/characterJump.png");
-  mask-image: url("/images/characterJump.png");
-  mask-mode: alpha;
   background-image: url("/images/characterJump.png");
   background-size: 100% 100%;
   image-rendering: pixelated;
 }
 .characterLightDamage{
-  background-color: rgba(255, 217, 0, 0.719);
-  background-blend-mode: multiply;
+  background-image: url("/images/characterHighHealth.png");
   animation: blinker 2s linear infinite;
 }
 .characterMediumDamage{
-  background-color: rgba(231, 121, 12, 0.712);
-  background-blend-mode: multiply;
+  background-image: url("/images/characterMediumHealth.png");
   animation: blinker 2s linear infinite;
 }
 .characterHighDamage{
-  background-color: rgba(245, 2, 2, 0.753);
-  background-blend-mode: multiply;
+  background-image: url("/images/characterLowHealth.png");
   animation: blinker 2s linear infinite;
 }
 
@@ -554,7 +547,7 @@ select {
    font-size: 1.7rem;
    color: white;
    width: calc(100% - (var(--bannerButtonWidth) * 5.5));
-   margin-left: calc(var(--bannerButtonWidth) * 3);
+   margin-left: calc(((100vw - var(--bannerWidth)) - (100% - (var(--bannerButtonWidth) * 5.5)))/ 2);
    user-select: none;
 }
 .voteText {
@@ -569,6 +562,7 @@ select {
   width: var(--bannerButtonWidth);
   height: 100%;
   display: flex;
+  flex-flow: row;
   justify-items: center;
   align-items: center;
   justify-content: center;

@@ -25,7 +25,7 @@ app.use(useragent.express());
 app.use(gameActionsRouter)
 app.use(gamesRouter);
 app.use(rankRouter);
-app.use(usersRouter)
+app.use(usersRouter);
 app.set('view engine', 'ejs');
 
 
