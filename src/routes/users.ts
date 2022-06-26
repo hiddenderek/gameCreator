@@ -19,8 +19,6 @@ router.use(function timeLog(req, res, next) {
   });
 
 function authenticateToken(req: any, res: any, next: any) {
-    console.log('AUTHENTICATE')
-    console.log(req.cookies)
     const token = JSON.parse(req.cookies.secureCookie)
     if (token == null) {
         console.log('NULL AUTHENTICATE')
@@ -28,7 +26,7 @@ function authenticateToken(req: any, res: any, next: any) {
     }
     jwt.verify(token.accessToken, process.env.ACCESS_TOKEN_SECRET as string, (err: any, user: any) => {
         if (err) {
-            console.log('ERROR AUTHENTICATE')
+            console.log('ERROR AUTHENTICATING: ' + err)
             return res.sendStatus(403)
         }
         req.user = user
@@ -37,27 +35,22 @@ function authenticateToken(req: any, res: any, next: any) {
 }
 
 router.get('/api/currentUser', authenticateToken, async (req: any, res: any) => {
-    console.log('getCurrentUser')
     try {
-        console.log("CURRENT USER: " + req.user)
         if (req?.user?.name  && req?.user?.name !== "[object Object]") {
             res.status(200)
             res.json(req.user.name)
-            console.log('GOT USER!')
         } else {
-            console.log('COULD NOT FIND USER')
             res.status(404)
             res.json('')
         }
-    } catch (e) {
-        console.log('FAILED GETTING USER')
+    } catch (e: any) {
+        console.log('Failed getting current user: ' + e.message)
         res.status(400)
         res.json('')
     }
 })
 
 router.get('/api/users', authenticateToken, async (req: any, res: any) => {
-    console.log('getUsers')
     try {
         const showUsers = await pool.query(`
         SELECT * FROM users
@@ -69,18 +62,16 @@ router.get('/api/users', authenticateToken, async (req: any, res: any) => {
             res.status(404)
             res.json('Could not get users.')
         }
-    } catch (e) {
-        console.log(e)
+    } catch (e: any) {
+        console.log('Failed getting users: ' + e.message)
         res.status(404)
         res.json('Failed getting users.')
     }
 })
 
 router.get('/api/users/:userName', async (req: any, res: any) => {
-    console.log('getUser')
     try {
         const { userName } = req.params
-        console.log(userName)
         let showUser
         if (userName.length <= 30 && userName !== "[object Object]") {
             showUser = await pool.query(`
@@ -91,40 +82,31 @@ router.get('/api/users/:userName', async (req: any, res: any) => {
             SELECT username, time_of_signup, date_of_birth FROM users WHERE id = $1
             `,[userName])
         }
-        console.log(showUser?.rows[0])
         if (showUser?.rows[0]) {
-            console.log('CURRENT USER:')
-            console.log(showUser?.rows[0])
             res.status(200)
             res.json(showUser?.rows[0])
         } else {
-            console.log('USER RETREIVAL FAILED.')
             res.status(404)
             res.json('Could not get user.')
         }
-    } catch (e) {
-        console.log(e)
-        res.status(400)
+    } catch (e: any) {
+        console.log('Failed getting user: ' + e.message)
+        res.status(500)
         res.json('Failed getting user.')
     }
 })
 
 router.post('/api/users/:userName', async (req: any, res: any) => {
-    console.log('postUser')
     try {
         const { userName } = req.params
         const { password } = req.body
         const { dateOfBirth } = req.body
-        console.log(userName)
-        console.log(password)
-        console.log(dateOfBirth)
         const saltRounds = 10
         const salt = await bcrypt.genSalt(saltRounds)
         const hashedPassword = await bcrypt.hash(password, salt)
         const addUser = await pool.query(`
         INSERT INTO users (id, username, password, date_of_birth, time_of_signup) VALUES (uuid_generate_v4(), $1, $2, $3, CURRENT_DATE) RETURNING *
         `,[userName, hashedPassword, new Date(dateOfBirth)])
-        console.log('savin')
         if (addUser) {
             res.status(200)
             res.json("Successful! User has been added")
@@ -133,8 +115,8 @@ router.post('/api/users/:userName', async (req: any, res: any) => {
             res.json('Could not add user.')
         }
     } catch (e: any) {
-        console.log(e.message)
-        res.status(404)
+        console.log('Failed creating user: ' + e.message)
+        res.status(500)
         if (e.message.match('violates unique constraint') && e.message.match('password')) {
             res.json('Failed. Password must be unique.')
         } else if (e.message.match('violates unique constraint') && e.message.match('username')) {
@@ -146,7 +128,6 @@ router.post('/api/users/:userName', async (req: any, res: any) => {
 })
 
 router.patch('/api/users/:userName', authenticateToken, async (req: any, res: any) => {
-    console.log('patchUser')
     try {
         const { userName } = req.params
         const userChange = req.body
@@ -154,7 +135,6 @@ router.patch('/api/users/:userName', authenticateToken, async (req: any, res: an
         const updateUser = await pool.query(`
         UPDATE users SET ${columnType} = $1 WHERE username = $2 RETURNING *
         `, [userChange[columnType], userName])
-        console.log('savin')
         if (updateUser.rows[0]) {
             res.status(200)
             res.json(updateUser.rows[0])
@@ -162,8 +142,8 @@ router.patch('/api/users/:userName', authenticateToken, async (req: any, res: an
             res.status(404) 
             res.json('Could not modify user.')
         }
-    } catch (e) {
-        console.log(e)
+    } catch (e: any) {
+        console.log('Failed modifying users: ' + e.message)
         res.status(404)
         res.json('Failed modifying users.')
     }
@@ -171,7 +151,6 @@ router.patch('/api/users/:userName', authenticateToken, async (req: any, res: an
 })
 
 router.delete('/api/users/:userName', authenticateToken, async (req: any, res: any) => {
-    console.log('deleteUser')
     try {
         const { userName } = req.params
         const updateUser = await pool.query(`
@@ -184,8 +163,8 @@ router.delete('/api/users/:userName', authenticateToken, async (req: any, res: a
             res.status(404)
             res.json('could not delete user.')
         }
-    } catch (e) {
-        console.log(e)
+    } catch (e: any) {
+        console.log('Failed deleting users: ' + e.message)
         res.status(404)
         res.json('failed deleting users')
     }

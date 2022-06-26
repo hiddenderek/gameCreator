@@ -82,7 +82,7 @@ function GameEditor ({turnOnSideBar, profileData} : any) {
               placeholder="Game Name..." onInput={specifyGameName}>
             </input>
           </div>
-          <form className="gameEditorSave flexCenter fullWidth" onSubmit={e => {saveGameEdit(e)}}>
+          <form className="gameEditorSave flexCenter fullWidth" onSubmit={(e) => {e.preventDefault();saveGameEdit(e)}}>
             <button data-testid = "game_save_btn" id="saveButton" className="saveButton">Save Game</button>
           </form>
           <p className="gameEditorError flexCenter fullWidth">{errorMessage?.toUpperCase()}</p>

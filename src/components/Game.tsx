@@ -67,7 +67,10 @@ function Game({ profileData, aspectRatio, isMobile }: { profileData: userObject,
         dispatch(loadGame(gameParse?.game_data[gameScreen]?.gameData))
         dispatch(setGameName(gameParse?.game_name))
         dispatch(setGameLikes(gameParse?.likes))
-        const addView = await handleApiData(null, null, "patch", { plays: gameParse?.plays + 1 })
+        //Dont add a play to the game if its in the editor
+        if (!location.pathname.includes('/gameEditor/')) {
+          await handleApiData(null, null, "patch", { plays: gameParse?.plays + 1 })
+        }
         dispatch(characterReset())
         spikeAlternate()
         timeCount()
@@ -75,7 +78,7 @@ function Game({ profileData, aspectRatio, isMobile }: { profileData: userObject,
       }
       return Promise.resolve('gameLoaded')
     } catch (e) {
-      console.error(e)
+      console.error('Error getting game data: ' + e)
       return Promise.resolve('gameLoadFailed')
     }
   }
@@ -89,7 +92,9 @@ function Game({ profileData, aspectRatio, isMobile }: { profileData: userObject,
         {characterHealth == 0 || gameWin ? "" : <HealthBar />}
         {characterHealth == 0 || gameWin ? "" : <Character ref={gameRef} />}
         <div id="gameGrid" className="gameGrid">
-          {gameData.map((item, index) => { return <GameElement key={`element${index}`} index={index} id={`element${index}`} ref={gameRef}  /> })}
+          {gameData.map((item, index) => { 
+            return <GameElement key={`element${index}`} index={index} id={`element${index}`} ref={gameRef}  /> 
+          })}
         </div>
         {(characterHealth == 0 || gameWin) && !rankView && (!isMobile)? <GameResult /> : ""}
         {!gameLoaded ? <div className="fullHeight fullWidth topLeft absolute flexCenter gameWin">Loading...</div> : ""}

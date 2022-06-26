@@ -58,7 +58,12 @@ function UserProfile ({profileData}: {profileData: userObject}) {
             </div>
             <div className="profileGameLabel center">{displayedUserName === username ?  "YOUR GAMES:" : `${displayedUserName.toUpperCase()}'S GAMES:`}</div>
             <div className="gameBrowserContentContainer profileGameBrowser">
-                <div id="gameInfo" className="gameBrowser">{typeof userGames.map == "function" ? userGames?.map((item: gameObject, index) => { console.log(item); return <GameIcon key={item.game_name} index={index}  gameData={item} getData={getData} profileData={profileData}/> }) : ""}</div>
+                <div id="gameInfo" className="gameBrowser">
+                    {typeof userGames.map == "function" ? 
+                        userGames?.map((item: gameObject, index) => {
+                            return <GameIcon key={item.game_name} index={index}  gameData={item} getData={getData} profileData={profileData}/> 
+                        }) : ""}
+                </div>
             </div>
         </div>
     );

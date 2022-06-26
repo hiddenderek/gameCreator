@@ -16,6 +16,7 @@ export async function getApiData(pathName: string, port: number | undefined) {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
+                'Content-Type': 'application/json',
             },
             signal: controller.signal
         })
@@ -141,7 +142,6 @@ export async function handleRequest(pathName: string | null, setState: Function 
             }
             return Promise.resolve({data: responseDataResult, status: responseData?.status})
         } catch (e) {
-            console.error('Error handling request: ' + e)
             return Promise.resolve({data: responseResult, status: responseData?.status})
         }
         
@@ -163,7 +163,6 @@ export async function handleRequest(pathName: string | null, setState: Function 
             const responseDataResult = responseResult ? JSON.parse(responseResult) : responseData
             return Promise.resolve({data: responseDataResult, status: responseData?.status})
         } catch (e) {
-            console.error('ERROR PROCESSING DATA: ' + e)
             return Promise.resolve({data: null, status: responseData?.status})
         }
     } else {

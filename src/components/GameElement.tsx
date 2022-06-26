@@ -49,13 +49,13 @@ function GameElement (props: any, ref: any) {
         (gameData[props.index].type == "3" || mode == "3") ||
         (gameData[props.index].type == "4" || mode == "4") ||
         (gameData[props.index].type == "5" || mode == "5")) && typeof window !== "undefined") {
-      let initialGameWidth = 1920
-      let initialGameHeight = 1080
-      let curGameMeasure = ref?.current?.getBoundingClientRect()
-      let curGameWidth = curGameMeasure.width
-      let curGameHeight = curGameMeasure.height
-      let gameWidthAdjust = curGameWidth / initialGameWidth
-      let gameHeightAdjust = curGameHeight / initialGameHeight
+      const initialGameWidth = 1920
+      const initialGameHeight = 1080
+      const curGameMeasure = ref?.current?.getBoundingClientRect()
+      const curGameWidth = curGameMeasure.width
+      const curGameHeight = curGameMeasure.height
+      const gameWidthAdjust = curGameWidth / initialGameWidth
+      const gameHeightAdjust = curGameHeight / initialGameHeight
       dispatch(modifyGame({
         index: props.index, property: "collision",
         modifier: {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useHistory } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../app/hooks';
-import {handleApiData} from '../utils/apicalls';
+import { handleApiData } from '../utils/apicalls';
 import { userObject } from '../app/types';
 import GameIcon from './GameIcon'
 import GameBrowserPages from './GameBrowserPages';
@@ -27,9 +27,10 @@ function GameBrowser({ profileData }: { profileData: userObject }) {
     const searchTerm = useAppSelector((state) => state.userInterface.searchTerm)
     const dispatch = useAppDispatch()
 
-    useEffect(()=>{
+    useEffect(() => {
+        const urlParamsToJSON = '{"' + decodeURI(location.search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}'
         try {
-            const { mode, uploaddate, direction, page, search } = JSON.parse('{"' + decodeURI(location.search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}')
+            const { mode, uploaddate, direction, page, search } = JSON.parse(urlParamsToJSON.split('{""}').join('{}'))
             if (mode) {
                 setQueryMode(mode)
             }
@@ -45,10 +46,10 @@ function GameBrowser({ profileData }: { profileData: userObject }) {
             if (searchTerm) {
                 dispatch(setSearchTerm(search))
             }
-            } catch (e) {
-                console.error('Invalid URL error: '  + e)
+        } catch (e) {
+            console.error('Invalid URL error: ' + e)
         }
-    },[])
+    }, [])
 
     useEffect(() => {
         const oldURL = location.pathname + location.search
@@ -64,11 +65,11 @@ function GameBrowser({ profileData }: { profileData: userObject }) {
 
     //resets the page to zero when you filter by something that changes the amount of results.
     //This is to prevent you from being on a page that shouldnt exist. 
-    useEffect(()=>{
+    useEffect(() => {
         if (page !== 0) {
             changePage(0)
         }
-    },[searchTerm, uploadDate])
+    }, [searchTerm, uploadDate])
 
     function changeQueryMode(query: string) {
         setQueryMode(query)
@@ -86,19 +87,19 @@ function GameBrowser({ profileData }: { profileData: userObject }) {
 
     return (
         <div className="content sideContent">
-            <div className="gameBrowserContainer">
+            <div className={`gameBrowserContainer ${pageList.length <= gameDisplayLimit ? "noPageBrowser" : ""}`}>
                 <div className="gameBrowserBanner">
                     <div className="gameBrowserGroup">
                         <div className="gameBrowserCategory">Sort By: </div>
-                        <div data-testid = "sort_by_time_created" className={`gameBrowserValue ${queryMode === "time_created" ? "gameValueSelected" : ""}`} onClick={() => { changeQueryMode('time_created') }}>Date</div>
-                        <div data-testid = "sort_by_game_name" className={`gameBrowserValue ${queryMode === "game_name" ? "gameValueSelected" : ""}`} onClick={() => { changeQueryMode('game_name') }}>Name</div>
-                        <div data-testid = "sort_by_likes" className={`gameBrowserValue ${queryMode === "likes" ? "gameValueSelected" : ""}`} onClick={() => { changeQueryMode('likes') }}>Likes</div>
-                        <div data-testid = "sort_by_plays" className={`gameBrowserValue ${queryMode === "plays" ? "gameValueSelected" : ""}`} onClick={() => { changeQueryMode('plays') }}>Plays</div>
+                        <div data-testid="sort_by_time_created" className={`gameBrowserValue ${queryMode === "time_created" ? "gameValueSelected" : ""}`} onClick={() => { changeQueryMode('time_created') }}>Date</div>
+                        <div data-testid="sort_by_game_name" className={`gameBrowserValue ${queryMode === "game_name" ? "gameValueSelected" : ""}`} onClick={() => { changeQueryMode('game_name') }}>Name</div>
+                        <div data-testid="sort_by_likes" className={`gameBrowserValue ${queryMode === "likes" ? "gameValueSelected" : ""}`} onClick={() => { changeQueryMode('likes') }}>Likes</div>
+                        <div data-testid="sort_by_plays" className={`gameBrowserValue ${queryMode === "plays" ? "gameValueSelected" : ""}`} onClick={() => { changeQueryMode('plays') }}>Plays</div>
                     </div>
                     <div className="gameBrowserGroup">
                         <div className="gameBrowserCategory" >Order: </div>
-                        <div data-testid = "change_search_result_asc" className={`gameBrowserValue ${resultDirection === "ASC" ? "gameValueSelected" : ""}`} onClick={() => { changeResultDirection('ASC') }}>Ascending</div>
-                        <div data-testid = "change_search_result_desc" className={`gameBrowserValue ${resultDirection === "DESC" ? "gameValueSelected" : ""}`} onClick={() => { changeResultDirection('DESC') }}>Descending</div>
+                        <div data-testid="change_search_result_asc" className={`gameBrowserValue ${resultDirection === "ASC" ? "gameValueSelected" : ""}`} onClick={() => { changeResultDirection('ASC') }}>Ascending</div>
+                        <div data-testid="change_search_result_desc" className={`gameBrowserValue ${resultDirection === "DESC" ? "gameValueSelected" : ""}`} onClick={() => { changeResultDirection('DESC') }}>Descending</div>
                         <div className="gameBrowserCategory" > Limit to: </div>
                         <form className="gameBrowserValue">
                             <select value={uploadDate} onChange={(e: any) => { changeUploadDate(e.target.value) }}>
@@ -114,10 +115,13 @@ function GameBrowser({ profileData }: { profileData: userObject }) {
                 </div>
                 <div className="gameBrowserContentContainer">
                     <div id="gameBrowser" className="gameBrowser ">
-                        {typeof gameList.map !== "undefined" ? gameList.map((item: gameObject, index) => { return <GameIcon key={item.game_name} index = {index} gameData={item} profileData={profileData} /> }) : ""}
+                        {typeof gameList.map !== "undefined" ?
+                            gameList.map((item: gameObject, index) => {
+                                return <GameIcon key={item.game_name} index={index} gameData={item} profileData={profileData} />
+                            }) : ""}
                     </div>
                 </div>
-                {pageList.length > gameDisplayLimit ? <GameBrowserPages page = {page} pageList = {pageList} changePage = {changePage} gameDisplayLimit = {gameDisplayLimit} pageDisplayLimit = {pageDisplayLimit}/> : ""}
+                {pageList.length > gameDisplayLimit ? <GameBrowserPages page={page} pageList={pageList} changePage={changePage} gameDisplayLimit={gameDisplayLimit} pageDisplayLimit={pageDisplayLimit} /> : ""}
             </div>
         </div>
     );

@@ -13,8 +13,6 @@ function SignUp() {
   const [signUpMessage, setSignUpMessage] = useState('')
 
   useEffect(() => {
-    console.log('checking')
-    console.log(password.search(/[a-z]/i) < 0)
     setSignUpMessage('')
     if (!userName) {
       setErrorMessage('Username must be specified.')
@@ -47,7 +45,6 @@ function SignUp() {
         setErrorMessage(signUpResult?.data)
         setSignUpMessage('')
       }
-    } else {
     }
   }
 

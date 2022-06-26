@@ -12,7 +12,6 @@ export function spikeAlternate() {
     if (!spikeAlternater) {
         spikeAlternater = setInterval(() => {
             const getStore = store.getState()
-            console.log('alternateSpike')
             if (getStore.gameEvents.spikeStatus == true) {
                 store.dispatch(toggleSpikeStatus(false))
             } else if (getStore.gameEvents.spikeStatus == false) {
@@ -25,7 +24,6 @@ export function spikeAlternate() {
 export function timeCount() {
     if (!timeCounter) {
         timeCounter = setInterval(() => {
-            console.log('countTime')
             const getStore = store.getState()
             if (!getStore.userInterface.rankView) {
                 store.dispatch(countTime())

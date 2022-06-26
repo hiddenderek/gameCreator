@@ -24,31 +24,31 @@ function Ranks () {
             <div className = "rankSection">
                 <h1 className = "fullWidth flexCenter smallHeight rankLabel">HIGH SCORES ACHIEVED</h1>            
                 <ul>{typeof highScoreRanks.map === "function" ? 
-                    highScoreRanks.map((item: userData, index)=>
-                        <li key = {"High Score Rank " + index} className = "rankEntry">
-                            <a data-testid = {`high_score_rank_${index}`} className = "userText" onClick = {(e)=>{e.preventDefault(); navigateToUser(item.username)}}>{`${index + 1}: ${item.username}`}</a>
-                            <p className = "right">{`${item.score_count} high scores`}</p>
-                        </li>) : ""}
+                    highScoreRanks.map((item: userData, index)=> {
+                        return <li key = {"High Score Rank " + index} className = "rankEntry">
+                                <a data-testid = {`high_score_rank_${index}`} className = "userText" onClick = {(e)=>{e.preventDefault(); navigateToUser(item.username)}}>{`${index + 1}: ${item.username}`}</a>
+                                <p className = "right">{`${item.score_count} high scores`}</p>
+                            </li>}) : ""}
                 </ul>  
             </div>
             <div className = "rankSection">
                 <h1 className = "fullWidth flexCenter smallHeight rankLabel">LIKES RECIEVED</h1>
                 <ul>{typeof likeRanks.map === "function" ? 
-                    likeRanks.map((item: userData, index)=>
-                        <li key = {"Like Rank " + index} className = "rankEntry">
-                            <a data-testid = {`likes_rank_${index}`} className = "userText" onClick = {(e)=>{e.preventDefault(); navigateToUser(item.username)}}>{`${index + 1}: ${item.username}`}</a>
-                            <p className = "right">{`${item.total_score} likes`}</p>
-                        </li>) : ""}
+                    likeRanks.map((item: userData, index)=> {
+                        return <li key = {"Like Rank " + index} className = "rankEntry">
+                                <a data-testid = {`likes_rank_${index}`} className = "userText" onClick = {(e)=>{e.preventDefault(); navigateToUser(item.username)}}>{`${index + 1}: ${item.username}`}</a>
+                                <p className = "right">{`${item.total_score} likes`}</p>
+                            </li>}) : ""}
                 </ul>  
             </div>
             <div className="rankSection">
                 <h1 className="fullWidth flexCenter smallHeight rankLabel">PLAYS RECIEVED </h1>
                 <ul>{typeof playRanks.map === "function" ?
-                    playRanks.map((item: userData, index) =>
-                        <li key = {"Play Rank " + index} className="rankEntry">
-                            <a data-testid = {`plays_rank_${index}`} className="userText" onClick={(e) => {e.preventDefault(); navigateToUser(item.username) }}>{`${index + 1}: ${item.username}`}</a>
-                            <p className="right">{`${item.play_count} plays`}</p>
-                        </li>) : ""}
+                    playRanks.map((item: userData, index) => {
+                        return <li key = {"Play Rank " + index} className="rankEntry">
+                                <a data-testid = {`plays_rank_${index}`} className="userText" onClick={(e) => {e.preventDefault(); navigateToUser(item.username) }}>{`${index + 1}: ${item.username}`}</a>
+                                <p className="right">{`${item.play_count} plays`}</p>
+                            </li>}) : ""}
                 </ul>
             </div>
         </div>

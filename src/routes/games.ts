@@ -13,13 +13,10 @@ const fs = require("fs")
 const router = express.Router()
 
 router.use(function timeLog(req, res, next) {
-    console.log('Time: ', Date.now());
     next();
   });
 
 function authenticateToken(req: any, res: any, next: any) {
-    console.log('AUTHENTICATE')
-    console.log(req.cookies)
     const token = JSON.parse(req.cookies.secureCookie)
     if (token == null) {
         console.log('NULL AUTHENTICATE')
@@ -27,7 +24,7 @@ function authenticateToken(req: any, res: any, next: any) {
     }
     jwt.verify(token.accessToken, process.env.ACCESS_TOKEN_SECRET as string, (err: any, user: any) => {
         if (err) {
-            console.log('ERROR AUTHENTICATE')
+            console.log('ERROR AUTHENTICATING: ' + err)
             return res.sendStatus(403)
         }
         req.user = user
@@ -36,7 +33,6 @@ function authenticateToken(req: any, res: any, next: any) {
 }
 
 router.get('/api/games', async (req: any, res: any) => {
-    console.log('getGames')
     try {
         let parameters = []
         if (req?.query?.search) { 
@@ -83,32 +79,7 @@ router.get('/api/games', async (req: any, res: any) => {
                 uploadDateFormat = "INTERVAL '1 HOUR'"
                 break
         }
-        console.log(parameters)
-        console.log("COUNT GAMES: " + req?.query?.countgames)
         const actionCheck = await pool.query(`SELECT * FROM gameactions`)
-        console.log(`
-        SELECT game_name, ${req?.query?.countgames ? "" : "game_data, user_id, grid_image, "} id, plays, time_created${actionCheck?.rows?.length > 0 ? ", (like_count - dislike_count) AS likes" : "" } FROM (
-            SELECT DISTINCT d.game_name, ${req?.query?.countgames ? "" : "d.game_data, d.user_id, d.grid_image,"} d.id, d.plays, d.time_created
-            ${actionCheck?.rows?.length > 0 ? ", COUNT(CASE WHEN a.game_id = d.id AND a.action = 'like' THEN a.game_id ELSE NULL END)::int AS like_count" : "" } 
-            ${actionCheck?.rows?.length > 0 ? ", COUNT(CASE WHEN a.game_id = d.id AND a.action = 'dislike' THEN a.game_id ELSE NULL END)::int AS dislike_count"  : "" }
-            FROM gamedata d${actionCheck?.rows?.length > 0 ? ", gameactions a" : ""} GROUP BY d.id
-            ) AS q1 
-            ${req?.query?.search || req?.query?.uploaddate ?
-                'WHERE' : ""} 
-            ${req?.query?.search ?
-                `game_name ILIKE $1` : ""} 
-            ${req?.query?.uploaddate && req?.query?.search ? 
-                "AND" : ""} 
-            ${req?.query?.uploaddate ? 
-                `time_created > NOW() - ${uploadDateFormat}` : ""} 
-            ${orderByFormat} 
-            ${req?.query?.direction === "ASC" ? 
-                "ASC" : req?.query.direction === "DESC" ? "DESC" : ""} 
-            ${req?.query?.countgames ?
-                "" : "LIMIT 16"} 
-            ${req?.query?.page && !req?.query?.countgames ?
-                `OFFSET ${req?.query?.search ? "$2" : "$1"}` : ""}
-        `)
         const selectGames = await pool.query(`
         SELECT game_name, ${req?.query?.countgames ? "" : "game_data, user_id, grid_image, "} id, plays, time_created${actionCheck?.rows?.length > 0 ? ", (like_count - dislike_count) AS likes" : "" } FROM (
             SELECT DISTINCT d.game_name, ${req?.query?.countgames ? "" : "d.game_data, d.user_id, d.grid_image,"} d.id, d.plays, d.time_created
@@ -135,20 +106,17 @@ router.get('/api/games', async (req: any, res: any) => {
         if (selectGames.rows) {
             res.status(200)
             res.json(selectGames.rows)
-            console.log('got games')
         } else {
-            res.status(404)
-            res.json('Failed getting games.')
-            console.log('could not get any games')
+            res.status(200)
+            res.json('No games available.')
         }
     } catch (e : any) {
-        console.log('SEARCH ERROR: ' + e)
-        res.status(400)
+        console.log('SEARCH ERROR: ' + e.message)
+        res.status(500)
         res.json('Failed getting games.'+ e.message)
     }
 })
 router.get('/api/games/:userName', async (req: any, res: any) => {
-    console.log('getGamesUser')
     try {
         const { userName } = req.params
         const getUser = await pool.query(`
@@ -163,19 +131,17 @@ router.get('/api/games/:userName', async (req: any, res: any) => {
             res.status(200)
             res.json(readGameData.rows)
         } else {
-            res.status(404)
-            res.json('Failed getting games from user.')
+            res.status(200)
+            res.json('No user games available.')
         }
-    } catch (e) {
-        console.log(e)
-        res.status(400)
+    } catch (e: any) {
+        console.log('Faled getting games from user: ' + e.message)
+        res.status(500)
         res.json('Failed getting games from user.')
     }
 })
 router.get('/api/games/:userName/:gameName', async (req: any, res: any) => {
-    console.log('getGame')
     try {
-        console.log('requesting game')
         const { userName, gameName } = req.params
         const getUser = await pool.query(`
         SELECT id FROM users WHERE username = $1
@@ -191,14 +157,13 @@ router.get('/api/games/:userName/:gameName', async (req: any, res: any) => {
             res.status(404)
             res.json('Failed getting game data.')
         }
-    } catch (e) {
-        console.log(e)
-        res.status(400)
+    } catch (e: any) {
+        console.log('failed reading game' + e.message)
+        res.status(500)
         res.json('failed reading game')
     }
 })
 router.post('/api/games/:userName/:gameName', authenticateToken, async (req: any, res: any) => {
-    console.log('postGame')
     try {
         const { userName } = req.params
         const { newGameName, screen, gridImage } = req.body
@@ -232,14 +197,12 @@ router.post('/api/games/:userName/:gameName', authenticateToken, async (req: any
                 res.status(404)
                 res.json('Failed adding game.')
             }
-           
-            console.log('gamedata:')
         }
 
 
     } catch (e: any) {
-        console.log(e)
-        res.status(400)
+        console.log('Failed  creating game: ' + e.message)
+        res.status(500)
         if (e.message.includes('violates unique constraint') && e.message.includes('game_name')) {
             res.json('Game name is already used.')
         }
@@ -257,16 +220,11 @@ router.post('/api/games/:userName/:gameName', authenticateToken, async (req: any
 })
 
 router.patch('/api/games/:userName/:gameName', authenticateToken, async (req: any, res: any) => {
-    console.log('patchGame')
     try {
         const { userName, gameName } = req.params
         const { newGameName, gameData, screen, gridImage, plays } = req.body
         const columnType = Object.keys(req.body)[0]
         const gameDataString = JSON.stringify(gameData)
-        console.log(userName)
-        console.log(gameName)
-        console.log(newGameName)
-        console.log(screen)
         const getUser = await pool.query(`
         SELECT id FROM users WHERE username = '${userName}'
         `)
@@ -283,7 +241,6 @@ router.patch('/api/games/:userName/:gameName', authenticateToken, async (req: an
                 res.json('Failed updating game screen.')
             }
         } else if (id && (req.user.name == userName || plays)) {
-            console.log('UPDATE')
             const updateGame = await pool.query(`
             UPDATE gamedata SET ${columnType} = $1 WHERE user_id = $2 AND  game_name = $3 RETURNING $4
             `, [req.body[columnType], id, gameName, columnType])
@@ -295,15 +252,14 @@ router.patch('/api/games/:userName/:gameName', authenticateToken, async (req: an
                 res.json('Failed updating game.')
             }
         }
-    } catch (e) {
-        console.log(e)
-        res.status(400)
+    } catch (e: any) {
+        console.log('Failed modifying game: ' + e.message)
+        res.status(500)
         res.json('failed modifying game')
     }
 })
 
 router.delete('/api/games/:userName/:gameName', authenticateToken, async (req: any, res: any) => {
-    console.log('deleteGame')
     try {
         const { userName, gameName} = req.params
         const { screen, mode } = req.body
@@ -311,7 +267,6 @@ router.delete('/api/games/:userName/:gameName', authenticateToken, async (req: a
         SELECT id FROM users WHERE username = $1
         `, [userName])
         const { id } = getUser.rows[0]
-        console.log(id, mode, req.user.name, userName)
         if (id && mode == "game" && req.user.name == userName) {
             const getGameId = await pool.query(`
             SELECT * FROM gamedata WHERE user_id = $1 AND  game_name = $2
@@ -324,13 +279,10 @@ router.delete('/api/games/:userName/:gameName', authenticateToken, async (req: a
             DELETE FROM gamedata WHERE user_id = $1 AND  game_name = $2
             `, [id, gameName])
             if (deleteGame) {
-                console.log(deleteGame)
-                console.log('deleted')
                 res.status(200)
                 res.json(deleteGame)
             } else {
                 res.status(404)
-                console.log('not deleted')
                 res.json('Could not delete game')
             }
         } else if (screen && id && mode == "screen" && req.user.name == userName) {
@@ -338,30 +290,24 @@ router.delete('/api/games/:userName/:gameName', authenticateToken, async (req: a
             UPDATE gamedata SET game_data = game_data - $1 WHERE user_id = $2 AND  game_name = $3 RETURNING game_data
             `, [screen, id, gameName])
             if (deleteGameScreen) {
-                console.log('delete game screen')
                 res.status(200)
                 res.json(deleteGameScreen)
             } else {
                 res.status(404)
-                console.log('could not do that.')
                 res.json('Could not delete game screen.')
             }
         }
-    } catch (e) {
-        console.log(e)
-        res.status(400)
+    } catch (e: any) {
+        console.log('Failed deleting game: ' + e)
+        res.status(500)
         res.json('failed deleting game')
     }
 })
 
 router.get('/api/gameEditor/:userName/:gameName', async (req: any, res: any) => {
-    console.log('getGameEditorGame')
     try {
         const { userName, gameName } = req.params
-        console.log('GET EDITOR')
-        console.log(userName)
         if (gameName == "new") {
-            console.log('readin')
             try {
                 const data = fs.readFileSync("./src/data/gameData.txt", 'utf8', (err: any, dataRead: any) => {
                     return dataRead
@@ -374,13 +320,10 @@ router.get('/api/gameEditor/:userName/:gameName', async (req: any, res: any) => 
                     res.json('Failed getting default data.')
                 }
             } catch (e) {
-                console.log('error')
-                console.log(e)
                 res.status(400)
                 res.json('Failed getting default data.')
             }
         } else {
-            console.log('gettinGAME!')
             try {
                 const getUser = await pool.query(`
                 SELECT id FROM users WHERE username = $1
@@ -394,17 +337,16 @@ router.get('/api/gameEditor/:userName/:gameName', async (req: any, res: any) => 
                     res.json(readGameData.rows[0])
                 } else {
                     res.status(404)
-                    res.json('Failed reading game.')
+                    res.json('Could not find game.')
                 }
             } catch (e) {
-                console.log(e)
                 res.status(400)
                 res.json('failed reading game')
             }
         }
-    } catch (e) {
-        console.log(e)
-        res.status(400)
+    } catch (e: any) {
+        console.log('Failed loading gameData: ' + e.message)
+        res.status(500)
         res.json('failed loading gameData')
     }
 

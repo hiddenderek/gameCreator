@@ -12,13 +12,10 @@ const pool = new Pool({
 const router = express.Router()
 
 router.use(function timeLog(req, res, next) {
-    console.log('Time: ', Date.now());
     next();
   });
 
 function authenticateToken(req: any, res: any, next: any) {
-    console.log('AUTHENTICATE')
-    console.log(req.cookies)
     const token = JSON.parse(req.cookies.secureCookie)
     if (token == null) {
         console.log('NULL AUTHENTICATE')
@@ -26,7 +23,7 @@ function authenticateToken(req: any, res: any, next: any) {
     }
     jwt.verify(token.accessToken, process.env.ACCESS_TOKEN_SECRET as string, (err: any, user: any) => {
         if (err) {
-            console.log('ERROR AUTHENTICATE')
+            console.log('ERROR AUTHENTICATING: ' + err)
             return res.sendStatus(403)
         }
         req.user = user
@@ -36,7 +33,7 @@ function authenticateToken(req: any, res: any, next: any) {
 
 router.get('/api/games/:userName/:gameName/scores', async (req: any, res: any) => {
     try {
-        const {userName, gameName} = req.params
+        const {gameName} = req.params
         const getGameId = await pool.query(`
         SELECT id FROM gamedata WHERE game_name = $1
         `, [gameName])
@@ -50,10 +47,9 @@ router.get('/api/games/:userName/:gameName/scores', async (req: any, res: any) =
             res.status(200)
             res.json(getGameScores.rows)
         }
-        console.log(getGameScores)
-    } catch (e) {
-        console.log(e)
-        res.status(400)
+    } catch (e: any) {
+        console.log('Failed getting scores: ' + e.message)
+        res.status(500)
         res.json('failed getting scores')
     }
 })
@@ -62,7 +58,6 @@ router.post('/api/games/:userName/:gameName/scores/:curUser', authenticateToken,
     try {
         const { userName, gameName, curUser } = req.params
         const { score } = req.body
-        console.log(userName, gameName, curUser, score)
         const getGameId = await pool.query(`
         SELECT id FROM gamedata WHERE game_name = $1
         `, [gameName])
@@ -74,7 +69,6 @@ router.post('/api/games/:userName/:gameName/scores/:curUser', authenticateToken,
         `, [curUser])
 
         const userId = getUserId?.rows[0]?.id
-        console.log(userId, gameId)
         if (gameId && userId && req.user.name == curUser) {
             let oldScore = 1000000
             const getOldScore = await pool.query(`
@@ -88,7 +82,6 @@ router.post('/api/games/:userName/:gameName/scores/:curUser', authenticateToken,
             INSERT INTO gamescores (id, score, game_id, user_id) VALUES (uuid_generate_v4(), $1, $2, $3) ON CONFLICT (game_id, user_id) ${score < oldScore ? `DO UPDATE SET score = $4` : 'DO NOTHING'}
             `, parameters)
             if (postNewScore.rows[0]) {
-                console.log(postNewScore.rows[0])
                 res.status(200)
                 res.json(postNewScore.rows[0])
             } else {
@@ -99,17 +92,16 @@ router.post('/api/games/:userName/:gameName/scores/:curUser', authenticateToken,
             res.status(404)
             res.json('Failed setting high score.')
         }
-    } catch (e) {
-        console.log(e)
-        res.status(400)
+    } catch (e: any) {
+        console.log('Failed setting high score: ' + e.message)
+        res.status(500)
         res.json('Failed setting high score.')
     }
 })
 
 router.get('/api/games/:userName/:gameName/:curUser/actions', authenticateToken, async (req: any, res: any) => {
-    console.log('getCurUserGameAction')
     try {
-        const {userName, gameName, curUser} = req.params
+        const {gameName, curUser} = req.params
         if (curUser === req?.user?.name) {
             const getGameId = await pool.query(`
             SELECT id FROM gamedata WHERE game_name = $1
@@ -130,21 +122,21 @@ router.get('/api/games/:userName/:gameName/:curUser/actions', authenticateToken,
                 res.status(200)
                 res.json(getCurUserGameAction.rows[0].action)
             } else {
-                res.status(404)
+                res.status(200)
                 res.json('Could not find game action.')
             }
         } else {
             res.status(404)
             res.json('Failed getting user actions. User name provided does not match logged in user.')
         }
-    } catch (e) {
-        res.status(400)
+    } catch (e: any) {
+        console.log('Failed getting user actions: ' + e.message)
+        res.status(500)
         res.json('Failed getting user actions.')
     }
 })
 
 router.get('/api/games/:userName/:gameName/actions/:action', async (req: any, res: any) => {
-    console.log('getLikes')
     try {
         const { userName, gameName, action } = req.params
         const getGameId = await pool.query(`
@@ -158,23 +150,19 @@ router.get('/api/games/:userName/:gameName/actions/:action', async (req: any, re
             res.status(200)
             res.json(addAction?.rows?.length)
         } else {
-            res.json(404)
+            res.json(200)
             res.json('Could not get likes.')
         }
-    } catch (e) {
-        console.log(e)
-        res.status(400)
+    } catch (e: any) {
+        console.log('Failed getting likes: ' + e.message)
+        res.status(500)
         res.json('Failed getting likes')
     }
 })
 router.post('/api/games/:userName/:gameName/actions/:action', authenticateToken, async (req: any, res: any) => {
-    console.log('addLikes')
     try {
-        console.log('gameAction!')
-        const { userName, gameName, action } = req.params
+        const { gameName, action } = req.params
         const { name } = req.user
-        console.log(gameName)
-        console.log(name)
         const getGameId = await pool.query(`
         SELECT id FROM gamedata WHERE game_name = '${gameName}' 
         `)
@@ -193,9 +181,9 @@ router.post('/api/games/:userName/:gameName/actions/:action', authenticateToken,
             res.status(404)
             res.json('Failed liking game.')
         }
-    } catch (e) {
-        console.log(e)
-        res.status(400)
+    } catch (e: any) {
+        console.log('Failed liking game: ' + e.message)
+        res.status(500)
         res.json('failed liking game')
     }
 })

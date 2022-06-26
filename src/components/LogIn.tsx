@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import config from '../config'
-import { useLocation, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import {handleApiData} from '../utils/apicalls';
 
 function LogIn({setProfileData} : any) {
-  const location = useLocation()
   const history = useHistory()
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')

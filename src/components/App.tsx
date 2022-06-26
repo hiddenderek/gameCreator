@@ -1,5 +1,5 @@
 declare const window: Window & { gameAudio : any }
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import SignUp from './SignUp'
 import LogIn from './LogIn'
@@ -16,11 +16,10 @@ import { useAppDispatch} from '../app/hooks';
 import {gameEditorReset} from '../features/gameEditor/gameEditor-slice'
 import {resetGame} from './GameEvents'
 import {handleApiData} from '../utils/apicalls';
-import {event, userObject} from '../app/types'
+import {userObject} from '../app/types'
 import Ranks from './Ranks'
 
 function App () {
-  console.log('STARTING APP')
   const [sideBar, setSideBar] = useState(false)
   const defaultProfile: userObject = { username: "" }
   const [profileData, setProfileData] = useState(defaultProfile)
@@ -37,23 +36,8 @@ function App () {
     if (location.pathname == "/") {
       history.push('/home')
     }
+    //gets the current user, then gets the relevant profile data if applicable. Then sets the state with this data.
     getData()
-    async function getData() {
-      console.log('currentuserer!')
-      try {
-        let currentUser = await handleApiData(`/currentUser`, null, "get", null)
-        if (!currentUser) {
-          currentUser = await handleApiData(`/currentUser`, null, "get", null)
-        }
-        if (currentUser?.status === 200){
-            console.log('THE CURRENT USER IS: ' + `/users/${currentUser?.data}`)
-            const result = await handleApiData(`/users/${currentUser?.data}`, setProfileData, "get", null)
-            console.log(result)
-        }
-      } catch (e) {
-        console.log('Failed getting user: ' + e)
-      }
-    }
     //fixes vh inconsistencies on mobile, runs when app component is mounted. 
     if (typeof document !== "undefined") {
       const vh = window.innerHeight * 0.01;
@@ -68,9 +52,21 @@ function App () {
       window.gameAudio.gameMusic_1 = new Audio('/sounds/gameMusic_1.wav')
     }
   }, [])
-console.log('STILL STARTING APP!')
+
+  async function getData() {
+    try {
+      let currentUser = await handleApiData(`/currentUser`, null, "get", null)
+
+      if (currentUser?.status === 200){
+          handleApiData(`/users/${currentUser?.data}`, setProfileData, "get", null)
+      }
+    } catch (e) {
+      console.error('Error getting user: ' + e)
+    }
+  }
+
   useEffect(()=>{
-    //checks to see if you're 
+    //checks to see what type of device you're using, and what the aspect ratio is. Updates state based on this information.
     const ua = typeof navigator !== "undefined" ? navigator?.userAgent : "desktop";
     const aspectRatio = screen.width/screen.height
     const isMobile = /Android|webOS|iPhone|iPad|iPod/i.test(ua)
@@ -92,8 +88,6 @@ console.log('STILL STARTING APP!')
   // the /games/ and /gameEditor/ endpoints always contain games in their pages, so this is a good way to check.
   // if you're not playing a game, the app will reset all game state and intervals.
   useEffect(() => {
-    console.log('resetGame!')
-    console.log(location.pathname)
     const audio = window.gameAudio.gameMusic_1
     if (!location.pathname.includes('/games/')  && !location.pathname.includes('/gameEditor/')) {
     resetGame()
@@ -101,7 +95,7 @@ console.log('STILL STARTING APP!')
     } else if (location.pathname.includes('/games/')) {
       dispatch(gameEditorReset())
     }
-    
+    //handles pausing and playing audio depending on endpoint location.
     if (!location.pathname.includes('/games/')) {
       audio.pause()
       audio.currentTime = 0
@@ -112,10 +106,7 @@ console.log('STILL STARTING APP!')
       audio.play()
     }
   },[location.pathname])
-  console.log('resetgmae!')
-  console.log(profileData.username)
-  console.log('hi')
-  //several key  events are set on loading the app. These are handled in a seperate key handler module.
+  //several key events are set on loading the app. These are handled in a seperate key handler module.
   function keyPress(e: KeyboardEvent) {
     handleKeyPress(e)
   }
@@ -123,14 +114,13 @@ console.log('STILL STARTING APP!')
     handleKeyRelease(e)
   }
   function turnOnSideBar() {
-    console.log('sideBarTurnedOn!!')
     setSideBar(true)
   }
 
   const appClasses = `appContainer ${sideBarCheck ? "noSideBar" : ""} ${doubleBannerCheck ? "doubleBanner" : ""}`
-  console.log(`app classes: ${appClasses}`) 
+
   return (
-    <div className={`appContainer ${sideBarCheck ? "noSideBar" : ""} ${doubleBannerCheck ? "doubleBanner" : ""}`} tabIndex={0} onKeyDown={(e: any)=>{keyPress(e)}} onKeyUp={(e: any)=>{keyRelease(e)}}>
+    <div className={appClasses} tabIndex={0} onKeyDown={(e: any)=>{keyPress(e)}} onKeyUp={(e: any)=>{keyRelease(e)}}>
       <Banner  profileData = {profileData as userObject} setProfileData = {setProfileData} aspectRatio = {aspectRatio} isMobile = {isMobile}/>
       <SideBar profileData = {profileData as userObject}/>
       <Switch>

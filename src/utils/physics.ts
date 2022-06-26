@@ -28,46 +28,46 @@ export function characterTrack(ref: any) {
             const eventData = getStore.gameData.eventData
             // the screen can be any size so we need to set an initial size to compare it to to get proper percentages 
             // for the X/Y location of each game element on screen
-            let initialGameWidth = 1920
-            let initialGameHeight = 1080
+            const initialGameWidth = 1920
+            const initialGameHeight = 1080
             //measure the parent component (game wrapper) size to get the percentage difference from the initial size
-            let curGameMeasure = ref?.current?.getBoundingClientRect()
-            let curGameWidth = curGameMeasure?.width
-            let curGameHeight = curGameMeasure?.height
+            const curGameMeasure = ref?.current?.getBoundingClientRect()
+            const curGameWidth = curGameMeasure?.width
+            const curGameHeight = curGameMeasure?.height
             //calculate the percentage difference to adjust the game elements location properly
-            let gameWidthAdjust = curGameWidth / initialGameWidth
-            let gameHeightAdjust = curGameHeight / initialGameHeight
+            const gameWidthAdjust = curGameWidth / initialGameWidth
+            const gameHeightAdjust = curGameHeight / initialGameHeight
             //we need to check if the location of the character is on a game element with collision enabled, so we need to 
             //retrieve the area on screen that the character is located in to compare to. Dont want to compare all 576 tiles each frame. This is calculated by getting the
             //characters location (a percentage) and then multiplying that percentage by the number of squares on screen and rounding to the nearest integer.
             //For height there is 18 tiles, for width that is 32. So multiplying by percentage will get you the row/column info of the tile grid.
             //For height, the character is 2 blocks high so we're offseting that by 2 to get the bottom of the character as a reference. 
-            let positionY = Math.round(((character.y / 100) * 18)) + 2
+            const positionY = Math.round(((character.y / 100) * 18)) + 2
             //Y1 calculates the position to be tracked 1 block up from the bottom of the character
-            let positionY1 = Math.round(((character.y / 100) * 18)) + 1
+            const positionY1 = Math.round(((character.y / 100) * 18)) + 1
             //Y0 calculates the position to be tracked 1 block above the character
-            let positionY0 = Math.round(((character.y / 100) * 18))
-            let positionX = Math.floor((character.x / 100) * 32)
-            let positionX2 = Math.ceil((character.x / 100) * 32)
-            let positionXLeft = Math.ceil((character.x / 100) * 32) - 1
-            let positionXRight = Math.floor((character.x / 100) * 32) + 1
-            //this gets the 3 elements directl left of the character
-            let gameElmLocationLeft1 = positionXLeft + ((positionY1) * 32)
-            let gameElmLocationLeft2 = positionXLeft + ((positionY0) * 32)
-            let gameElmLocationLeft3 = positionXLeft + ((positionY) * 32)
+            const positionY0 = Math.round(((character.y / 100) * 18))
+            const positionX = Math.floor((character.x / 100) * 32)
+            const positionX2 = Math.ceil((character.x / 100) * 32)
+            const positionXLeft = Math.ceil((character.x / 100) * 32) - 1
+            const positionXRight = Math.floor((character.x / 100) * 32) + 1
+            //this gets the 3 elements directly left of the character
+            const gameElmLocationLeft1 = positionXLeft + ((positionY1) * 32)
+            const gameElmLocationLeft2 = positionXLeft + ((positionY0) * 32)
+            const gameElmLocationLeft3 = positionXLeft + ((positionY) * 32)
             //this gets the 3 elements directly right of the character
-            let gameElmLocationRight1 = positionXRight + ((positionY1) * 32)
-            let gameElmLocationRight2 = positionXRight + ((positionY0) * 32)
-            let gameElmLocationRight3 = positionXRight + ((positionY) * 32)
+            const gameElmLocationRight1 = positionXRight + ((positionY1) * 32)
+            const gameElmLocationRight2 = positionXRight + ((positionY0) * 32)
+            const gameElmLocationRight3 = positionXRight + ((positionY) * 32)
             //this gets the two elements above the character
-            let gameElmLocationTop1 = positionX + (positionY0 * 32)
-            let gameElmLocationTop2 = positionX2 + (positionY0 * 32)
+            const gameElmLocationTop1 = positionX + (positionY0 * 32)
+            const gameElmLocationTop2 = positionX2 + (positionY0 * 32)
             //this gets the exact game element index in the array of game elements by multiplying the rows (32 long) and then adding the column locaiton in that row
-            let gameElmLocation1 = positionX + (positionY * 32)
-            let gameElmLocation2 = positionX2 + (positionY * 32)
+            const gameElmLocation1 = positionX + (positionY * 32)
+            const gameElmLocation2 = positionX2 + (positionY * 32)
             //this is the game element 1 block up from the bottom of the character, for elements that need to be tracked but arent necessarily having collision
-            let gameElmLocation3 = positionX + ((positionY1) * 32)
-            let gameElmLocation4 = positionX2 + ((positionY1) * 32)
+            const gameElmLocation3 = positionX + ((positionY1) * 32)
+            const gameElmLocation4 = positionX2 + ((positionY1) * 32)
             //if all tracked game element array items exist and the character is not less than X 0 or greater than Y 18 (boundaries of the grid), evaluate physics. 
             if (positionY <= 18) {
                 if (((gameData[gameElmLocation1]?.collision && (eventData[gameElmLocation1]?.collisionActive === undefined ? true : eventData[gameElmLocation1].collisionActive)) ||

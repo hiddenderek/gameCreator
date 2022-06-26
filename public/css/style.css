@@ -593,6 +593,12 @@ select {
   "gameBrowser"
   "pageBrowser";
 }
+.noPageBrowser {
+  grid-template-rows: 5.5rem auto;
+  grid-template-areas: 
+  "gameBrowserBanner"
+  "gameBrowser";
+}
 .pageBrowserContainer {
   grid-area: pageBrowser;
   width: 100%;

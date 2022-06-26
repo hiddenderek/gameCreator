@@ -11,14 +11,11 @@ const pool = new Pool({
 const router = express.Router()
 
 router.use(function timeLog(req, res, next) {
-    console.log('Time: ', Date.now());
     next();
   });
 
 router.get('/api/trending', async (req: any, res: any) => {
-    console.log('getTrending')
     try {
-        console.log('getting FEATURE LENGTH')
         const trendingGames = await pool.query(`
         SELECT * FROM (
             SELECT DISTINCT d.game_name, d.game_data, d.id, d.user_id, d.plays, d.grid_image, 
@@ -34,19 +31,18 @@ router.get('/api/trending', async (req: any, res: any) => {
             res.status(200)
             res.json(trendingGames.rows)
         } else {
-            res.status(404)
+            res.status(200)
             res.json('Could not get trending games.')
         }
-    } catch (e) {
-        res.status(400)
+    } catch (e: any) {
+        console.log('Failed getting trending games: ' + e.message)
+        res.status(500)
         res.json('Failed getting trending games.')
-        console.log(e)
     }
 })
 
 router.get('/api/ranks/scores', async (req: any, res: any) =>{
     try {
-        console.log('getScores!')
         const getScores = await pool.query(`
         SELECT * FROM (
             SELECT DISTINCT u.username,
@@ -54,23 +50,21 @@ router.get('/api/ranks/scores', async (req: any, res: any) =>{
             FROM users u, gamescores s GROUP BY u.id
         ) AS Q1 WHERE score_count IS NOT NULL ORDER BY score_count DESC LIMIT 25 
         `)
-        console.log(getScores.rows)
         if (getScores.rows[0]) {
             res.status(200)
             res.json(getScores.rows)
         } else {
-            res.status(404) 
+            res.status(200) 
             res.json('No scores available.')
         }
-    } catch (e) {
-        console.log(e)
-        res.status(400)
+    } catch (e: any) {
+        console.log('Failed getting scores: ' + e.message)
+        res.status(500)
         res.json('failed getting ranks')
     }
 })
 router.get('/api/ranks/plays', async (req: any, res: any) => {
     try {
-        console.log('gettingRanks!')
         const getRanks = await pool.query(`
         SELECT * FROM (
                 SELECT DISTINCT u.username, 
@@ -78,19 +72,17 @@ router.get('/api/ranks/plays', async (req: any, res: any) => {
                 FROM users u, gamedata d GROUP BY u.id
         ) AS Q1  WHERE play_count IS NOT NULL ORDER BY play_count DESC LIMIT 25 
         `)
-        console.log('ranks: ')
-        console.log(getRanks)
         if (getRanks.rows) {
             res.status(200)
             res.json(getRanks.rows)
         } else {
-            res.status(404)
-            res.json('failed getting ranks.')
-            console.log('failed getting ranks')
+            res.status(200)
+            res.json('No plays available.')
         }
-    } catch (e) {
-        res.status(400)
-        res.json('failed getting ranks: ' + e)
+    } catch (e: any) {
+        console.log('Failed getting plays: ' + e.message)
+        res.status(500)
+        res.json('failed getting plays: ' + e)
     }
 })
 
@@ -110,12 +102,13 @@ router.get('/api/ranks/likes', async (req: any, res: any) => {
             res.status(200)
             res.json(getRanks.rows)
         } else {
-            res.status(404)
-            res.json('Could not get likes.')
+            res.status(200)
+            res.json('No likes available.')
         }
-    } catch (e) {
-        res.status(404)
-        res.json('failed getting ranks: ' + e)
+    } catch (e: any) {
+        console.log('Failed getting likes: ' + e.message)
+        res.status(500)
+        res.json('failed getting likes: ' + e)
     }
 })
 

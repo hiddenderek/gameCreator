@@ -4,7 +4,7 @@ export function getAfterLastCharacter({string, character} : {string: string, cha
     const lastEndpointFormat = lastEndpoint.split(character).join('')
     return lastEndpointFormat
 }
-
+//From stack overflow, not my code but is very handy!
 export const getFromBetween = {
   results: [] as string[],
   string: "",
