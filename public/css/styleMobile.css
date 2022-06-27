@@ -312,7 +312,7 @@
     position: relative;
   }
   .dpadButtonContainer .gameButtonEditor {
-    max-width: 45%;
+    max-width: calc(((var(--vh, 1vh) * 100) - var(--topBarWidth) - var(--topBarWidth) - 30vh) / 2) !important;
   }
   .dpadBtnUp {
     top: 0;
