@@ -47,6 +47,12 @@ function App () {
         // We execute the same script as before
         const vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
+        if (isMobile) {
+          const aspectRatio = window.innerWidth/window.innerHeight
+          const doubleBannerCheck = (isMobile === true && aspectRatio < 1 && location.pathname.includes('/games/'))
+          setAspectRatio(aspectRatio)
+          setDoubleBannerCheck(doubleBannerCheck)
+        }
       })
       window.gameAudio = {}
       window.gameAudio.gameMusic_1 = new Audio('/sounds/gameMusic_1.wav')
@@ -76,7 +82,7 @@ function App () {
     setIsMobile(isMobile)
     setSideBarCheck(sideBarCheck)
     setDoubleBannerCheck(doubleBannerCheck)
-  },[location.pathname, sideBar,  typeof screen !== "undefined" ? screen.height : 1920, typeof screen !== "undefined" ? screen.width : 1080])
+  },[location.pathname, sideBar,  typeof screen !== "undefined" ? screen.height : 1920, typeof screen !== "undefined" ? screen.width : 1080, ])
 
 
 
