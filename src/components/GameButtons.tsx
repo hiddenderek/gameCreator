@@ -11,6 +11,7 @@ function GameButtons() {
   const [buttonPressed, setButtonPressed] = useState('')
   const [jumpPressed, setJumpPressed] = useState(false)
   const [minimized, setMinimized] = useState(false)
+  const isEditor = location.pathname.includes('/gameEditor/')
 
   useEffect(()=>{
     if (buttonPressed === "dpadRight") {
@@ -42,9 +43,13 @@ function GameButtons() {
   }
 
   return (
-    <div id = "gameButtonContainer" className={`absolute fullWidth gameButtonContainer ${minimized ? "gameButtonsMimized" : ""}`} onContextMenu = {(e)=>{e.preventDefault()}}>
-      {location.pathname.includes('/gameEditor/') ? <div data-testid = "game_button_minimizer" className = "fullWidth gameButtonMinimizer" onClick = {()=>{toggleMinimized()}}>{minimized ? "Maximize Buttons" : "Minimize Buttons"}</div> : "" }
-      <div className = {`left ${location.pathname.includes('/gameEditor/') ? "gameEditorButtonHeight" : "fullHeight"} dpadContainer`}>
+    <div id = "gameButtonContainer" className={`absolute fullWidth gameButtonContainer ${isEditor ? "gameButtonEditor" : ""} ${minimized ? "gameButtonsMimized" : ""}`} onContextMenu = {(e)=>{e.preventDefault()}}>
+      {isEditor ? 
+        <div data-testid = "game_button_minimizer" className = "fullWidth gameButtonMinimizer" onClick = {()=>{toggleMinimized()}}>
+          {minimized ? "Maximize Buttons" : "Minimize Buttons"}
+        </div> 
+      : "" }
+      <div className = {`left ${isEditor ? "gameEditorButtonHeight" : "fullHeight"} dpadContainer`}>
         <div className = "dpadButtonContainer">
           <input data-testid = "game_button_up" className = {`absolute pixelate noSelect dpadBtnUp ${buttonPressed === "dpadUp" ? "invert" : ""}`} type="image" src="/images/dPadUp.png" onPointerEnter = {(e)=>{setButtonPressed('dpadUp')}}  onPointerLeave = {(e)=>{setButtonPressed('')}}  onPointerUp = {(e)=>{setButtonPressed('')}}/>
           <input data-testid = "game_button_down" className = {`absolute pixelate noSelect dpadBtnDown ${buttonPressed === "dpadDown" ? "invert" : ""}`}  type="image" src="/images/dPadDown.png" onPointerEnter = {(e)=>{setButtonPressed('dpadDown')}} onPointerLeave = {(e)=>{setButtonPressed('')}} onPointerUp = {(e)=>{setButtonPressed('')}}/>
@@ -52,7 +57,7 @@ function GameButtons() {
           <input data-testid = "game_button_right" className = {`absolute pixelate noSelect dpadBtnRight ${buttonPressed === "dpadRight" ? "invert" : ""}`}  type="image" src="/images/dPadRight.png" onPointerEnter = {(e)=>{setButtonPressed('dpadRight')}} onPointerLeave = {(e)=>{setButtonPressed('')}} onPointerUp = {(e)=>{setButtonPressed('')}}/>
         </div>
       </div>
-      <div className = {`right ${location.pathname.includes('/gameEditor/') ? "gameEditorButtonHeight" : "fullHeight"} jumpContainer`}>
+      <div className = {`right ${isEditor ? "gameEditorButtonHeight" : "fullHeight"} jumpContainer`}>
           <div className = "jumpButtonContainer">
             <input data-testid = "game_button_jump" className = {`absolute pixelate noSelect jumpBtn ${jumpPressed ? "invert" : ""}`}  type="image" src="/images/jump.png" onPointerEnter = {(e)=>{setJumpPressed(true)}} onPointerLeave = {(e)=>{setJumpPressed(false)}} onPointerUp = {(e)=>{setJumpPressed(false)}}/>
           </div>

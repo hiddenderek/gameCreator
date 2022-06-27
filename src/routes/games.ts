@@ -229,7 +229,7 @@ router.patch('/api/games/:userName/:gameName', authenticateToken, async (req: an
         SELECT id FROM users WHERE username = '${userName}'
         `)
         const { id } = getUser.rows[0]
-        if (screen && gameData && id && req.user.name == userName) {
+        if (screen && gameData && id && req?.user?.name == userName) {
             const saveGame = await pool.query(`  
             UPDATE gamedata SET game_data = jsonb_set(game_data, $1, $2), grid_image = $3, game_name = $4 WHERE user_id = $5 AND  game_name = $6 RETURNING game_data
             `, [`{${screen}}`, `{"gameData" : ${gameDataString}}`, gridImage, newGameName, id, gameName])
@@ -240,7 +240,7 @@ router.patch('/api/games/:userName/:gameName', authenticateToken, async (req: an
                 res.status(404)
                 res.json('Failed updating game screen.')
             }
-        } else if (id && (req.user.name == userName || plays)) {
+        } else if (id && (req?.user?.name == userName || plays)) {
             const updateGame = await pool.query(`
             UPDATE gamedata SET ${columnType} = $1 WHERE user_id = $2 AND  game_name = $3 RETURNING $4
             `, [req.body[columnType], id, gameName, columnType])
