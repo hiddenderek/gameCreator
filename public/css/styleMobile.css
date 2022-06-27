@@ -273,6 +273,7 @@
     width: 60rem;
   }
   .profileName {
+    height: 70%;
     font-size: 5rem;
   }
   .profileCaption{
