@@ -302,6 +302,10 @@
     padding: 1rem;
     box-sizing: border-box;
   }
+  .gameButtonEditor .dpadContainer {
+    width: 40vw !important;
+    max-width: 40vw !important;
+  }
   .dpadButtonContainer{
     width: 100%;
     max-width: calc(((var(--vh, 1vh) * 100) - var(--topBarWidth) / 2) * .4);
@@ -311,9 +315,7 @@
     justify-self: start;
     position: relative;
   }
-  .dpadButtonContainer .gameButtonEditor {
-    max-width: calc(((var(--vh, 1vh) * 100) - var(--topBarWidth) - var(--topBarWidth) - 30vh) / 2) !important;
-  }
+
   .dpadBtnUp {
     top: 0;
     left: 50%;
