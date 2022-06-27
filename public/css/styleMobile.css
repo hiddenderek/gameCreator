@@ -284,7 +284,7 @@
   .gameButtonContainer{
     bottom: 0;
     left: 0;
-    height: calc(((var(--vh, 1vh) * 100)  - var(--topBarWidth)  - var(--topBarWidth)) * .33);
+    height: 50%;
     z-index: 10;
     touch-action: manipulation;
   }
@@ -310,6 +310,9 @@
     align-self: center;
     justify-self: start;
     position: relative;
+  }
+  .dpadButtonContainer .gameButtonEditor {
+    max-width: 45%;
   }
   .dpadBtnUp {
     top: 0;
