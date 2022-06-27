@@ -795,6 +795,7 @@ select {
 .profileGameLabel{
   grid-area: profileGameLabel;
   height: 100%;
+  width: 100%;
   font-size: 1.3rem;
   font-family: "8bit";
   color: white;
@@ -823,11 +824,14 @@ select {
   color:white;
   display: flex;
   flex-flow: column;
+  align-items: start;
 }
 .profileName {
-  font-size: 2.5rem;
+  font-size: 3rem !important;
   color: rgb(255, 255, 255);
   font-family: "8bit";
+  text-align: left;
+  align-items: start;
 }
 .profileCaption{
   font-size: 1.8rem;
